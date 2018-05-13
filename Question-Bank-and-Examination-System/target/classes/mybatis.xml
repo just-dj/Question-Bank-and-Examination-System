@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+		PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	
+	<!--注意把这个文件放在环境路径里面-->
+	<!--可以不用引用,但是要修改下面的配置-->
+	<!--<properties resource="db.properties"></properties>-->
+	
+	<settings>
+		<!--选择日志工具-->
+		<setting name="logImpl" value="LOG4J"/>
+		
+		
+		<!--当返回行的所有列都是空时，MyBatis默认返回null-->
+		<!--几波，下面的设置哪里来的，坑死我了，压根不存在-->
+		<!--<setting name="returnInstanceForEmptyRow" value="true"/>-->
+		
+		<!--使用延迟加载生效必要的配置-->
+		<!--延迟加载的全局开关,开启后,所有关联对象都会延迟加载-->
+		<setting name="lazyLoadingEnabled" value="true"/>
+		<!--属性启用时,会使带有延迟加载属性的对象立即加载,反之,每种属性将会按需加载-->
+		<setting name="aggressiveLazyLoading" value="false"/>
+		
+		<!--开启二级缓存-->
+		<!--<setting name="cacheEnabled" value="true"></setting>-->
+	</settings>
+	
+	<!--环境配置.既连接的数据库-->
+	<!--<environments default="development">-->
+	<!---->
+	<!--<environment id="development">-->
+	<!--&lt;!&ndash;使用了 JDBC 的提交和回滚设置，它依赖于从数据源得到的连接来管理事务作用域&ndash;&gt;-->
+	<!--<transactionManager type="JDBC"/>-->
+	<!--&lt;!&ndash;datasource 指数据源配置 pooled是jdbc连接对象的数据源连接池的实现&ndash;&gt;-->
+	<!--<dataSource type="POOLED">-->
+	<!--<property name="driver" value="com.mysql.jdbc.Driver"/>-->
+	<!--<property name="url" value="jdbc:mysql://localhost:3306/demo"/>-->
+	<!--<property name="username" value="root"/>-->
+	<!--<property name="password" value="521947"/>-->
+	<!--</dataSource>-->
+	<!---->
+	<!--</environment>-->
+	<!--</environments>-->
+	
+	<!--<mappers >-->
+	<!---->
+	<!--&lt;!&ndash;使用包名,还可以指定配置文件或者对应的类&ndash;&gt;-->
+	<!--<package name="justdj.top.dao" ></package>-->
+	<!---->
+	<!---->
+	<!--</mappers>-->
+
+
+</configuration>

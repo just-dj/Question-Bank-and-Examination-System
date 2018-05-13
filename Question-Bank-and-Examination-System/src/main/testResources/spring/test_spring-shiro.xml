@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	
+	<!-- security datasource: -->
+	<bean id="myRealm" class="justdj.top.realm.MyRealm">
+		<property name="credentialsMatcher">
+			<!--使用自定义密码匹配规则-->
+			<bean class="justdj.top.util.RetryLimitCredentialsMatcher">
+				<!--哈希算法-->
+				<property name="hashAlgorithmName" value="MD5"/>
+				<!--散列计算几次-->
+				<property name="hashIterations" value="2"></property>
+			</bean>
+			<!---->
+			<!--<bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">-->
+				<!--&lt;!&ndash;哈希算法&ndash;&gt;-->
+				<!--<property name="hashAlgorithmName" value="MD5"/>-->
+				<!--&lt;!&ndash;散列计算几次&ndash;&gt;-->
+				<!--<property name="hashIterations" value="2"></property>-->
+			<!--</bean>-->
+		</property>
+	</bean>
+	
+	
+	
+	<!-- 配置shiro的过滤器工厂类，id- shiroFilter要和我们在web.xml中配置的过滤器一致 -->
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<!-- 调用我们配置的权限管理器 -->
+		<property name="securityManager" ref="securityManager"/>
+		<!-- 配置我们的登录请求地址 -->
+		<property name="loginUrl" value="/login"/>
+		<!-- 配置我们在登录页登录成功后的跳转地址，如果你访问的是非/login地址，则跳到您访问的地址 -->
+		<!-- 认证成功统一跳转到first.action，建议不配置，shiro认证成功自动到上一个请求路径 -->
+	   <property name="successUrl" value="/userInfo"/>
+		<!-- 通过unauthorizedUrl指定没有权限操作时跳转页面-->
+	   <!-- 如果您请求的资源不再您的权限范围，则跳转到/403请求地址 -->
+		<property name="unauthorizedUrl" value="/403"/>
+		<!-- 权限配置 -->
+		<property name="filterChainDefinitions">
+			<value>
+				
+				<!-- anon表示此地址不需要任何权限即可访问 -->
+				/=anon
+				/403=anon
+				/=anon
+				/login=anon
+				/getGifCode=anon
+				/static/**=anon
+				/favicon.ico=anon
+				<!--需要登录认证-->
+				/userInfo=authc
+				
+				<!-- perms[user:query]表示访问此连接需要权限为user:query的用户 -->
+				<!--/user/all=perms[query]-->
+				
+				<!-- roles[manager]表示访问此连接需要用户的角色为manager -->
+				<!--/user/add=roles[manager]-->
+				<!--/user/del/**=roles[admin]-->
+				<!--/user/edit/**=roles[manager]-->
+				<!--/user/insert=perms[del]-->
+				<!--所有的请求(除去配置的静态资源请求或请求地址为anon的请求)都要通过登录验证,如果未登录则跳到/login-->
+				<!--/	/authenticated.jsp = authc”表示访问该地址用户必须身份验证通过（Subject. isAuthenticated()==true）；-->
+				<!--/** = authc-->
+				
+				<!--使用remberme功能-->
+				<!--而“/** = user”表示访问该地址的用户是身份验证通过或RememberMe登录的都可/以-->
+				/**=user
+			</value>
+		</property>
+	</bean>
+
+
+	
+	<!-- 配置安全管理器 -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<!-- ref对应我们写的realm  MyShiro -->
+		<property name="realm" ref="myRealm"/>
+		<!-- 使用下面配置的缓存管理器 -->
+		<!--<property name="cacheManager" ref="shiroRedisCacheManager"/>-->
+		<property name="cacheManager" ref="cacheManager"/>
+		<!--记住我-->
+		<property name="rememberMeManager" ref="rememberMeManager"/>
+	</bean>
+	
+	<!--start-->
+	<!-- 会话Cookie模板 -->
+	<bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+		<constructor-arg value="sid"/>
+		<property name="httpOnly" value="true"/>
+		<property name="maxAge" value="-1"/>
+	</bean>
+	<!-- remenberMe配置 -->
+	<bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+		<constructor-arg value="rememberMe" />
+		<property name="httpOnly" value="true" />
+		<!-- 默认记住7天（单位：秒） -->
+		<property name="maxAge" value="604800" />
+	</bean>
+	<!-- rememberMe管理器 -->
+	<bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+		<property name="cipherKey" value="#{T(org.apache.shiro.codec.Base64).decode('4AvVhmFLUs0KTA3Kprsdag==')}" />
+		<property name="cookie" ref="rememberMeCookie" />
+	</bean>
+	<!--end-->
+	
+	<!--缓存管理器-->
+	<!--<bean id="shiroRedisCacheManager" class="justdj.top.cache.ShiroRedisCacheManager" />-->
+	<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+		<property name="cacheManagerConfigFile" value="classpath:shiro-ehcache.xml"/>
+	</bean>
+	
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+	
+	<!--<bean class="org.apache.shiro.authc.credential.DefaultPasswordService "></bean>-->
+	
+	<!--传声随机字符串的工具bean-->
+	<bean class="org.apache.shiro.crypto.SecureRandomNumberGenerator"></bean>
+
+</beans>
