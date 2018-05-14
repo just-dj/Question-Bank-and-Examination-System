@@ -54,12 +54,11 @@
 		</property>
 	</bean>
 	
-	<!-- 静态资源映射 -->
-	<!--<mvc:resources mapping="/static/css/**" location="/WEB-INF/statics/css/"></mvc:resources>-->
-	<!--<mvc:resources mapping="/static/js/**" location="/WEB-INF/statics/js/"></mvc:resources>-->
-	<!--<mvc:resources mapping="/static/img/**" location="/WEB-INF/statics/img/"></mvc:resources>-->
-	<!--<mvc:resources mapping="/static/lib/**" location="/WEB-INF/statics/lib/"></mvc:resources>-->
-	<!--<mvc:resources mapping="/uploads/**" location="/WEB-INF/statics/uploads/"></mvc:resources>-->
+	 <!--静态资源映射-->
+	<mvc:resources mapping="/static/css/**" location="/WEB-INF/statics/css/"></mvc:resources>
+	<mvc:resources mapping="/static/js/**" location="/WEB-INF/statics/js/"></mvc:resources>
+	<mvc:resources mapping="/static/img/**" location="/WEB-INF/statics/img/"></mvc:resources>
+	<mvc:resources mapping="/static/lib/**" location="/WEB-INF/statics/lib/"></mvc:resources>
 	
 	<!--默认没有装配MultipartResolver,所以默认情况下 不能处理文件上传工作。如果想使用文件上传功能，必须在上下文中配置Multipartresolver-->
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">

@@ -9,36 +9,40 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-    <title>My JSP 'MyJsp.jsp' starting page</title>
+    <title>请登录</title>
+    <link rel="stylesheet" href="/static/lib/bootstrap-3.3.7-dist/css/bootstrap.css" >
 </head>
 
 <body>
-<h1>登录页面----${message }</h1>
-<img alt="" src="/static/img/1.jpg">
-<form:form action="/login" modelAttribute="user" method="post">
-    <table>
-        <tr>
-            <td>账&nbsp;户：</td>
-            <td><form:input path="account"/> <form:errors path="account" cssClass="error"/> <br/></td>
-        </tr>
 
-        <tr>
-            <td> 密 &nbsp;码：</td>
-            <td>   <form:password path="password"/> <form:errors path="password" cssClass="error" /></td>
-        </tr>
-
-        <tr>
-            <td>验证码：</td>
-            <td><input type="text" name="vcode" id="vcode"/></td>
-            <td><img id="image" alt="验证码" src="/getGifCode"></td>
-            <td><a onclick="changeImage()" style="cursor:pointer">看不清楚？点击这里更换</a></td>
-        </tr>
-
-        <tr>
-            <td>    <form:button name="button">submit</form:button></td>
-        </tr>
-    </table>
-</form:form>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <h3>登录页面----${message }</h3>
+            <img alt="" src="/static/img/1.jpg">
+            <form:form action="/login" modelAttribute="user" method="post">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">账号</label>
+                    <form:input path="account"  class="form-control" id="exampleInputEmail1" placeholder="Account"/>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">密码</label>
+                    <form:password path="password" class="form-control" id="exampleInputPassword1" placeholder="Password"/>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">验证码</label>
+                    <input type="text" name="vcode" id="vcode" class="form-control" id="exampleInputEmail1"
+                           placeholder="identity"/>
+                </div>
+                <div class="form-group">
+                    <img id="image" alt="验证码" src="/getGifCode">
+                    <a class="btn btn-default" onclick="changeImage()" style="cursor:pointer">看不清</a>
+                </div>
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form:form>
+        </div>
+    </div>
+</div>
 
 <script>
     function changeImage(){

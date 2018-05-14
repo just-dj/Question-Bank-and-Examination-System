@@ -62,4 +62,23 @@ public interface TestDatabaseMapper {
 	})
 	List<Question> selectTestDatabaseQuestionByKindId(@Param("testDatabaseId") BigInteger testDatabaseId,
 	                                                  @Param("kindId") BigInteger kindId);
+	
+	@Select("select question.id,kind_id,kind.name,test_database_id,question,a,b,c,d,answer \n" +
+			"from kind join question join test_database \n" +
+			"on kind.id = kind_id and test_database_id = test_database.id \n" +
+			"where test_database.id = #{testDatabaseId} " +
+			" order by question.id")
+	@Results({
+			@Result(id = true,column = "id",property = "id"),
+			@Result(column = "kind_id",property = "kindId"),
+			@Result(column = "name",property = "kindName"),
+			@Result(column = "test_database_id",property = "testDatabaseId"),
+			@Result(column = "question",property = "question"),
+			@Result(column = "a",property = "a"),
+			@Result(column = "b",property = "b"),
+			@Result(column = "c",property = "c"),
+			@Result(column = "d",property = "d"),
+			@Result(column = "answer",property = "answer")
+	})
+	List<Question> selectTestDatabaseQuestionByTDId(BigInteger testDataBaseId);
 }

@@ -17,4 +17,6 @@ public interface TestDatabaseService {
 	//注意这个方法是不安全的，返回了question的所有信息
 	@Deprecated
 	List<Question> selectTestDatabaseQuestionByKindId(BigInteger testDatabaseId,BigInteger kindId);
+	
+	List<Question> selectTestDatabaseQuestionByTDId(BigInteger testDataBaseId);
 }

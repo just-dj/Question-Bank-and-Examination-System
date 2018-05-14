@@ -37,4 +37,9 @@ public class TestDatabaseServiceImpl implements TestDatabaseService {
 	public List <Question> selectTestDatabaseQuestionByKindId(BigInteger testDatabaseId, BigInteger kindId) {
 		return testDatabaseMapper.selectTestDatabaseQuestionByKindId(testDatabaseId,kindId);
 	}
+	
+	@Override
+	public List <Question> selectTestDatabaseQuestionByTDId(BigInteger testDataBaseId) {
+		return testDatabaseMapper.selectTestDatabaseQuestionByTDId(testDataBaseId);
+	}
 }

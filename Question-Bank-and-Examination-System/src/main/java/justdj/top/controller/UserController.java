@@ -8,6 +8,7 @@
 package justdj.top.controller;
 
 import justdj.top.pojo.User;
+import justdj.top.service.CourseService;
 import justdj.top.vcode.Captcha;
 import justdj.top.vcode.GifCaptcha;
 import org.apache.shiro.SecurityUtils;
@@ -45,6 +46,10 @@ public class UserController {
 	justdj.top.service.UserService UserService;
 	
 	@Autowired
+	@Qualifier("courseService")
+	private CourseService courseService;
+	
+	@Autowired
 	SecureRandomNumberGenerator secureRandomNumberGenerator;
 	
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -64,7 +69,7 @@ public class UserController {
 	
 	@RequestMapping(value="/login",method= RequestMethod.POST)
 	public String login(@Valid User user, @RequestParam(value = "vcode") String vcode, BindingResult bindingResult,
-	                    RedirectAttributes redirectAttributes, HttpServletRequest request){
+	                    RedirectAttributes redirectAttributes, HttpServletRequest request,Model model){
 		//验证码判断
 		if (!codeIdentify(vcode,redirectAttributes))
 			return "redirect:/login";
@@ -84,6 +89,9 @@ public class UserController {
 				subject.login(token);
 				
 				User userNow = UserService.selectUserByAccount(user.getAccount());
+				if (subject.hasRole("teacher")){
+					model.addAttribute("courseList",courseService.selectCourseByTeacherId(userNow.getId()));
+				}
 				
 				logger.warn("用户 "+ userNow.getAccount()+" 已登录！");
 				
@@ -170,7 +178,7 @@ public class UserController {
 		vcode = vcode.toLowerCase();
 		String v = (String) session.getAttribute("_code");
 		//还可以读取一次后把验证码清空，这样每次登录都必须获取验证码
-		session.removeAttribute("_code");
+//		session.removeAttribute("_code");
 		if(!vcode.equals(v)){
 			redirectAttributes.addFlashAttribute("message","验证码不正确!");
 			logger.error("验证码不正确!");

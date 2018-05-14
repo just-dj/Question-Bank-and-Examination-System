@@ -45,7 +45,7 @@ public interface TestPaperMapper {
 	})
 	List<TestPaper> selectTestPaperByExamId(BigInteger examId);
 	
-	@Select("select question.id,kind_id,kind.name,test_database_id,question,a,b,c,d,answer \n" +
+	@Select("select question.id,kind_id,kind.name,test_database_id,question,a,b,c,d,answer,score \n" +
 			"from kind join question join test_paper_question join test_paper\n" +
 			"on kind.id = kind_id and question.id = question_id and test_paper_id = test_paper.id\n" +
 			"where test_paper.id = #{paperId} \n" +
@@ -60,7 +60,8 @@ public interface TestPaperMapper {
 			@Result(column = "b",property = "b"),
 			@Result(column = "c",property = "c"),
 			@Result(column = "d",property = "d"),
-			@Result(column = "answer",property = "answer")
+			@Result(column = "answer",property = "answer"),
+			@Result(column = "score",property = "score")
 	})
 	List<Question> selectQuestionByTestPaperId(BigInteger paperId);
 	
