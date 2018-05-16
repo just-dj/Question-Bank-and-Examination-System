@@ -34,6 +34,11 @@ public class TestPaperServiceImpl implements TestPaperService {
 	}
 	
 	@Override
+	public List <TestPaper> selectTestPaperByExamId(BigInteger examId) {
+		return testPaperMapper.selectTestPaperByExamId(examId);
+	}
+	
+	@Override
 	public List <Question> selectQuestionByTestPaperId(BigInteger paperId) {
 		return testPaperMapper.selectQuestionByTestPaperId(paperId);
 	}

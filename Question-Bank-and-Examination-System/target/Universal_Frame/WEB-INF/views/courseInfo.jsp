@@ -84,6 +84,34 @@
                     </tr>
                 </c:forEach>
             </table>
+
+        </div>
+
+        <div class="col-md-12">
+            <h2>考试信息</h2>
+            <table class="table table-bordered">
+                <tr>
+                    <th>编号</th>
+                    <th>测试名称</th>
+                    <th>开始时间</th>
+                    <th>结束时间</th>
+                    <th>是否启用</th>
+                    <th>操作</th>
+                </tr>
+                <c:forEach items="${examList}" var="exam" varStatus="status">
+                    <tr>
+                        <td>${status.index}</td>
+                        <td>${exam.name}</td>
+                        <td>${exam.startTime}</td>
+                        <td>${exam.endTime}</td>
+                        <td>${exam.use}</td>
+                        <td class="center-pill">
+                            <a class="btn btn-default" href="">删除</a>
+                            <a class="btn btn-default" href="/exam/info?id=${exam.id}">查看</a>
+                        </td>
+                    </tr>
+                </c:forEach>
+            </table>
         </div>
     </div>
 </div>

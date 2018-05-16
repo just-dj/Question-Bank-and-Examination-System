@@ -2,9 +2,8 @@ package justdj.top.dao;
 
 import justdj.top.pojo.Answer;
 import justdj.top.pojo.AnswerQuestion;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.mapping.FetchType;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -20,7 +19,10 @@ public interface AnswerMapper {
 			@Result(column = "test_paper_id",property = "testPaperId"),
 			@Result(column = "start_time",property = "startTime"),
 			@Result(column = "end_time",property = "endTime"),
-			@Result(column = "is_commit",property = "commit")
+			@Result(column = "is_commit",property = "commit"),
+			@Result(column = "student_id",property = "student",
+			one = @One(select = "justdj.top.dao.UserMapper.selectUserByAccount",fetchType = FetchType.EAGER))
+			
 	})
 	List<Answer> selectAnswerByExamId(BigInteger examId);
 	
@@ -52,7 +54,8 @@ public interface AnswerMapper {
 	Answer selectAnswerByAnswerId(BigInteger answerId);
 	
 	
-	@Select("select answer_question.id,question,a,b,c,d,answer_question.answer,score,kind_id,kind.name\n" +
+	@Select("select answer_question.id,question,a,b,c,d,question.answer as an,answer_question.answer,score,kind_id," +
+			"kind.name\n" +
 			"from answer join answer_question join question join kind\n" +
 			"on answer.id = answer_id and question_id = question.id and  kind_id = kind.id\n" +
 			"where answer.id = #{answerId}\n" +
@@ -64,12 +67,11 @@ public interface AnswerMapper {
 			@Result(column = "b",property = "b"),
 			@Result(column = "c",property = "c"),
 			@Result(column = "d",property = "d"),
+			@Result(column = "an",property = "answer"),
 			@Result(column = "answer",property = "userAnswer"),
-			@Result(column = "score",property = "userScore"),
+			@Result(column = "score",property = "score"),
 			@Result(column = "kind_id",property = "kindId"),
 			@Result(column = "name",property = "kindName")
-			
-			
 	})
 	 List<AnswerQuestion> selectAnswerQuestionByAnswerId(BigInteger answerId);
 	

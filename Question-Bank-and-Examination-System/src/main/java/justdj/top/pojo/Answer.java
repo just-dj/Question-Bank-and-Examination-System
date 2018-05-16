@@ -30,4 +30,6 @@ public class Answer implements Serializable {
 	
 	private Boolean commit;
 	
+	private User student;
+	
 }

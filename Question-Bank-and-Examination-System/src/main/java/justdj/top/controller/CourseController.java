@@ -8,11 +8,9 @@
 package justdj.top.controller;
 
 import justdj.top.pojo.*;
-import justdj.top.service.CourseService;
-import justdj.top.service.KindService;
-import justdj.top.service.TestDatabaseService;
-import justdj.top.service.TestPaperService;
+import justdj.top.service.*;
 import justdj.top.util.KindHelper;
+import org.apache.ibatis.annotations.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -43,8 +41,12 @@ public class CourseController {
 	@Qualifier("testPaperService")
 	private TestPaperService testPaperService;
 	
+	@Autowired
+	@Qualifier("examService")
+	private ExamService examService;
+	
 	@RequestMapping("/info")
-	private String courseInfo(@RequestParam("id") BigInteger courseId, Model model){
+	public String courseInfo(@RequestParam("id") BigInteger courseId, Model model){
 		
 		List<Clazz> classList = courseService.selectClazzByCourseId(courseId);
 		
@@ -54,6 +56,8 @@ public class CourseController {
 		
 		List<TestPaper> testPaperList = testPaperService.selectTestPaperByCourseId(courseId);
 		
+		List<Exam> examList = examService.selectExamByCourseId(courseId);
+		
 		model.addAttribute("classList",classList);
 		
 		model.addAttribute("knowledgeList",knowledgeList);
@@ -62,19 +66,21 @@ public class CourseController {
 		
 		model.addAttribute("testPaperList",testPaperList);
 	
+		model.addAttribute("examList",examList);
+		
 		return "courseInfo";
 	}
 
 	
 	@RequestMapping("/student")
-	private String courseStudent(@RequestParam BigInteger id,Model model){
+	public String courseStudent(@RequestParam BigInteger id,Model model){
 		List<User> studentList = courseService.selectStudentByClassId(id);
 		model.addAttribute("studentList",studentList);
 		return "courseStudent";
 	}
 
 	@RequestMapping("/testDatabase")
-	private String courseTestDatabase(@RequestParam("id")BigInteger testDatabaseId,Model model){
+	public String courseTestDatabase(@RequestParam("id")BigInteger testDatabaseId,Model model){
 		KindHelper.setKindService(kindService);
 		List<String> kindName = KindHelper.getKindNameList();
 		

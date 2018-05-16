@@ -47,4 +47,7 @@ public interface UserMapper {
 	@Select(value = " select  role_name from role join user_role on role.id = user_role.role_id where " +
 			"user_role.user_id = #{userId}")
 	List<String> selectRoleByUserId(BigInteger userId);
+	
+	
+	
 }

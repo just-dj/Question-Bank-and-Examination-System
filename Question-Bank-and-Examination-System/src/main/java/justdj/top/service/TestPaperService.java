@@ -13,6 +13,8 @@ public interface TestPaperService {
 	
 	List<TestPaper> selectTestPaperByCourseId(@Param("courseId") BigInteger courseId);
 	
+	List<TestPaper> selectTestPaperByExamId(BigInteger examId);
+	
 	@Deprecated
 	List<Question> selectQuestionByTestPaperId(BigInteger paperId);
 	

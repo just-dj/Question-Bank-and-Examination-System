@@ -31,7 +31,10 @@ public class AnswerQuestion implements Serializable {
 	
 	private String d;
 	
+	private String answer;
+	
 	private String userAnswer;
 	
-	private Short userScore;
+	private Short score;
+	
 }

@@ -83,6 +83,10 @@ public class UserController {
 		//登录，即身份验证，传输凭证并登录
 		//if语句是为了避免重复登录问题
 		if (subject.isAuthenticated()){
+			User userNow = UserService.selectUserByAccount(user.getAccount());
+			if (subject.hasRole("teacher")){
+				model.addAttribute("courseList",courseService.selectCourseByTeacherId(userNow.getId()));
+			}
 			return "userInfo";
 		}else{
 			try{
