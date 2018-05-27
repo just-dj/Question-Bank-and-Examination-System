@@ -8,6 +8,7 @@
 package justdj.top.service.impl;
 
 import justdj.top.dao.TestPaperMapper;
+import justdj.top.pojo.Kind;
 import justdj.top.pojo.Question;
 import justdj.top.pojo.TestPaper;
 import justdj.top.service.TestPaperService;
@@ -41,6 +42,11 @@ public class TestPaperServiceImpl implements TestPaperService {
 	@Override
 	public List <Question> selectQuestionByTestPaperId(BigInteger paperId) {
 		return testPaperMapper.selectQuestionByTestPaperId(paperId);
+	}
+	
+	@Override
+	public List <Kind> selectQuestionKindByTestPaperId(BigInteger testPaperId) {
+		return testPaperMapper.selectQuestionKindByTestPaperId(testPaperId);
 	}
 	
 	@Override

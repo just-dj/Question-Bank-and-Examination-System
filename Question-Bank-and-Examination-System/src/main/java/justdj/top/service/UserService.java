@@ -15,4 +15,6 @@ public interface UserService {
 	
 	List<String> selectRoleByUserId(BigInteger userId);
 	
+	Integer insertUser(User user);
+	
 }

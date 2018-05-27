@@ -9,6 +9,8 @@ package justdj.top.service;
 
 import justdj.top.pojo.Answer;
 import justdj.top.pojo.AnswerQuestion;
+import justdj.top.pojo.Kind;
+import org.apache.ibatis.annotations.Param;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -21,6 +23,9 @@ public interface AnswerService {
 	
 	Answer selectAnswerByAnswerId(BigInteger answerId);
 	
+	Answer selectAnswerByExamIdAndStudentId(BigInteger examId,BigInteger studentId);
+	
 	List<AnswerQuestion> selectAnswerQuestionByAnswerId(BigInteger answerId);
 	
+	List<Kind> selectQuestionKindByAnswerId(BigInteger answerId);
 }

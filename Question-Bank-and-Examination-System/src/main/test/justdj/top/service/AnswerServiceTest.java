@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import justdj.top.JUnit4ClassRunner;
 import justdj.top.pojo.Answer;
 import justdj.top.pojo.AnswerQuestion;
+import justdj.top.pojo.Kind;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,4 +61,24 @@ public class AnswerServiceTest {
 		
 	}
 	
+	@Test
+	public void selectQuestionKindByAnswerId() throws  Exception{
+		List<Kind> list = answerService.selectQuestionKindByAnswerId(BigInteger.valueOf(1));
+		
+		assertNotNull(list);
+		assertNotEquals(0,list.size());
+		System.err.println("\n selectQuestionKindByAnswerId() \n"+ JSON.toJSONString(list) + "\n");
+		
+	}
+	
+	
+	@Test
+	public void selectAnswerByExamIdAndStudentId() throws Exception {
+		
+		Answer answer =answerService.selectAnswerByExamIdAndStudentId(BigInteger.valueOf(1),
+				BigInteger.valueOf(1));
+		assertNotNull(answer);
+		System.err.println("\n selectAnswerByExamIdAndStudentId() \n"+ JSON.toJSONString(answer) + "\n");
+		
+	}
 }

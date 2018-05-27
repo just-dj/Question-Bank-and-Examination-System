@@ -1,6 +1,5 @@
 package justdj.top.dao;
 
-import com.sun.xml.internal.bind.v2.model.core.ID;
 import justdj.top.pojo.Clazz;
 import justdj.top.pojo.Course;
 import justdj.top.pojo.Knowledge;
@@ -25,6 +24,17 @@ public interface CourseMapper {
 	})
 	List<Course> selectCourseByTeacherId(BigInteger teacherId);
 	
+	@Select("select course.id,teacher_id,course.name,course.introduce\n" +
+			"from user inner join class_student inner join class inner join course\n" +
+			"on user.id = student_id and class_id = class.id and course_id = course.id\n" +
+			"where user.id = #{studentId}")
+	@Results({
+			@Result(id = true,column = "id",property = "id"),
+			@Result(column = "teacher_id",property = "teacherId"),
+			@Result(column = "name",property = "name"),
+			@Result(column = "introduce",property = "introduce")
+	})
+	List<Course> selectCourseByStudentId(BigInteger studentId);
 	
 	@Select("select id,teacher_id,name,introduce from course where id = #{courseId}")
 	@Results({

@@ -24,7 +24,19 @@
 	<!--会自动注册RequestMappingHandlerMapping与RequestMappingHandlerAdapter两个Bean-->
 	<mvc:annotation-driven >
 		<mvc:message-converters register-defaults="true" >
-			<bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+			
+			<!-- 去除返回字符串时的引号 -->
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<constructor-arg value="UTF-8" />
+			</bean>
+			
+			
+			<bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter" >
+				<property name="fastJsonConfig">
+					<list>
+						<value></value>
+					</list>
+				</property>
 				<property name="supportedMediaTypes">
 					<list>
 						<value>text/html;charset=UTF-8</value>
@@ -46,7 +58,7 @@
 		  class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<!--前缀-->
 		<property name="prefix">
-			<value>/WEB-INF/views/</value>
+			<value>/WEB-INF/view/</value>
 		</property>
 		<!--后缀-->
 		<property name="suffix">
@@ -55,10 +67,10 @@
 	</bean>
 	
 	 <!--静态资源映射-->
-	<mvc:resources mapping="/static/css/**" location="/WEB-INF/statics/css/"></mvc:resources>
-	<mvc:resources mapping="/static/js/**" location="/WEB-INF/statics/js/"></mvc:resources>
-	<mvc:resources mapping="/static/img/**" location="/WEB-INF/statics/img/"></mvc:resources>
-	<mvc:resources mapping="/static/lib/**" location="/WEB-INF/statics/lib/"></mvc:resources>
+	<mvc:resources mapping="/static/css/**" location="/WEB-INF/static/css/"></mvc:resources>
+	<mvc:resources mapping="/static/js/**" location="/WEB-INF/static/js/"></mvc:resources>
+	<mvc:resources mapping="/static/img/**" location="/WEB-INF/static/img/"></mvc:resources>
+	<mvc:resources mapping="/static/lib/**" location="/WEB-INF/static/lib/"></mvc:resources>
 	
 	<!--默认没有装配MultipartResolver,所以默认情况下 不能处理文件上传工作。如果想使用文件上传功能，必须在上下文中配置Multipartresolver-->
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">

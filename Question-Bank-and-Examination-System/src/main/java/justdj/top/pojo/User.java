@@ -20,6 +20,8 @@ public class User implements Serializable{
 	
 	private String account;
 	
+	private String  email;
+	
 	private String password;
 	
 	private String salt;

@@ -44,7 +44,11 @@
 			<value>
 				
 				<!-- anon表示此地址不需要任何权限即可访问 -->
+				/st/*=anon
+				/images/*=anon
 				/test=anon
+				/upload=anon
+				/download=anon
 				/=anon
 				/403=anon
 				/=anon

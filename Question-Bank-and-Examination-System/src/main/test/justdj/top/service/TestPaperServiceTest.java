@@ -1,6 +1,7 @@
 package justdj.top.service;
 
 import com.alibaba.fastjson.JSON;
+import justdj.top.pojo.Kind;
 import justdj.top.pojo.Question;
 import justdj.top.pojo.TestPaper;
 import justdj.top.util.KindHelper;
@@ -55,6 +56,16 @@ public class TestPaperServiceTest {
 		assertNotEquals(0,list.size());
 		System.err.println("\n  selectQuestionByTestPaperId() \n"+ JSON.toJSONString(list) + "\n");
 	}
+	
+	
+	@Test
+	public void selectQuestionKindByTestPaperId() throws Exception{
+		List<Kind> list = testPaperService.selectQuestionKindByTestPaperId(BigInteger.valueOf(1));
+		assertNotNull(list);
+		assertNotEquals(0,list.size());
+		System.err.println("\n  selectQuestionKindByTestPaperId() \n"+ JSON.toJSONString(list) + "\n");
+	}
+	
 	
 	@Test
 	public void selectQuestionByTestPaperIdAndKindName() throws Exception {

@@ -1,21 +1,19 @@
 package justdj.top.dao;
 
 import justdj.top.pojo.User;
-import org.apache.ibatis.annotations.CacheNamespace;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.math.BigInteger;
 import java.util.List;
 
-@CacheNamespace(implementation = justdj.top.cache.MybatisRedisCache.class)
+//@CacheNamespace(implementation = justdj.top.cache.MybatisRedisCache.class)
 public interface UserMapper {
 	
 	@Select("select * from user where id = #{userId}")
 	@Results({
 			@Result(id = true,column = "id",property = "id"),
 			@Result(column = "account",property = "account"),
+			@Result(column = "email",property = "email"),
 			@Result(column = "password",property = "password"),
 			@Result(column = "salt",property = "salt"),
 			@Result(column = "name",property = "name"),
@@ -25,11 +23,11 @@ public interface UserMapper {
 	})
 	User selectUserById(BigInteger userId);
 	
-	
 	@Select("select * from user where account = #{userAccount}")
 	@Results({
 			@Result(id = true,column = "id",property = "id"),
 			@Result(column = "account",property = "account"),
+			@Result(column = "email",property = "email"),
 			@Result(column = "password",property = "password"),
 			@Result(column = "salt",property = "salt"),
 			@Result(column = "name",property = "name"),
@@ -49,5 +47,10 @@ public interface UserMapper {
 	List<String> selectRoleByUserId(BigInteger userId);
 	
 	
+	@Insert(value = "insert into user (account,email,password,salt,name,age,sex,is_use) \n" +
+			"values (#{account},#{email},#{password},#{salt},#{name},#{age},#{sex},#{use})")
+	//	获取数据库内部生成主键,将返回值赋值给id属性
+	@Options(useGeneratedKeys = true,keyProperty = "id")
+	Integer insertUser(User user);
 	
 }

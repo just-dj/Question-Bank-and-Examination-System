@@ -12,6 +12,8 @@ public interface CourseService {
 	
 	List<Course> selectCourseByTeacherId(BigInteger teacherId);
 	
+	List<Course> selectCourseByStudentId(BigInteger studentId);
+	
 	Course selectCourseByCourseId(BigInteger courseId);
 	
 	List<Knowledge> selectKnowledgeByCourseId(BigInteger courseId);

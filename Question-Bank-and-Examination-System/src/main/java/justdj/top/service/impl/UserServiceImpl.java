@@ -41,4 +41,9 @@ public class UserServiceImpl implements UserService {
 	public List <String> selectRoleByUserId(BigInteger userId) {
 		return userMapper.selectRoleByUserId(userId);
 	}
+	
+	@Override
+	public Integer insertUser(User user) {
+		return userMapper.insertUser(user);
+	}
 }

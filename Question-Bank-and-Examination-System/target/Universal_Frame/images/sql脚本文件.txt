@@ -1,0 +1,169 @@
+软件过程后端  
+
+
+
+webService调用
+
+
+测试restemplate
+
+
+
+select user_account.id,name,register_time,sex,age,phone,login_time,address
+from user_account join user_login_journal
+on user_account.id = user_id
+where user_login_journal.id 
+in (select max(id) from user_login_journal group by user_id)  and name like %大%
+
+
+
+select user_account.id,name,register_time,sex,age,phone,login_time,address
+from user_account join user_login_journal
+on user_account.id = user_id
+where user_login_journal.id 
+in (select max(id) from user_login_journal group by user_id)  and name like '%大%';
+
+
+
+insert into user (account,password,salt,name,age,sex,is_use) values 
+(6,'4ac86a78043b6d1dec8218304fd3ef9b','3c16b6b092c0ea87bdeb5f0d3599f2b2','佩奇3',20,'男',1),
+(7,'4ac86a78043b6d1dec8218304fd3ef9b','3c16b6b092c0ea87bdeb5f0d3599f2b2','佩奇4',20,'男',1),
+(8,'4ac86a78043b6d1dec8218304fd3ef9b','3c16b6b092c0ea87bdeb5f0d3599f2b2','佩奇5',20,'男',1),
+(9,'4ac86a78043b6d1dec8218304fd3ef9b','3c16b6b092c0ea87bdeb5f0d3599f2b2','佩奇6',20,'男',1),
+(10,'4ac86a78043b6d1dec8218304fd3ef9b','3c16b6b092c0ea87bdeb5f0d3599f2b2','佩奇7',20,'男',1),
+(11,'4ac86a78043b6d1dec8218304fd3ef9b','3c16b6b092c0ea87bdeb5f0d3599f2b2','佩奇8',20,'男',1),
+(12,'4ac86a78043b6d1dec8218304fd3ef9b','3c16b6b092c0ea87bdeb5f0d3599f2b2','佩奇9',20,'男',1),
+(13,'4ac86a78043b6d1dec8218304fd3ef9b','3c16b6b092c0ea87bdeb5f0d3599f2b2','佩奇10',20,'男',1),
+(14,'4ac86a78043b6d1dec8218304fd3ef9b','3c16b6b092c0ea87bdeb5f0d3599f2b2','佩奇11',20,'男',1),
+(15,'4ac86a78043b6d1dec8218304fd3ef9b','3c16b6b092c0ea87bdeb5f0d3599f2b2','佩奇12',20,'男',1),
+(16,'4ac86a78043b6d1dec8218304fd3ef9b','3c16b6b092c0ea87bdeb5f0d3599f2b2','佩奇13',20,'男',1),
+(17,'4ac86a78043b6d1dec8218304fd3ef9b','3c16b6b092c0ea87bdeb5f0d3599f2b2','佩奇14',20,'男',1),
+(18,'4ac86a78043b6d1dec8218304fd3ef9b','3c16b6b092c0ea87bdeb5f0d3599f2b2','佩奇15',20,'男',1),
+(19,'4ac86a78043b6d1dec8218304fd3ef9b','3c16b6b092c0ea87bdeb5f0d3599f2b2','佩奇16',20,'男',1),
+(20,'4ac86a78043b6d1dec8218304fd3ef9b','3c16b6b092c0ea87bdeb5f0d3599f2b2','佩奇17',20,'男',1),
+(21,'4ac86a78043b6d1dec8218304fd3ef9b','3c16b6b092c0ea87bdeb5f0d3599f2b2','佩奇18',20,'男',1)；
+
+insert into class_student (student_id,class_id) values 
+(4,1),
+(5,1),
+(6,1),
+(7,1),
+(8,1),
+(9,1),
+(10,1),
+(11,1),
+(12,1),
+(13,1),
+(14,1),
+(15,1),
+(16,1),
+(17,1),
+(18,1),
+(19,1),
+(20,1),
+(21,1);
+
+
+
+insert into question (kind_id,test_database_id,question,a,b,c,d,answer) values
+(1,1,'Mybatis最高有几级缓存机制？','一层','两层','三层','我也不知道',b),
+(1,1,'Mybatis最高有几级缓存机制？','一层','两层','三层','我也不知道',b),
+(1,1,'Mybatis最高有几级缓存机制？','一层','两层','三层','我也不知道',b),
+(1,1,'Mybatis最高有几级缓存机制？','一层','两层','三层','我也不知道',b),
+(1,1,'Mybatis最高有几级缓存机制？','一层','两层','三层','我也不知道',b),
+(1,1,'Mybatis最高有几级缓存机制？','一层','两层','三层','我也不知道',b),
+(1,1,'Mybatis最高有几级缓存机制？','一层','两层','三层','我也不知道',b),
+(1,1,'Mybatis最高有几级缓存机制？','一层','两层','三层','我也不知道',b);
+
+
+
+insert into question (kind_id,test_database_id,question,a,b,c,d,answer) values
+(3,1,'AOP是面向切面编程的意思。','true','false','','','a'),
+(3,1,'AOP是面向切面编程的意思。','true','false','','','a'),
+(3,1,'AOP是面向切面编程的意思。','true','false','','','a'),
+(3,1,'AOP是面向切面编程的意思。','true','false','','','a'),
+(3,1,'AOP是面向切面编程的意思。','true','false','','','a');
+
+
+
+
+insert into question (kind_id,test_database_id,question,a,b,c,d,answer) values
+(4,1,'Java中ArrayList的初始化长度为__','','','','','16'),
+(4,1,'Java中ArrayList的初始化长度为__','','','','','16'),
+
+(4,1,'Java中ArrayList的初始化长度为__','','','','','16');
+
+
+
+
+
+insert into question (kind_id,test_database_id,question,a,b,c,d,answer) values
+(5,1,'请简述ORM框架的思想。','','','','','将关系数据库中表的数据映射成为对象，以对象的形式展现，这样开发人员就可以把对数据库的操作转化为对这些对象的操作。因此它的目的是为了方便开发人员以面向对象的思想来实现对数据库的操作。'),
+(5,1,'请简述ORM框架的思想。','','','','','将关系数据库中表的数据映射成为对象，以对象的形式展现，这样开发人员就可以把对数据库的操作转化为对这些对象的操作。因此它的目的是为了方便开发人员以面向对象的思想来实现对数据库的操作。'),
+(5,1,'请简述ORM框架的思想。','','','','','将关系数据库中表的数据映射成为对象，以对象的形式展现，这样开发人员就可以把对数据库的操作转化为对这些对象的操作。因此它的目的是为了方便开发人员以面向对象的思想来实现对数据库的操作。');
+
+
+
+
+select * from user where id = 1
+
+
+
+select user.id,account,password,salt,name,age,sex from class_student join user 
+where student_id = user.id;
+
+
+select question.id,kind_id,kind.name,test_database_id,question,a,b,c,d,answer 
+from kind join question join test_database 
+on kind.id = kind_id and test_database_id = test_database.id 
+where test_database.id = 1 and kind.name = '单选题'
+order by question.id;
+
+select id,course_id,name,is_use from test_paper
+where id = 1
+
+
+
+select question.id,kind_id,kind.name,test_database_id,question,a,b,c,d,answer 
+from kind join question join test_paper_question join test_paper
+on kind.id = kind_id and question.id = question_id and test_paper_id = test_paper.id
+where test_paper.id = 1 and kind.name = '单选题'
+order by question.id;
+
+
+
+select test_paper.id,test_paper.course_id,test_paper.name,test_paper.is_use 
+from exam join exam_test_paper join test_paper
+on exam.id = exam_id and test_paper_id = test_paper.id
+where exam.id = 1
+
+
+
+select exam.id,exam.name,course_id,start_time,end_time,is_use
+from  course join exam
+on course.id = exam.id
+where course.id = 1;
+
+
+两次考试使用了同一张试卷，或造成错误
+解决方案 使用的试卷时不能再次使用
+
+select answer.id,student_id,answer.test_paper_id,answer.start_time,answer.end_time,result,is_commit
+from exam join exam_test_paper join test_paper join answer
+on exam.id = exam_id and exam_test_paper.test_paper_id = test_paper.id and test_paper.id = answer.test_paper_id
+where exam.id = 1;
+
+
+select answer_question.id,question,a,b,c,d,answer_question.answer,score,kind_id,kind.name
+from answer join answer_question join question join kind
+on answer.id = answer_id and question_id = question.id and  kind_id = kind.id
+where answer.id = 1
+order by answer_question.answer_id;
+
+
+
+
+
+
+
+

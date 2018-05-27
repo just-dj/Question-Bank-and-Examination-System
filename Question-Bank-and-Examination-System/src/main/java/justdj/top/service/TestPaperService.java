@@ -1,5 +1,6 @@
 package justdj.top.service;
 
+import justdj.top.pojo.Kind;
 import justdj.top.pojo.Question;
 import justdj.top.pojo.TestPaper;
 import org.apache.ibatis.annotations.Param;
@@ -17,6 +18,9 @@ public interface TestPaperService {
 	
 	@Deprecated
 	List<Question> selectQuestionByTestPaperId(BigInteger paperId);
+	
+	
+	List<Kind> selectQuestionKindByTestPaperId(BigInteger testPaperId);
 	
 	@Deprecated
 	List<Question> selectQuestionByTestPaperIdAndKindName(@Param("paperId") BigInteger paperId, @Param("kindName") String kindName);

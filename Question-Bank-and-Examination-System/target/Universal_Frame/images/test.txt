@@ -1,0 +1,83 @@
+浏览Web网页服务默认的端口号是( ) 
+A、80 
+B、8181 
+C、25 
+D、1433
+参考答案: A
+
+假设在helloapp应用中有一个hello.jsp，文件路径为C:／Tomcat／webapps／helloapp／hello／hello.jsp那么在浏览器端访问hello.jsp的URL是(  ) 
+A、http:／／localhost:8080／hello.jsp 
+B、http:／／localhost:8080／helloapp／hello.jsp 
+C、http:／／localhost:8080／helloapp／hello／hello.jsp 
+D、http:／／localhost:8080／helloapp／hello
+参考答案: C
+
+下面不属于Servlet生命周期阶段的是( ) 
+A、加载 
+B、实例化 
+C、初始化 
+D、请求资源
+参考答案: D
+
+在J2EE中，给定某Servlet的代码如下，编译运行该文件，以下陈述正确的是( ) 
+public class Servletl extends HttpServlet{ 
+public void init() throws ServletException{ 
+                  } 
+                  public void service(HttpServletRequest 
+                  request,HttpServletResponse response)throws 
+                  ServletException,IOException{ 
+                  PrintWriter out=response.getWriter(); 
+                  out.println(“hello!”); 
+                  } 
+                  } 
+A、编译该文件时会提示缺少doGet()或者doPost()方法，编译不能够成功通过 
+B、编译后，把Servletl.class放在正确位置，运行该Servlet，在浏览器中会看到输出文字：hello! 
+C、编译后，把Servletl.class放在正确位置，运行该Servlet，在浏览器中会看不到任何输出的文字 
+D、编译后, 把Servletl.class放在正确位置，运行该Servlet，在浏览器中会看到运行期错误信息 
+参考答案: B
+
+ServletContext对象的作用是( ) 
+A、获取请求属性值 
+B、读取请求参数值 
+C、读取Web应用程序上下文参数 
+D、读取Servlet配置参数
+参考答案: C
+
+给定如下Servlet代码，假定在浏览器中输入URL：http:／／localhost:8080／servlet／HelloServlet，可以调用该servlet，那么该Servlet的输出是( 
+                  ) 
+                  import java.io.*; 
+                  import javax.servlet.*; 
+                  import javax.servlet.http.*; 
+                  public class HelloServlet extends HttpServlet{ 
+                  public void service(HttpServletRequest req,HttpServletResponse 
+                  res) 
+                  throws ServletException,IOException{ 
+                  } 
+                  Public void doGet(HttpServletRequest req,HttpServletResponse 
+                  res) 
+                  Throws ServletException,IOException{ 
+                  Res.setContentType(“text／html”); 
+                  PrintWriter out=res.getWriter(); 
+                  Out.println(“＜html＞”); 
+                  Out.println(“＜body＞”); 
+                  Out.println(“doGet Hello World”); 
+                  Out.println(“＜／body＞”); 
+                  Out.println(＜／html＞); 
+                  Out.close(); 
+                  } 
+                  Public void doPost(HttpServletRequest req,HttpServletResponse 
+                  res) 
+                  Throws ServletException,IOException{ 
+                  Res.setContentType(“text／html”); 
+                  PrintWriter out=res.getWriter(); 
+                  Out.println(“＜html＞”); 
+                  Out.println(“＜body＞”); 
+                  Out.println(“doPost Hello World”); 
+                  Out.println(“＜／body＞”); 
+                  } 
+                  } 
+A、一个HTML页面，页面上显示doGet Hello World! 
+B、一个HTML页面，页面上显示 doPost Hello World! 
+C、一个空白的HTML页面 
+D、错误信息
+参考答案: C

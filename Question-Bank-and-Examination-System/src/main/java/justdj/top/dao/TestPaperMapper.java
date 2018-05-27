@@ -1,5 +1,6 @@
 package justdj.top.dao;
 
+import justdj.top.pojo.Kind;
 import justdj.top.pojo.Question;
 import justdj.top.pojo.TestPaper;
 import org.apache.ibatis.annotations.Param;
@@ -36,14 +37,14 @@ public interface TestPaperMapper {
 	@Select("select test_paper.id,test_paper.course_id,test_paper.name,test_paper.is_use \n" +
 			"from exam join exam_test_paper join test_paper\n" +
 			"on exam.id = exam_id and test_paper_id = test_paper.id\n" +
-			"where exam.id = 1")
+			"where exam.id = #{examId}")
 	@Results({
 			@Result(id =true,column = "id",property = "id"),
 			@Result(column = "course_id",property = "courseId"),
 			@Result(column = "name",property = "name"),
 			@Result(column = "is_use",property = "use")
 	})
-	List<TestPaper> selectTestPaperByExamId(BigInteger examId);
+	List<TestPaper> selectTestPaperByExamId(@Param("examId") BigInteger examId);
 	
 	@Select("select question.id,kind_id,kind.name,test_database_id,question,a,b,c,d,answer,score \n" +
 			"from kind join question join test_paper_question join test_paper\n" +
@@ -64,6 +65,18 @@ public interface TestPaperMapper {
 			@Result(column = "score",property = "score")
 	})
 	List<Question> selectQuestionByTestPaperId(BigInteger paperId);
+	
+	@Select("select kind.id,kind.name \n" +
+			"from kind  join question  join test_paper_question  join test_paper \n" +
+			"on kind.id = kind_id and question.id = question_id and test_paper_id = test_paper.id \n" +
+			"where test_paper.id = #{testPaperId} \n" +
+			"group by kind.id \n" +
+			"order by kind.id")
+	@Results({
+			@Result(id = true,column = "id",property = "id"),
+			@Result(column = "name",property = "name")
+	})
+	List<Kind> selectQuestionKindByTestPaperId(@Param("testPaperId") BigInteger testPaperId);
 	
 	@Select("select question.id,kind_id,kind.name,test_database_id,question,a,b,c,d,answer \n" +
 			"from kind join question join test_paper_question join test_paper\n" +

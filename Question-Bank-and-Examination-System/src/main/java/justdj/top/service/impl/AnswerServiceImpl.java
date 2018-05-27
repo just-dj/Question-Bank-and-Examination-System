@@ -10,6 +10,7 @@ package justdj.top.service.impl;
 import justdj.top.dao.AnswerMapper;
 import justdj.top.pojo.Answer;
 import justdj.top.pojo.AnswerQuestion;
+import justdj.top.pojo.Kind;
 import justdj.top.service.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,17 @@ public class AnswerServiceImpl implements AnswerService{
 	}
 	
 	@Override
+	public Answer selectAnswerByExamIdAndStudentId(BigInteger examId, BigInteger studentId) {
+		return answerMapper.selectAnswerByExamIdAndStudentId(examId,studentId);
+	}
+	
+	@Override
 	public List <AnswerQuestion> selectAnswerQuestionByAnswerId(BigInteger answerId) {
 		return answerMapper.selectAnswerQuestionByAnswerId(answerId);
+	}
+	
+	@Override
+	public List <Kind> selectQuestionKindByAnswerId(BigInteger answerId) {
+		return answerMapper.selectQuestionKindByAnswerId(answerId);
 	}
 }

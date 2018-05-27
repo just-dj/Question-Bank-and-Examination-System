@@ -81,4 +81,7 @@ public interface TestDatabaseMapper {
 			@Result(column = "answer",property = "answer")
 	})
 	List<Question> selectTestDatabaseQuestionByTDId(BigInteger testDataBaseId);
+	
+	
+	
 }

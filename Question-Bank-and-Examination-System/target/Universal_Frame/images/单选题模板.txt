@@ -1,0 +1,395 @@
+浏览Web网页服务默认的端口号是( ) 
+A:80 
+B:8181 
+C:25 
+D:1433
+参考答案A
+
+假设在helloapp应用中有一个hello.jsp，文件路径为C:／Tomcat／webapps／helloapp／hello／hello.jsp那么在浏览器端访问hello.jsp的URL是( 
+) 
+A:http:／／localhost:8080／hello.jsp 
+B:http:／／localhost:8080／helloapp／hello.jsp 
+C:http:／／localhost:8080／helloapp／hello／hello.jsp 
+D:http:／／localhost:8080／helloapp／hello
+参考答案C
+
+下面不属于Servlet生命周期阶段的是( ) 
+A:加载 
+B:实例化 
+C:初始化 
+D:请求资源
+参考答案D
+
+在J2EE中，给定某Servlet的代码如下，编译运行该文件，以下陈述正确的是( ) 
+public class Servletl extends HttpServlet{ 
+public void init() throws ServletException{ 
+} 
+public void service(HttpServletRequest 
+request,HttpServletResponse response)throws 
+ServletException,IOException{ 
+PrintWriter out=response.getWriter(); 
+out.println(“hello!”); 
+} 
+} 
+A:编译该文件时会提示缺少doGet()或者doPost()方法，编译不能够成功通过 
+B:编译后，把Servletl.class放在正确位置，运行该Servlet，在浏览器中会看到输出文字：hello! 
+C:编译后，把Servletl.class放在正确位置，运行该Servlet，在浏览器中会看不到任何输出的文字 
+D:编译后, 把Servletl.class放在正确位置，运行该Servlet，在浏览器中会看到运行期错误信息 
+参考答案B
+
+ServletContext对象的作用是( ) 
+A:获取请求属性值 
+B:读取请求参数值 
+C:读取Web应用程序上下文参数 
+D:读取Servlet配置参数
+参考答案C
+
+给定如下Servlet代码，假定在浏览器中输入URL：http:／／localhost:8080／servlet／HelloServlet，可以调用该servlet，那么该Servlet的输出是( 
+) 
+import java.io.*; 
+import javax.servlet.*; 
+import javax.servlet.http.*; 
+public class HelloServlet extends HttpServlet{ 
+public void service(HttpServletRequest req,HttpServletResponse 
+res) 
+throws ServletException,IOException{ 
+} 
+Public void doGet(HttpServletRequest req,HttpServletResponse 
+res) 
+Throws ServletException,IOException{ 
+Res.setContentType(“text／html”); 
+PrintWriter out=res.getWriter(); 
+Out.println(“＜html＞”); 
+Out.println(“＜body＞”); 
+Out.println(“doGet Hello World”); 
+Out.println(“＜／body＞”); 
+Out.println(＜／html＞); 
+Out.close(); 
+} 
+Public void doPost(HttpServletRequest req,HttpServletResponse 
+res) 
+Throws ServletException,IOException{ 
+Res.setContentType(“text／html”); 
+PrintWriter out=res.getWriter(); 
+Out.println(“＜html＞”); 
+Out.println(“＜body＞”); 
+Out.println(“doPost Hello World”); 
+Out.println(“＜／body＞”); 
+} 
+} 
+A:一个HTML页面，页面上显示doGet Hello World! 
+B:一个HTML页面，页面上显示 doPost Hello World! 
+C:一个空白的HTML页面 
+D:错误信息
+参考答案C
+
+HttpServletRequest接口的( )方法用于创建会话 
+A:getSession() 
+B:getServletContext() 
+C:setSession(); 
+D:putSession();
+参考答案A
+
+给定某servlet 程序的片段，如下： 
+Public void doGet(HttpServletRequest 
+request,Httpservletresponse response) 
+{ 
+_________ 
+} 
+要把session的失效时间设为30分钟，应该在下划线处插入( )
+A:request.getSession().setTimeout(1800); 
+B:request.getSession().setTimeout(30) 
+C:request.getSession().setMaxInactiveInterval(1800); 
+D:request.getSession().setMaxInactiveInterval(30);
+参考答案C
+
+Cookie默认保存在( )目录下 
+A:Tomcat／Webapps／Cookies 
+B:系统目录／program files／Cookies 
+C:系统目录／documents and settings／Cookies 
+D:由写Cookie的程序决定
+参考答案C
+
+在J2EE中，以下关于HttpServlet说法错误的是( ) 
+A:HttpServlet是一个抽象类 
+B:HttpServlet扩展了GenericServlet类 
+C:HttpServlet类的子类必须至少重写service方法 
+D:HttpServlet位于javax.servlet.http包中
+参考答案C
+
+servlet 生命周期由一系列事件组成，把这些事件按照先后顺序排列，以下正确的是( ) 
+A:加载类:实例化:请求处理:初始化:销毁 
+B:加载类:实例化:初始化:请求处理:销毁 
+C:实例化:加载类:初始化:请求处理:销毁 
+D:加载类:初始化:实例化:请求处理:销毁
+参考答案B
+
+在J2EE中，当用户在浏览器中输入http:／／localhost:8080／myWebApp／start／，就会调用pk包中名为student的servlet，在Web.xml中配置正确的是( 
+) 
+A:＜servlet＞ ＜servlet-name＞／start／*＜／servlet-name＞ 
+＜servlet-class＞pk.student＜／servlet-class＞ ＜／servlet＞ 
+B:＜servlet＞ ＜servlet-name＞pk.student＜／servlet-name＞ 
+＜url-pattern＞／start／*＜／url-pattern＞ ＜／servlet＞ 
+C:＜servlet＞ ＜servlet-name＞student＜／servlet-name＞ 
+＜servlet-class＞pk.student＜／servlet-class＞ ＜／servlet＞ 
+＜servlet-mapping＞ ＜servlet-name＞student＜／servlet-name＞ 
+＜url-pattern＞／start／*＜／url-pattern＞ ＜／servlet-mapping＞ 
+D:＜servlet＞ ＜servlet-name＞pk.student＜／servlet-name＞ 
+＜servlet-class＞student＜／servlet-class＞ ＜／servlet＞ 
+＜servlet-mapping＞ ＜servlet-name＞pk.student＜／servlet-name＞ 
+＜url-pattern＞／start／*＜／url-pattern＞ ＜／servlet-mapping＞ 
+参考答案C
+
+给定JSP程序源码如下，该JSP运行后输出的结果是( ) 
+＜html＞ 
+＜% int Count=1;%＞ 
+Count:＜%=++Count %＞ 
+＜／html＞ 
+A:Count:1 
+B:Count:2 
+C:1:2 
+D:Count:
+参考答案B
+
+在JSP中，page指令的( )属性来引入需要的包或类 
+A:extends 
+B:import 
+C:language 
+D:contentType
+参考答案B
+
+在J2EE中，＜%=”2”+4 %＞将输出( ) 
+A:2+4 
+B:6 
+C:24 
+D:不会输出，因为表达式是错误的
+参考答案B
+
+JSP是一种Java服务器端技术，其实质是一个Servlet。与Servlet的生命周期相同，JSP也有生命周期。在JSP的生命周期中，JSP引擎调用一系列的方法执行JSP，其中不包括( 
+) 
+A:jspInit 
+B:jspActivate 
+C:jspService 
+D:jspDestroy
+参考答案B
+
+下面这一段JSP代码片断的输出结果是( ) 
+＜%! int i=1;%＞ 
+＜%!int getNumber(){ 
+return i; 
+} 
+%＞ 
+＜% int i=10; 
+out.println(“first i=”+i); 
+%＞ 
+＜% out.println(“second i=”+i); %＞ 
+＜% out.println(“third i=”+getNumber()) ; %＞ 
+A:first 1=10 second i=1 third i=1 
+B:first i=10 second i=10 third i=1 
+C:first 1=10 second i=1 third i=10 
+D:first 1=1 second i=1 third i=1
+参考答案B
+
+在J2EE中，test.jsp文件如下。试图运行时，将发生( ) 
+＜html＞ 
+＜% String str=null ;%＞ 
+str is ＜% =”str”%＞ 
+＜／html＞ 
+A:转译期错误 
+B:编译期错误 
+C:运行后，浏览器上显示：str is null 
+D:运行后，浏览器上显示：str is str
+参考答案B
+
+在J2EE中，以下不是JSP隐式对象的是( ) 
+A:pageContect 
+B:context 
+C:application 
+D:out
+参考答案B
+
+如果不希望JSP网页支持Session，应该( ) 
+A:调用HttpSession的invalidate()方法 
+B:＜%@ page session= "false"＞ 
+C:在jsp页面中写入如下代码HttpSession session=request.getSession(false); 
+D:调用HttpSession的setMaxInactiveInterval()，将时间设置为0
+参考答案B
+
+在JSP中，( )动作用于将请求转发给其它JSP页面 
+A:forward 
+B:include 
+C:useBean 
+D:setProperty
+参考答案A
+
+在J2EE中，test.jsp文件中有如下一行代码： 
+＜jsp:useBean id=”user” scope=”_” type=”com.UserBean” ／＞ 
+要使user对象一直存在于会话中，直至其终止或被删除为止，下划线中应填入( ) 
+A:page 
+B:request 
+C:session 
+D:application
+参考答案C
+
+在JSP中，使用＜jsp:useBean＞动作可以将javaBean嵌入JSP页面，对JavaBean的访问范围不能是( ) 
+A:page 
+B:request 
+C:response 
+D:application
+参考答案C
+
+给定一个JSP程序源代码，如下： 
+＜jsp:include page=“two.jsp” flush=“true”＞ 
+＜jsp:param name=“location” value=“beijing” ／＞ 
+＜／jsp:include＞ 
+在two.jsp中加入( )代码片段可以输出参数location的值 
+A:＜jsp:getParam name=“location”＞ 
+B:＜jsp:getParameter name=“location”＞ 
+C:＜%=request.getAttribute(“location”) %＞ 
+D:＜%=request.getParameter(“location”) %＞
+参考答案D
+
+在J2EE中，在JSP中想要使用user包中的User类，并存于page范围内，则以下写法正确的是( ) 
+A:＜jsp:useBean id=“user” class=”user.User” ＞ 
+B:＜jsp:usreBean class=“user.User.class”＞ 
+C:＜jsp:useBean name=“user” class=“user.User”＞ 
+D:＜jsp:us eBean id=“user” class=“user.User” 
+scope=“pageContext” ＞
+参考答案A
+
+( )对象可以处理JSP页面中运行的错误或异常 
+A:pageContext 
+B:page 
+C:session 
+D:exception
+参考答案D
+
+下面的哪个动作用于实现请求转发( ) 
+A:setProperty 
+B:include 
+C:forward 
+D:useBean
+参考答案C
+
+下面对于include动作说法正确的是( ) 
+A:include动作是静态包含 
+B:include动作是动态包含 
+C:用于加入头文件 
+D:以上说法都不正确
+参考答案B
+
+在Model1体系结构中负责处理请求的组件是( ) 
+A:XML 
+B:HTML 
+C:JSP 
+D:DHTML
+参考答案C
+
+J2EE中，JSP EL表达式：${(10*10) ne 100}的值是（ ） 
+A:0 
+B:True 
+C:False 
+D:1
+参考答案C
+
+在J2EE实现企业级应用开发中，（ ）是描述标签库的XML文档 
+A:TLD文件 
+B:DTD文件 
+C:WAR文件 
+D:EAR文件
+参考答案A
+
+在JSTL的迭代标签＜forEach＞的属性中，用于指定要遍历的对象集合的是（ ） 
+A:var 
+B:items 
+C:value 
+D:varStatus
+参考答案B
+
+JSP 
+标准标签库（JSTL）包含用于编写和开发JSP页面的一组标准标签，按照标签的功能不同，将标签划分为_____和_____两 
+个标签库（ ） 
+a.通用标签库 b. 条件标签库 c. 核心标签库 d. SQL标签库 
+A:ad 
+B:bc 
+C:ac 
+D:bd
+参考答案A
+
+在J2EE中，若要在JSP正确使用标签：＜x:getKing／＞，在jsp中声明的taglib指令为：＜%@ taglib 
+uri=”／WEB-INF／myTags.tld” prefix=”_____”%＞，下划线处应该是（ ） 
+A:x 
+B:getKing 
+C:myTags 
+D:king
+参考答案A
+
+给定一个自定义标签程序的代码片断如下： 
+public int doStartTage() throws JspTagException{ 
+pageContext.getAttribute(“A”); ／／第二行 
+return EVAL_BODY_INCLUDE; 
+} 
+假定第二行返回的对象引用不是null，那么这个对象存储在（ ）范围中 
+A:page 
+B:session 
+C:request 
+D:application
+参考答案A
+
+下列选项中( )可以准确的获取请求页面上文本框的输入值 
+A:request.getParameter(name) 
+B:request.getParameter(“name”) 
+C:request.getParameterValues(name) 
+D:request.getParameterValues(“name”)
+参考答案B
+
+（ ）对象可以处理JSP页面中运行的错误和异常 
+A:pageContent 
+B:Page 
+C:Session 
+D:exception
+参考答案D
+
+（ ）是一种可以在一个或者多个应用程序中重复使用的组件 
+A:JSP页面 
+B:Servlet 
+C:JavaBean 
+D:JSP标准动作
+参考答案C
+
+useBean标准动作在创建Bean时默认的范围是（ ） 
+A:session 
+B:page 
+C:application 
+D:request
+参考答案B
+
+Model1实现MVC设计模式，其中的模型由（ ）来充当 
+A:JSP 
+B:JavaBean 
+C:Servlet 
+D:HTML
+参考答案B
+
+在Model1体系结构中负责处理请求的组件是（ ） 
+A:XML 
+B:HTML 
+C:JSP 
+D:DHTML
+参考答案C
+
+JSP EL表达式的语法为（ ） 
+A:!JSP expression 
+B:@{JSP expression} 
+C:${JSP expression} 
+D:＃{JSP expression}
+参考答案C
+
+（ ）多次计算它的标签体 
+A:迭代标签 
+B:通用标签 
+C:自定义标签 
+D:条件标签
+参考答案A
+
+

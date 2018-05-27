@@ -15,8 +15,10 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
+import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ByteSource;
 import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +45,7 @@ public class UserController {
 	
 	@Autowired
 	@Qualifier(value = "userService")
-	justdj.top.service.UserService UserService;
+	justdj.top.service.UserService userService;
 	
 	@Autowired
 	@Qualifier("courseService")
@@ -61,20 +63,35 @@ public class UserController {
 		return "/login";
 	}
 	
+	/**
+	 *@author  ShanDJ
+	 *@params [model]
+	 *@return  java.lang.String
+	 *@date  18.5.25
+	 *@description 仅作跳转作用
+	 */
 	@RequestMapping(value="/login",method= RequestMethod.GET)
 	public String loginForm(Model model){
 		model.addAttribute("user", new User());
 		return "login";
 	}
 	
+	/**
+	 *@author  ShanDJ
+	 *@params [user, vcode, bindingResult, redirectAttributes, request, model]
+	 *@return  java.lang.String
+	 *@date  18.5.25
+	 *@description 处理登陆逻辑
+	 */
 	@RequestMapping(value="/login",method= RequestMethod.POST)
-	public String login(@Valid User user, @RequestParam(value = "vcode") String vcode, BindingResult bindingResult,
-	                    RedirectAttributes redirectAttributes, HttpServletRequest request,Model model){
+	public String login(@Valid User user, @RequestParam(value = "vcode") String vcode,
+	                    BindingResult bindingResult,
+	                    RedirectAttributes redirectAttributes,
+	                    HttpServletRequest request,Model model){
 		//验证码判断
 		if (!codeIdentify(vcode,redirectAttributes))
 			return "redirect:/login";
 		UsernamePasswordToken token = new UsernamePasswordToken(user.getAccount(), user.getPassword());
-		
 		//七天免登录,注意权限问题，是必须登录还是记住密码即可
 		if (false)
 			token.setRememberMe(true);
@@ -83,7 +100,7 @@ public class UserController {
 		//登录，即身份验证，传输凭证并登录
 		//if语句是为了避免重复登录问题
 		if (subject.isAuthenticated()){
-			User userNow = UserService.selectUserByAccount(user.getAccount());
+			User userNow = userService.selectUserByAccount(user.getAccount());
 			if (subject.hasRole("teacher")){
 				model.addAttribute("courseList",courseService.selectCourseByTeacherId(userNow.getId()));
 			}
@@ -92,18 +109,26 @@ public class UserController {
 			try{
 				subject.login(token);
 				
-				User userNow = UserService.selectUserByAccount(user.getAccount());
-				if (subject.hasRole("teacher")){
-					model.addAttribute("courseList",courseService.selectCourseByTeacherId(userNow.getId()));
-				}
-				
+				User userNow = userService.selectUserByAccount(user.getAccount());
 				logger.warn("用户 "+ userNow.getAccount()+" 已登录！");
 				
 				//判断是否是从其他页跳转过来的
 				String temp = getForwardUrl(request);
 				if (temp != null)
 					return "forward:"+temp;
-				return "userInfo";
+				else{
+					//				这里应该有一段判断跳转到哪里的逻辑
+					if (subject.hasRole("teacher")){
+						model.addAttribute("courseList",courseService.selectCourseByTeacherId(userNow.getId()));
+						return "redirect:/tc?id="+userNow.getId();
+					}else if (subject.hasRole("student")){
+						return "redirect:/st?id="+userNow.getId();
+					}else if (subject.hasRole("manager")){
+						return "redirect:/ma?id=" + userNow.getId();
+					}else {
+						return "redirect:/st?id="+userNow.getId();
+					}
+				}
 			}
 			catch (AuthenticationException e) {
 				//认证异常
@@ -114,8 +139,17 @@ public class UserController {
 		}
 	}
 	
+	
+	/**
+	 *@author  ShanDJ
+	 *@params [redirectAttributes]
+	 *@return  java.lang.String
+	 *@date  18.5.25
+	 *@description 用户登出处理
+	 */
 	@RequestMapping(value="/logout",method= RequestMethod.GET)
 	public String logout(RedirectAttributes redirectAttributes ){
+		
 		Subject subject = SecurityUtils.getSubject();
 		if (subject.isAuthenticated() || subject.isRemembered()) {
 			//	这里会将记住密码功能保存的也给删除掉
@@ -126,13 +160,29 @@ public class UserController {
 		return "redirect:/login";
 	}
 	
+	/**
+	 *@author  ShanDJ
+	 *@params []
+	 *@return  java.lang.String
+	 *@date  18.5.25
+	 *@description 简单错误页面,后期可以删除
+	 */
 	@RequestMapping("/403")
 	public String unauthorizedRole(){
-		return "/shiro/403";
+		
+		return "/403";
 	}
 	
+	/**
+	 *@author  ShanDJ
+	 *@params []
+	 *@return  java.lang.String
+	 *@date  18.5.25
+	 *@description 实现记住我功能 后期可以删除
+	 */
 	@RequestMapping(value = "/remberme")
 	@ResponseBody
+	@Deprecated
 	public String testRemberMe(){
 		Subject subject = SecurityUtils.getSubject();
 		String info = "";
@@ -141,14 +191,16 @@ public class UserController {
 	}
 	
 	/**
-	 * 获取验证码（Gif版本）
-	 * @param response
+	 *@author  ShanDJ
+	 *@params [a, response, request, httpSession]
+	 *@return  void
+	 *@date  18.5.25
+	 *@description 提供验证码的接口
 	 */
 	@RequestMapping(value="/getGifCode",method= RequestMethod.GET)
 	public void getGifCode(@RequestParam(required = false,name = "a") String a, HttpServletResponse response,
 	                       HttpServletRequest request,
-	                       HttpSession httpSession)throws
-			Exception{
+	                       HttpSession httpSession)throws Exception{
 		
 		response.setHeader("Pragma", "No-cache");
 		response.setHeader("Cache-Control", "no-cache");
@@ -169,6 +221,40 @@ public class UserController {
 		
 	}
 	
+	/**
+	 *@author  ShanDJ
+	 *@params []
+	 *@return  java.lang.String
+	 *@date  18.5.25
+	 *@description 用户注册接口 具体参数还没写
+	 */
+	@RequestMapping(value = "/register")
+	@ResponseBody
+	public String addUser(){
+		
+		User user = new User();
+		user.setAccount("123456");
+		user.setPassword("123456");
+		user.setName("大鹏");
+		user.setEmail("2269090020@qq.com");
+		user.setSex('男');
+		String salt = secureRandomNumberGenerator.nextBytes().toHex();
+		//加密两次 盐为用户名+随机数
+		String cryptedPwd = new SimpleHash("MD5",user.getPassword() , ByteSource.Util.bytes(salt),2).toHex();
+		user.setPassword(cryptedPwd);
+		user.setSalt(salt);
+		int result = userService.insertUser(user);
+		logger.warn("新用户"+ user.getAccount()+ "注册成功！");
+		return user.getId()+"";
+	}
+	
+	/**
+	 *@author  ShanDJ
+	 *@params [vcode, redirectAttributes]
+	 *@return  boolean
+	 *@date  18.5.25
+	 *@description 具体处理验证码方面的逻辑
+	 */
 	private boolean codeIdentify(String vcode,RedirectAttributes redirectAttributes){
 		//首先判断验证码是否为空
 		if(vcode==null||vcode==""){
@@ -193,6 +279,13 @@ public class UserController {
 		}
 	}
 	
+	/**
+	 *@author  ShanDJ
+	 *@params [request]
+	 *@return  java.lang.String
+	 *@date  18.5.25
+	 *@description 查找用户是否从其他页面跳转过来,处理相关逻辑
+	 */
 	private String getForwardUrl(HttpServletRequest request){
 		
 		//	返回跳转前界面 暂时没没有bug啦

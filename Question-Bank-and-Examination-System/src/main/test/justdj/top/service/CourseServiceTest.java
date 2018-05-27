@@ -43,6 +43,15 @@ public class CourseServiceTest {
 	}
 	
 	@Test
+	public void selectCourseByStudentId() throws Exception {
+		List<Course> courseList = courseService.selectCourseByStudentId(BigInteger.valueOf(1));
+		assertNotNull(courseList);
+		assertNotEquals(0,courseList.size());
+		assertEquals(2,courseList.size());
+		System.err.println("\n selectCourseByTeacherId() \n"+JSON.toJSONString(courseList) + "\n");
+	}
+	
+	@Test
 	public void selectCourseByCourseId() throws Exception {
 		Course course = courseService.selectCourseByCourseId(BigInteger.valueOf(1));
 		assertNotNull(course);

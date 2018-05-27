@@ -31,6 +31,11 @@ public class CourseServiceImpl implements CourseService{
 	}
 	
 	@Override
+	public List <Course> selectCourseByStudentId(BigInteger studentId) {
+		return courseMapper.selectCourseByStudentId(studentId);
+	}
+	
+	@Override
 	public Course selectCourseByCourseId(BigInteger courseId) {
 		return courseMapper.selectCourseByCourseId(courseId);
 	}
