@@ -51,6 +51,7 @@ public class KindHelper {
 	}
 	
 	public static void setKindService(KindService kindService) {
-		KindHelper.kindService = kindService;
+		if (null == kindService)
+			KindHelper.kindService = kindService;
 	}
 }

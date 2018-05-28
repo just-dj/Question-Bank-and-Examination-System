@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigInteger;
@@ -50,8 +51,21 @@ public class TeacherController {
 		model.addAttribute("courseList",courseList);
 	}
 	
+	/**
+	 *@author  ShanDJ
+	 *@params [studentId, model]
+	 *@return  void
+	 *@date  18.5.27
+	 *@description 老师个人中心
+	 */
+	@RequestMapping(value = "/te/info",method = RequestMethod.GET)
+	public void teacherInfo(@RequestParam(value = "id",required = true) BigInteger teacherId,
+	                        Model model){
+		User user = userService.selectUserById(teacherId);
+		
+		model.addAttribute("user",user);
+		
+	}
 	
-	@RequestMapping("/te/info")
-	
-	
+//	修改密码接口
 }
