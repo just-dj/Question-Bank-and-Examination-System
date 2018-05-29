@@ -39,8 +39,6 @@ public class KindHelper {
 	}
 	
 	public static List <String> getKindNameList() {
-		if (null == kindService)
-			System.err.println("\n" +"1111111111"+ "\n");
 		if (null == kindNameList)
 			kindNameList = kindService.selectAllKindName();
 		return kindNameList;
@@ -51,7 +49,7 @@ public class KindHelper {
 	}
 	
 	public static void setKindService(KindService kindService) {
-		if (null == kindService)
+		if (null == KindHelper.kindService)
 			KindHelper.kindService = kindService;
 	}
 }
