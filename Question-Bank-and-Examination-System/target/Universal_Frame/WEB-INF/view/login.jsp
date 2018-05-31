@@ -1,56 +1,45 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: 霜
-  Date: 18.4.21
-  Time: 23:33
---%>
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-    <title>请登录</title>
-    <link rel="stylesheet" href="/static/lib/bootstrap-3.3.7-dist/css/bootstrap.css" >
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>login</title>
+<link href="../static/css/login.css" rel="stylesheet">
 </head>
-
 <body>
-
-<div class="container">
-    <div class="row">
-        <div class="col-md-4">
-            <h3>登录页面----${message }</h3>
-            <img alt="" src="/static/img/1.jpg">
-            <form:form action="/login" modelAttribute="user" method="post">
-                <div class="form-group">
-                    <label for="exampleInputEmail1">账号</label>
-                    <form:input path="account"  class="form-control" id="exampleInputEmail1" placeholder="Account"/>
-                </div>
-                <div class="form-group">
-                    <label for="exampleInputPassword1">密码</label>
-                    <form:password path="password" class="form-control" id="exampleInputPassword1" placeholder="Password"/>
-                </div>
-                <div class="form-group">
-                    <label for="exampleInputPassword1">验证码</label>
-                    <input type="text" name="vcode" id="vcode" class="form-control" id="exampleInputEmail1"
-                           placeholder="identity"/>
-                </div>
-                <div class="form-group">
-                    <img id="image" alt="验证码" src="/getGifCode">
-                    <a class="btn btn-default" onclick="changeImage()" style="cursor:pointer">看不清</a>
-                </div>
-                <button type="submit" class="btn btn-default">Submit</button>
-            </form:form>
-        </div>
-    </div>
+<div class="body_box">
+	<div class="login_box">
+		<div class="login_box_bar">
+			<span>登录</span>
+		</div>
+		
+		<div class="login_box_body">
+			<form id="form_login" name="form_login" action="/login" method="post">
+				<input type="text" name="account" placeholder="请输入账号" /><br>
+				<input type="password" name="pwd" placeholder="请输入密码" /><br>
+				<div class="identify_box">
+					<div>
+						<input id="identify" type="text" name="identifyNum" placeholder="请输入验证码"/>
+						<img src="/getGifCode"><br>
+					</div>
+				</div>
+				<div class="pwd_box">
+					<div>
+						<input id="checkbox" type="checkbox" name="checkbox1" value="记住密码" />
+						<span>记住密码</span>
+					</div>
+				</div>
+				<div class="btn_box">
+						<input class="login_box_btn" type="submit" value="登录">
+				</div>
+			</form>
+		</div>
+		
+		<div class="login_box_footer">
+			<a href="/register">还没有账号？马上注册>></a>
+		</div>
+	</div>
 </div>
-
-<script>
-    function changeImage(){
-        console.log("刷新验证码")
-        var obj = document.getElementById("image");
-        obj.src = "/getGifCode?a="+Math.random();
-    }
-</script>
 </body>
-
 </html>

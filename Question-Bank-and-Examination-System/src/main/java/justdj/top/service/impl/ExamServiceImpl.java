@@ -28,6 +28,16 @@ public class ExamServiceImpl implements ExamService {
 	}
 	
 	@Override
+	public List <Exam> selectStudentExamByCourseId(BigInteger courseId) {
+		return examMapper.selectStudentExamByCourseId(courseId);
+	}
+	
+	@Override
+	public List <BigInteger> selectClassListByExamId(BigInteger examId) {
+		return examMapper.selectClassListByExamId(examId);
+	}
+	
+	@Override
 	public Exam selectExamByExamId(BigInteger examId) {
 		return examMapper.selectExamByExamId(examId);
 	}

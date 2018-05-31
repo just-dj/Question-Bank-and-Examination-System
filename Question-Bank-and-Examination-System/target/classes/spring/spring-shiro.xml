@@ -42,7 +42,8 @@
 		<!-- 权限配置 -->
 		<property name="filterChainDefinitions">
 			<value>
-				
+				/login=anon
+				/register=anon
 				<!-- anon表示此地址不需要任何权限即可访问 -->
 				/st/*=anon
 				/images/*=anon

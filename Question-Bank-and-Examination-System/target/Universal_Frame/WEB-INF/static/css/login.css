@@ -1,0 +1,115 @@
+@charset "UTF-8";
+
+.body_box {
+	width: 100%;
+	height: 900px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.login_box {
+}
+
+.login_box_bar {
+	width: 443px;
+	height: 39px;
+	color: #FFFFFF;
+	background-color: rgba(91,192,222,1);
+	border-radius: 5px;
+	text-align: center;
+	line-height: 40px;
+	font-size: 20px;
+}
+
+.login_box_body {
+	width: 443px;
+	height: 280px;
+	text-align: center;
+}
+
+.login_box_body input {
+	width: 190px;
+	height: 27px;
+	text-indent: 10px;
+	border: 1px solid #CCCCCC;
+	border-radius: 5px;
+	margin-top: 20px;
+}
+
+.identify_box {
+	wdith: 443px;
+	height: 31px;
+	margin-top: 20px;
+	display: flex;
+	justify-content:center;  /* 内容水平居中 */ 
+	align-items:center; /* 内容垂直居中 */ 
+}
+
+.identify_box img{
+	float: left;
+	margin-left: 10px;
+}
+
+#identify {
+	margin-top: 0px;
+	float: left;
+	width: 116px;
+	height: 27px;
+}
+
+#checkbox {
+	height: 13px;
+	width: 13px;
+}
+
+.pwd_box a {
+	text-decoration: none;
+	margin-left: 50px;
+}
+
+.pwd_box a:hover {
+	color: #e50;
+	text-decoration: underline;
+}
+
+.btn_box {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.login_box_btn {
+	margin-top: 20px;
+	width: 190px;
+	height: 27px;
+	border: 1px solid #CCCCCC;
+	background-color: rgba(91,192,222,1);
+	color: #FFFFFF;
+	text-align: center;
+	line-height: 27px;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+
+
+
+
+.login_box_footer {
+	width: 443px;
+	height: 39px;
+	background-color: rgba(91,192,222,1);
+	border-radius: 5px;
+	text-align: center;
+	line-height: 40px;
+}
+
+.login_box_footer a{
+	text-decoration: none;
+}
+
+.login_box_footer a:hover {
+	color: #E50;
+	text-decoration: underline;
+}

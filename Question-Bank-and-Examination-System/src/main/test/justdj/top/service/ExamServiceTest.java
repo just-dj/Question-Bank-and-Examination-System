@@ -34,6 +34,14 @@ public class ExamServiceTest {
 	}
 	
 	@Test
+	public void selectStudentExamByCourseId() throws Exception{
+		List<Exam> list = examService.selectStudentExamByCourseId(BigInteger.valueOf(1));
+		assertNotNull(list);
+		assertNotEquals(0,list.size());
+		System.err.println("\n selectStudentExamByCourseId() \n"+ JSON.toJSONString(list) + "\n");
+	}
+	
+	@Test
 	public void selectExamByExamId() throws Exception {
 		Exam exam = examService.selectExamByExamId(BigInteger.valueOf(1));
 		assertNotNull(exam);

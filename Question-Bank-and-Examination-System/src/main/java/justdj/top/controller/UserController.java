@@ -84,10 +84,19 @@ public class UserController {
 	 *@description 处理登陆逻辑
 	 */
 	@RequestMapping(value="/login",method= RequestMethod.POST)
-	public String login(@Valid User user, @RequestParam(value = "vcode") String vcode,
+	public String login(@RequestParam(value = "account")String account,
+			@RequestParam(value = "pwd")String password,
+			@RequestParam(value = "identifyNum") String vcode,
+	        @RequestParam(value = "checkbox1",required = true)String[] remberMe,
 	                    BindingResult bindingResult,
 	                    RedirectAttributes redirectAttributes,
 	                    HttpServletRequest request,Model model){
+		User user= new User();
+		user.setAccount(account);
+		user.setPassword(password);
+		Boolean rember = false;
+		if (null != remberMe[0] && remberMe[0].equals("记住密码"))
+			rember = true;
 		//验证码判断
 		if (!codeIdentify(vcode,redirectAttributes))
 			return "redirect:/login";
@@ -210,7 +219,7 @@ public class UserController {
 		 * gif格式动画验证码
 		 * 宽，高，位数。
 		 */
-		Captcha captcha = new GifCaptcha(146,33,4);
+		Captcha captcha = new GifCaptcha(64,27,3);
 		//输出
 		captcha.out(response.getOutputStream());
 		HttpSession session = request.getSession(true);
@@ -221,6 +230,11 @@ public class UserController {
 		
 	}
 	
+	@RequestMapping(value = "/register",method = RequestMethod.GET)
+	public String register(){
+		return "register";
+	}
+	
 	/**
 	 *@author  ShanDJ
 	 *@params []
@@ -228,7 +242,7 @@ public class UserController {
 	 *@date  18.5.25
 	 *@description 用户注册接口 具体参数还没写
 	 */
-	@RequestMapping(value = "/register")
+	@RequestMapping(value = "/register",method = RequestMethod.POST)
 	@ResponseBody
 	public String addUser(){
 		

@@ -45,4 +45,11 @@ public class UserServiceTest {
 		assertEquals(BigInteger.valueOf(25),user.getId());
 	}
 	
+	
+	@Test
+	public void selectClassByStudentIdAndCourseId(){
+		BigInteger a = userService.selectClassByStudentIdAndCourseId(BigInteger.valueOf(1)
+				,BigInteger.valueOf(1));
+		System.out.println(a);
+	}
 }

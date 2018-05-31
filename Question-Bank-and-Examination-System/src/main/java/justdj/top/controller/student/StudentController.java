@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +57,7 @@ public class StudentController {
 	 *@params [courseId, model]
 	 *@return  java.lang.String
 	 *@date  18.5.25
-	 *@description 获得学生所学课程 难点？学生 课程
+	 *@description 学生主页 获得学生所学课程 难点？学生 课程
 	 */
 	@RequestMapping("/st")
 	public void selectCourseByStudentId(@RequestParam(value = "id",required = true) BigInteger studentId,
@@ -73,7 +74,7 @@ public class StudentController {
 	 *@params [studentId, model]
 	 *@return  void
 	 *@date  18.5.26
-	 *@description 获取学生个人信息
+	 *@description 学生个人中心 获取学生个人信息
 	 */
 	@RequestMapping(value = "/st/info",method = RequestMethod.GET)
 	public void getStudentInfoByStudentId(@RequestParam(value = "id",required = true) BigInteger studentId,
@@ -94,7 +95,7 @@ public class StudentController {
 	 *@params [courseId, model]
 	 *@return  void
 	 *@date  18.5.26
-	 *@description 学生获得课程知识点列表 以及考试列表的接口
+	 *@description 课程详情 学生获得课程知识点列表 以及考试列表的接口
 	 */
 	@RequestMapping("/st/course")
 	public  void selectCourseInfoByCourseId(@RequestParam(value = "id",required = true) BigInteger courseId,
@@ -112,15 +113,27 @@ public class StudentController {
 	 *@params [courseId, model]
 	 *@return  void
 	 *@date  18.5.26
-	 *@description 获得课程考试信息
+	 *@description 课程详情 可以考虑和上面的合并 获得课程考试信息 需要完善
 	 */
-	@RequestMapping("/st/course/examInfo")
+	@RequestMapping(value = "/st/course/examInfo",method = RequestMethod.GET
+	)
 	public void selectExamByCourseId(@RequestParam("id")BigInteger courseId,
 	                                 Model model){
+		BigInteger studentId = BigInteger.valueOf(1);
 		//注意这里获得课程考试信息 不是学生考试信息
-		List<Exam> examList = examService.selectExamByCourseId(courseId);
-		
-		model.addAttribute("examList",examList);
+		List<Exam> examList = examService.selectStudentExamByCourseId(courseId);
+		List<Exam> newExamList = new ArrayList <>();
+		BigInteger classId = userService.selectClassByStudentIdAndCourseId(studentId,courseId);
+		if (null != examList){
+			for (int i = 0; i < examList.size(); i++) {
+				if (null != examList.get(i).getClassList()){
+					if (examList.get(i).getClassList().contains(classId)){
+						newExamList.add(examList.get(i));
+					}
+				}
+			}
+		}
+		model.addAttribute("examList",newExamList);
 	}
 	
 	
@@ -129,7 +142,7 @@ public class StudentController {
 	 *@params [examId, model]
 	 *@return  void
 	 *@date  18.5.26
-	 *@description 学生开始考试
+	 *@description 开始考试界面 学生开始考试
 	 */
 	@RequestMapping(value = "/st/course/exam",method = RequestMethod.GET)
 	public String startExam(@RequestParam("id") BigInteger examId,
@@ -166,7 +179,7 @@ public class StudentController {
 	 *@params [request]
 	 *@return  java.lang.String
 	 *@date  18.5.27
-	 *@description 这是个学生提交答案的接口 具体逻辑还没实现
+	 *@description 开始考试提交 这是个学生提交答案的接口 具体逻辑还没实现
 	 */
 	@RequestMapping(value = "/st/course/exam",method = RequestMethod.POST)
 	@ResponseBody
@@ -182,7 +195,7 @@ public class StudentController {
 	 *@params [kindName]
 	 *@return  java.lang.String
 	 *@date  18.5.27
-	 *@description 按题目类型名获取试卷对应的题目
+	 *@description 开始考试 按题目类型名获取试卷对应的题目
 	 */
 	@RequestMapping("/st/course/exam/question")
 	@ResponseBody
@@ -201,7 +214,7 @@ public class StudentController {
 	 *@params [examId, model]
 	 *@return  void
 	 *@date  18.5.26
-	 *@description 获取学生答卷信息 包括题型 题目
+	 *@description 查看考试 获取学生答卷信息 包括题型 题目
 	 */
 	@RequestMapping("/st/course/exam/answer")
 	public void selectAnswerByExamIdAndStudentId(@RequestParam("id")BigInteger examId,

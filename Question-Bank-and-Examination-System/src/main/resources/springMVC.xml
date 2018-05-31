@@ -32,11 +32,7 @@
 			
 			
 			<bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter" >
-				<property name="fastJsonConfig">
-					<list>
-						<value></value>
-					</list>
-				</property>
+
 				<property name="supportedMediaTypes">
 					<list>
 						<value>text/html;charset=UTF-8</value>

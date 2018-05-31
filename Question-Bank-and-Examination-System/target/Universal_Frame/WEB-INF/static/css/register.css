@@ -1,0 +1,93 @@
+@charset "UTF-8";
+
+.body_box {
+	width: 100%;
+	margin-top: 40px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+}
+
+.register_box {
+
+}
+
+.register_box_bar {
+	width: 406px;
+	height: 42px;
+	background-color: rgba(91,192,222,1);
+	text-align: center;
+	line-height: 40px;
+	color: #FFFFFF;
+	font-size: 20px;
+}
+
+.register_box_body {
+	width: 406px;
+	height: 460px;
+	text-align: center;
+	
+}
+
+.register_box_body input {
+	width: 174px;
+	height: 27px;
+	border-radius: 5px;
+	border: 1px solid #CCCCCC;
+	margin-top: 20px;
+	text-indent: 10px;
+}
+
+.identify_box {
+	margin-top: 20px;
+	width: 406px;
+	height: 31px;
+	display:flex; 
+	justify-content:center;  /* 内容水平居中 */ 
+	align-items:center; /* 内容垂直居中 */ 
+}
+
+#identify {
+	width: 98px;
+	height: 27px;
+	margin-top: 0px;
+	float: left;
+}
+
+.register_box_body_btn {
+	float: left;
+	width: 64px;
+	height: 31px;
+	text-align: center;
+	color: #FFFFFF;
+	line-height: 31px;
+	font-size: 14px;
+	background-color: rgba(91,192,222,1);
+	border-radius: 5px;
+	margin-left: 10px;
+}
+
+#submit {
+	margin-top: 40px;
+	cursor: pointer;
+	text-indent: 0px;
+}
+
+.register_box_footer {
+	width: 406px;
+	height: 42px;
+	background-color: rgba(91,192,222,1);
+	text-align: center;
+	line-height: 40px;
+	font-size: 14px;
+}
+
+.register_box_footer a {
+	text-decoration: none;
+}
+
+.register_box_footer a:hover {
+	color: #E50;
+	text-decoration: underline;
+}

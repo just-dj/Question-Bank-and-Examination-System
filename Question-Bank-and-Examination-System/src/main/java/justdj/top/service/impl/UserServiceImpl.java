@@ -46,4 +46,9 @@ public class UserServiceImpl implements UserService {
 	public Integer insertUser(User user) {
 		return userMapper.insertUser(user);
 	}
+	
+	@Override
+	public BigInteger selectClassByStudentIdAndCourseId(BigInteger studentId, BigInteger courseId) {
+		return userMapper.selectClassByStudentIdAndCourseId(studentId,courseId);
+	}
 }

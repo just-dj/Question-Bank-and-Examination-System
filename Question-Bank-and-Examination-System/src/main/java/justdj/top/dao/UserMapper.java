@@ -53,4 +53,11 @@ public interface UserMapper {
 	@Options(useGeneratedKeys = true,keyProperty = "id")
 	Integer insertUser(User user);
 	
+	
+	@Select("select class.id\n" +
+			"from user join class_student  join class join course\n" +
+			"on user.id=class_student.student_id and class_id=class.id and course_id=course.id\n" +
+			"where user.id=#{studentId} and course.id=#{courseId};")
+	BigInteger selectClassByStudentIdAndCourseId(@Param("studentId") BigInteger studentId,
+	                                          @Param("courseId") BigInteger courseId);
 }

@@ -32,4 +32,6 @@ public class Exam implements Serializable {
 	private Boolean use;
 	
 	private List<TestPaper> testPaperList;
+	
+	private List<BigInteger> classList;
 }

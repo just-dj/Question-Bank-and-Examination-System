@@ -46,8 +46,7 @@
                                     <td>${question.question}</td>
                                     <td>
                                         <div>
-                                            <input type="checkbox" name="${question.id}"
-                                                   value="a"/>A ${question.a}
+                                            <input type="checkbox" name="${question.id}" value="a"/>A ${question.a}
                                             <input type="checkbox" name="${question.id}"
                                                    value="b"/>B ${question.b}
                                             <input type="checkbox" name="${question.id}"

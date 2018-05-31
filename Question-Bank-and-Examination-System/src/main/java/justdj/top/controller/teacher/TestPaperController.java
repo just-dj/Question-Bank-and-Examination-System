@@ -46,7 +46,7 @@ public class TestPaperController {
 	 *@date  18.5.29
 	 *@description 试卷管理 提供所有试卷队列  和相关的题目信息
 	 */
-	@RequestMapping("/te/testPaper")
+	@RequestMapping(value = "/te/testPaper",method = RequestMethod.GET)
 	public void getAllTestPaperByCourseId(@RequestParam(value = "id",required = true)BigInteger courseId,
 	                                      Model model){
 		KindHelper.setKindService(kindService);
