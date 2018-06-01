@@ -60,12 +60,16 @@ public class StudentController {
 	 *@description 学生主页 获得学生所学课程 难点？学生 课程
 	 */
 	@RequestMapping("/st")
-	public void selectCourseByStudentId(@RequestParam(value = "id",required = true) BigInteger studentId,
+	public String selectCourseByStudentId(@RequestParam(value = "id",required = true) BigInteger studentId,
 	                                    Model model){
+		User user = userService.selectUserById(studentId);
 		//通过学生Id获取课程
 		List<Course> courseList = courseService.selectCourseByStudentId(studentId);
 		
+		model.addAttribute(user);
 		model.addAttribute("courseList",courseList);
+		
+		return "userInfo";
 	}
 	
 	

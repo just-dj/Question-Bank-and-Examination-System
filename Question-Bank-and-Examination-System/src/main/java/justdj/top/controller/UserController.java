@@ -56,12 +56,6 @@ public class UserController {
 	
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
-	@RequestMapping(value="" +
-			"",method= RequestMethod.GET)
-	public String mainPage(Model model){
-		model.addAttribute("user", new User());
-		return "/login";
-	}
 	
 	/**
 	 *@author  ShanDJ
@@ -73,7 +67,7 @@ public class UserController {
 	@RequestMapping(value="/login",method= RequestMethod.GET)
 	public String loginForm(Model model){
 		model.addAttribute("user", new User());
-		return "login";
+		return "/user/login";
 	}
 	
 	/**
@@ -85,21 +79,23 @@ public class UserController {
 	 */
 	@RequestMapping(value="/login",method= RequestMethod.POST)
 	public String login(@RequestParam(value = "account")String account,
-			@RequestParam(value = "pwd")String password,
+			@RequestParam(value = "password")String password,
 			@RequestParam(value = "identifyNum") String vcode,
-	        @RequestParam(value = "checkbox1",required = true)String[] remberMe,
-	                    BindingResult bindingResult,
-	                    RedirectAttributes redirectAttributes,
-	                    HttpServletRequest request,Model model){
+	        @RequestParam(value = "rember",required = false)String[] remberMe,
+	         RedirectAttributes redirectAttributes,
+	         HttpServletRequest request,
+	         Model model){
+		//验证码判断
+		if (!codeIdentify(vcode,redirectAttributes)){
+			return "redirect:/login";
+		}
+		
 		User user= new User();
 		user.setAccount(account);
 		user.setPassword(password);
 		Boolean rember = false;
-		if (null != remberMe[0] && remberMe[0].equals("记住密码"))
+		if (null != remberMe && remberMe[0].equals("true"))
 			rember = true;
-		//验证码判断
-		if (!codeIdentify(vcode,redirectAttributes))
-			return "redirect:/login";
 		UsernamePasswordToken token = new UsernamePasswordToken(user.getAccount(), user.getPassword());
 		//七天免登录,注意权限问题，是必须登录还是记住密码即可
 		if (false)
@@ -108,44 +104,48 @@ public class UserController {
 		Subject subject = SecurityUtils.getSubject();
 		//登录，即身份验证，传输凭证并登录
 		//if语句是为了避免重复登录问题
+		User userNow = userService.selectUserByAccount(user.getAccount());
+		
 		if (subject.isAuthenticated()){
-			User userNow = userService.selectUserByAccount(user.getAccount());
-			if (subject.hasRole("teacher")){
-				model.addAttribute("courseList",courseService.selectCourseByTeacherId(userNow.getId()));
-			}
-			return "userInfo";
+		
 		}else{
 			try{
 				subject.login(token);
-				
-				User userNow = userService.selectUserByAccount(user.getAccount());
-				logger.warn("用户 "+ userNow.getAccount()+" 已登录！");
-				
-				//判断是否是从其他页跳转过来的
-				String temp = getForwardUrl(request);
-				if (temp != null)
-					return "forward:"+temp;
-				else{
-					//				这里应该有一段判断跳转到哪里的逻辑
-					if (subject.hasRole("teacher")){
-						model.addAttribute("courseList",courseService.selectCourseByTeacherId(userNow.getId()));
-						return "redirect:/tc?id="+userNow.getId();
-					}else if (subject.hasRole("student")){
-						return "redirect:/st?id="+userNow.getId();
-					}else if (subject.hasRole("manager")){
-						return "redirect:/ma?id=" + userNow.getId();
-					}else {
-						return "redirect:/st?id="+userNow.getId();
-					}
-				}
 			}
 			catch (AuthenticationException e) {
-				//认证异常
-				redirectAttributes.addFlashAttribute("message",e.getMessage());
+				if (e.getMessage().length()>10){
+					redirectAttributes.addFlashAttribute("message","账号或密码错误");
+				}else {
+					//认证异常
+					redirectAttributes.addFlashAttribute("message",e.getMessage());
+				}
 				logger.error("用户 "+user.getId()+" 身份认证失败!错误信息 : " + e.getMessage());
 				return "redirect:/login";
 			}
 		}
+		
+		logger.warn("用户 "+ userNow.getAccount()+" 已登录！");
+		
+		
+		//判断是否是从其他页跳转过来的
+		String temp = getForwardUrl(request);
+		if (temp != null)
+			return "forward:"+temp;
+		else{
+			//				这里应该有一段判断跳转到哪里的逻辑
+			if (subject.hasRole("teacher")){
+				model.addAttribute("courseList",courseService.selectCourseByTeacherId(userNow.getId()));
+				return "redirect:/te?id="+userNow.getId();
+			}else if (subject.hasRole("student")){
+				return "redirect:/st?id="+userNow.getId();
+			}else if (subject.hasRole("manager")){
+				return "redirect:/ma?id=" + userNow.getId();
+			}else {
+				return "redirect:/st?id="+userNow.getId();
+			}
+		}
+		
+		
 	}
 	
 	
@@ -232,7 +232,7 @@ public class UserController {
 	
 	@RequestMapping(value = "/register",method = RequestMethod.GET)
 	public String register(){
-		return "register";
+		return "/user/register";
 	}
 	
 	/**

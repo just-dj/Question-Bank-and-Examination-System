@@ -16,6 +16,7 @@ import java.math.BigInteger;
 
 @Data
 public class User implements Serializable{
+	
 	private BigInteger id;
 	
 	private String account;

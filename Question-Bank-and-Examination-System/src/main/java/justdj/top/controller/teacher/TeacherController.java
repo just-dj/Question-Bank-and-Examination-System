@@ -42,13 +42,15 @@ public class TeacherController {
 	 *@description 教师主页
 	 */
 	@RequestMapping("/te")
-	public void teacherMainPage(@RequestParam("id")BigInteger teacherId,
+	public String teacherMainPage(@RequestParam("id")BigInteger teacherId,
 	                            Model model){
 		User user = userService.selectUserById(teacherId);
 		List<Course> courseList = courseService.selectCourseByTeacherId(teacherId);
 		
 		model.addAttribute("user",user);
 		model.addAttribute("courseList",courseList);
+		
+		return "userInfo";
 	}
 	
 	/**

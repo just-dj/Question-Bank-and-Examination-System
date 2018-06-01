@@ -103,13 +103,15 @@ public class MyRealm extends AuthorizingRealm {
 		//查询用户是否存在
 		User user = userService.selectUserByAccount(account) ;
 		if (user != null){
+			if (!user.getUse())
+				throw new AuthenticationException("当前账号不可用！") ;
 			//登录认证info
 			SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(user.getAccount(),user.getPassword
 					(), ByteSource.Util.bytes(user.getSalt()),getName()) ;
 			logger.warn("登录验证执行完成");
 			return authenticationInfo ;
 		}else{
-			return  null ;
+			throw new AuthenticationException("账号或密码错误！") ;
 		}
 	}
 	

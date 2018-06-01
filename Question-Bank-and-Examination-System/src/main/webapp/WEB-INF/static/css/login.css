@@ -2,7 +2,7 @@
 
 .body_box {
 	width: 100%;
-	height: 900px;
+	margin-top: 150px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -24,7 +24,6 @@
 
 .login_box_body {
 	width: 443px;
-	height: 280px;
 	text-align: center;
 }
 
@@ -92,6 +91,14 @@
 	cursor: pointer;
 }
 
+.myCheckbox{
+	margin-top: 20px;
+	width: 190px;
+	height: 27px;
+	display: flex;
+	justify-items: flex-start;
+	align-items: center ;
+}
 
 
 
@@ -99,6 +106,7 @@
 .login_box_footer {
 	width: 443px;
 	height: 39px;
+	margin-top: 20px;
 	background-color: rgba(91,192,222,1);
 	border-radius: 5px;
 	text-align: center;
@@ -112,4 +120,8 @@
 .login_box_footer a:hover {
 	color: #E50;
 	text-decoration: underline;
+}
+
+.temp{
+	margin-top: 0px;
 }
