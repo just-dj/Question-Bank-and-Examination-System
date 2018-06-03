@@ -3,10 +3,8 @@ package justdj.top.dao;
 import justdj.top.pojo.Kind;
 import justdj.top.pojo.Question;
 import justdj.top.pojo.TestPaper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -116,4 +114,17 @@ public interface TestPaperMapper {
 			@Result(column = "answer",property = "answer")
 	})
 	List<Question>selectQuestionByTestPaperIdAndKindId(@Param("paperId") BigInteger paperId, @Param("kindId") BigInteger kindId);
+
+
+
+
+
+	@Insert("insert into test_paper (course_id,name,is_use)" +
+			"values (#{courseId},#{name},#{isUse})")
+	Integer addTestPaper(@RequestParam("courseId") BigInteger courseId,
+	                     @RequestParam("name") String testPaperName,
+	                     @RequestParam("isUse") Boolean isUse);
+	
+	
+	List<Question> selectQuestionByCondition();
 }

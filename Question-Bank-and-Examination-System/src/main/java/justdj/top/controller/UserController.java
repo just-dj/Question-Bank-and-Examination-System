@@ -7,6 +7,7 @@
 
 package justdj.top.controller;
 
+import com.alibaba.fastjson.JSON;
 import justdj.top.pojo.User;
 import justdj.top.service.CourseService;
 import justdj.top.vcode.Captcha;
@@ -24,6 +25,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,6 +36,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.Message;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -53,6 +59,14 @@ public class UserController {
 	
 	@Autowired
 	SecureRandomNumberGenerator secureRandomNumberGenerator;
+	
+	
+	@Autowired
+	@Qualifier("jmsQueueTemplate")
+	private JmsTemplate jmsQueueTemplate;
+	
+	@Autowired
+	private Destination queueDestination;
 	
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
@@ -81,24 +95,25 @@ public class UserController {
 	public String login(@RequestParam(value = "account")String account,
 			@RequestParam(value = "password")String password,
 			@RequestParam(value = "identifyNum") String vcode,
-	        @RequestParam(value = "rember",required = false)String[] remberMe,
+	        @RequestParam(value = "rember",required = false)String[] rememberMe,
 	         RedirectAttributes redirectAttributes,
 	         HttpServletRequest request,
 	         Model model){
+		User user= new User();
+		user.setAccount(account);
+		user.setPassword(password);
+		Boolean remember = false;
+		redirectAttributes.addFlashAttribute("user",user);
 		//验证码判断
 		if (!codeIdentify(vcode,redirectAttributes)){
 			return "redirect:/login";
 		}
 		
-		User user= new User();
-		user.setAccount(account);
-		user.setPassword(password);
-		Boolean rember = false;
-		if (null != remberMe && remberMe[0].equals("true"))
-			rember = true;
+		if (null != rememberMe && rememberMe[0].equals("true"))
+			remember = true;
 		UsernamePasswordToken token = new UsernamePasswordToken(user.getAccount(), user.getPassword());
 		//七天免登录,注意权限问题，是必须登录还是记住密码即可
-		if (false)
+		if (remember)
 			token.setRememberMe(true);
 		//获取当前用户
 		Subject subject = SecurityUtils.getSubject();
@@ -107,13 +122,13 @@ public class UserController {
 		User userNow = userService.selectUserByAccount(user.getAccount());
 		
 		if (subject.isAuthenticated()){
-		
+			//  用户是使用了记住密码
 		}else{
 			try{
 				subject.login(token);
 			}
 			catch (AuthenticationException e) {
-				if (e.getMessage().length()>10){
+				if (e.getMessage().length()>15){
 					redirectAttributes.addFlashAttribute("message","账号或密码错误");
 				}else {
 					//认证异常
@@ -157,7 +172,8 @@ public class UserController {
 	 *@description 用户登出处理
 	 */
 	@RequestMapping(value="/logout",method= RequestMethod.GET)
-	public String logout(RedirectAttributes redirectAttributes ){
+	public String logout(@RequestParam(value = "message",required = false)String message,
+			RedirectAttributes redirectAttributes ){
 		
 		Subject subject = SecurityUtils.getSubject();
 		if (subject.isAuthenticated() || subject.isRemembered()) {
@@ -165,7 +181,11 @@ public class UserController {
 			logger.warn("用户 " + subject.getPrincipal().toString() + " 已安全退出!");
 			subject.logout();
 		}
-		redirectAttributes.addFlashAttribute("message", "您已安全退出");
+		//判断是否是修改密码后跳转过来的
+		if (null == message)
+			redirectAttributes.addFlashAttribute("message", "您已安全退出");
+		else
+			redirectAttributes.addFlashAttribute("message", message);
 		return "redirect:/login";
 	}
 	
@@ -235,6 +255,30 @@ public class UserController {
 		return "/user/register";
 	}
 	
+	@RequestMapping(value = "/sendEmail",method = RequestMethod.POST)
+	public void sendEmail(@RequestParam("email")String email,
+	                      HttpServletRequest request,
+	                      Model model){
+		User user = new User();
+		user.setEmail(email);
+		user.setCode(secureRandomNumberGenerator.nextBytes().toString().substring(0,6));
+		HttpSession session = request.getSession(true);
+		session.setAttribute("code",user.getCode());
+		session.setAttribute("email",email);
+		System.out.println(user.getEmail() + "  "+ user.getCode());
+		
+		jmsQueueTemplate.send(queueDestination, new MessageCreator() {
+			@Override
+			public Message createMessage(javax.jms.Session session) throws JMSException {
+				Message message = session.createObjectMessage(user);
+				return message;
+			}
+		});
+		
+	}
+	
+	
+	
 	/**
 	 *@author  ShanDJ
 	 *@params []
@@ -243,23 +287,48 @@ public class UserController {
 	 *@description 用户注册接口 具体参数还没写
 	 */
 	@RequestMapping(value = "/register",method = RequestMethod.POST)
-	@ResponseBody
-	public String addUser(){
-		
+	public String addUser(@RequestParam("name")String name,
+	                      @RequestParam("account")String account,
+	                      @RequestParam("pwd")String password,
+	                      @RequestParam("pwdCheck")String password1,
+	                      @RequestParam("email")String email,
+	                      @RequestParam("identifyCode")String code,
+	                      RedirectAttributes redirectAttributes,
+	                      HttpSession session,
+	                      Model model){
 		User user = new User();
-		user.setAccount("123456");
-		user.setPassword("123456");
-		user.setName("大鹏");
-		user.setEmail("2269090020@qq.com");
+		user.setAccount(account);
+		user.setPassword(password);
+		user.setName(name);
+		user.setEmail(email);
+		user.setCode(code);
 		user.setSex('男');
+		user.setUse(false);
+		redirectAttributes.addFlashAttribute("user",user);
+		logger.info("注册用户信息："+JSON.toJSONString(user));
+		logger.info("当前用户验证信息"+ session.getAttribute("email").toString()+" "+session.getAttribute("code").toString());
+		if (null == session.getAttribute("email") ||
+				null == session.getAttribute("code") ||
+				!session.getAttribute("code").toString().toLowerCase()
+						.trim().equals(user.getCode().trim().toLowerCase())){
+			redirectAttributes.addFlashAttribute("message","验证码错误！");
+			return "redirect:/register";
+		}
+		User user1 = userService.selectUserByAccount(account);
+		if (null != user1){
+			redirectAttributes.addFlashAttribute("message","账号已存在！");
+			return "redirect:/register";
+		}
 		String salt = secureRandomNumberGenerator.nextBytes().toHex();
 		//加密两次 盐为用户名+随机数
 		String cryptedPwd = new SimpleHash("MD5",user.getPassword() , ByteSource.Util.bytes(salt),2).toHex();
 		user.setPassword(cryptedPwd);
 		user.setSalt(salt);
 		int result = userService.insertUser(user);
-		logger.warn("新用户"+ user.getAccount()+ "注册成功！");
-		return user.getId()+"";
+		logger.warn("新用户"+ user.getAccount()+ "注册成功！待审核。");
+		redirectAttributes.addFlashAttribute("user",null);
+		redirectAttributes.addFlashAttribute("success","注册成功！待管理员审核。");
+		return "redirect:/register";
 	}
 	
 	/**

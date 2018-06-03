@@ -4,10 +4,7 @@ import justdj.top.pojo.Clazz;
 import justdj.top.pojo.Course;
 import justdj.top.pojo.Knowledge;
 import justdj.top.pojo.User;
-import org.apache.ibatis.annotations.Many;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.FetchType;
 
 import java.math.BigInteger;
@@ -69,4 +66,16 @@ public interface CourseMapper {
 			"where student_id = user.id " +
 			"and class_id = #{classId};\n")
 	List<User> selectStudentByClassId(BigInteger classId);
+	
+	@Delete("delete from class where id = #{classId}")
+	Integer deleteClass(BigInteger classId);
+	
+	@Delete("delete from class_student where class_id = #{classId} && student_id = #{studentId}")
+	Integer deleteClassStudent(@Param("classId") BigInteger classId,
+	                           @Param("studentId") BigInteger studentId);
+	
+	@Insert("insert into class_student (class_id,studentId)" +
+			"values (#{classId},#{studentId})")
+	Integer addStudentToClass(@Param("classId") BigInteger classId,
+	                          @Param("studentId") BigInteger studentId);
 }

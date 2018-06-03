@@ -13,6 +13,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -21,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration()//声明为集成测试加载的ApplicationContext应该是WebApplicationContext类型
 //下面的注解告诉测试运行器如何加载和配置WebApplicationContext
 @ContextConfiguration(locations = {"/spring/test_springContext.xml","/spring/test_spring-shiro.xml",
-		"/test_springMVC.xml"})
+		"/test_springMVC.xml","/spring/test_spring-activemq.xml"})
 public class TeacherControllerTest {
 	
 	private MockMvc mockMvc;
@@ -54,4 +55,11 @@ public class TeacherControllerTest {
 				.andDo(print());
 	}
 	
+	
+	@Test
+	public void changePassword()throws Exception{
+		mockMvc.perform(post("/te/changePassword?password=123456"))
+				.andExpect(status().isOk())
+				.andDo(print());
+	}
 }

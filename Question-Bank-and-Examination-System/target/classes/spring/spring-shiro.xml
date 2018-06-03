@@ -45,9 +45,18 @@
 				<!-- anon表示此地址不需要任何权限即可访问 -->
 				/login=anon
 				/register=anon
+				/getGifCode=anon
+				/sendEmail=anon
+				
+				/static/**=anon
+				/favicon.ico=anon
 				<!--需要登录认证-->
 				/logout=authc
 				
+				<!-- roles[manager]表示访问此连接需要用户的角色为manager -->
+				/st/*=roles[student]
+				/te/*=roles[teacher]
+				/ma/*=roles[manager]
 				
 				
 				

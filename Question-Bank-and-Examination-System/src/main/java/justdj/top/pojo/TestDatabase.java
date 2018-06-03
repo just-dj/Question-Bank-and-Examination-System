@@ -19,6 +19,8 @@ public class TestDatabase implements Serializable {
 	
 	private BigInteger courseId;
 	
+	private String introduce;
+	
 	private String name;
 	
 }

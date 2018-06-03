@@ -1,5 +1,9 @@
 @charset "UTF-8";
 
+* a{
+	color: #ffffff;
+}
+
 .body_box {
 	width: 100%;
 	margin-top: 150px;

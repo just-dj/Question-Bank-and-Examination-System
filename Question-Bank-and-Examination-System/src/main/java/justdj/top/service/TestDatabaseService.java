@@ -2,6 +2,7 @@ package justdj.top.service;
 
 import justdj.top.pojo.Question;
 import justdj.top.pojo.TestDatabase;
+import org.apache.ibatis.annotations.Param;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -19,4 +20,8 @@ public interface TestDatabaseService {
 	List<Question> selectTestDatabaseQuestionByKindId(BigInteger testDatabaseId,BigInteger kindId);
 	
 	List<Question> selectTestDatabaseQuestionByTDId(BigInteger testDataBaseId);
+	
+	Integer addTestDatabase(@Param("name") String name,
+	                        @Param("introduce") String introduce,
+	                        @Param("courseId")BigInteger courseId);
 }

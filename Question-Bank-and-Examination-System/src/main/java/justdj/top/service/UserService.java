@@ -21,4 +21,5 @@ public interface UserService {
 	BigInteger selectClassByStudentIdAndCourseId(@Param("studentId") BigInteger studentId,
 	                                          @Param("courseId") BigInteger courseId);
 	
+	Integer changePassword(User user);
 }

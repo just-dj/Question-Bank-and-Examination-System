@@ -79,9 +79,12 @@ public class TestPaperController {
 	 */
 	
 	@RequestMapping(value = "/te/testPaper/new",method = RequestMethod.POST)
-	public void createTestPaper(@RequestParam("name")String testPaperName,
+	public String createTestPaper(@RequestParam("courseId")BigInteger courseId,
+			@RequestParam("name")String testPaperName,
 	                            Model model){
-	 
+	    int result = testPaperService.addTestPaper(courseId,testPaperName,true);
+		
+		return "redirect:/te/testPaper";
 	}
 	
 	
@@ -108,7 +111,7 @@ public class TestPaperController {
 	 *@params [testPaperId, model]
 	 *@return  void
 	 *@date  18.5.29
-	 *@description 导入试题界面 稍微复杂的逻辑任务没有给Dao层
+	 *@description 导入试题界面 复杂的逻辑任务没有给Dao层
 	 * 单纯的获取现有的试卷已有的题目
 	 * 还需要一个筛选题库题目的接口
 	 */

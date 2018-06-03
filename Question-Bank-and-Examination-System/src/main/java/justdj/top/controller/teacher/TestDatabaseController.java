@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -117,6 +118,7 @@ public class TestDatabaseController {
 	 *@return  void
 	 *@date  18.5.29
 	 *@description 导入题目 向题库按题型插入数据 逻辑还没实现
+	 *涉及文件上传 现在还不能写
 	 */
 	@RequestMapping(value = "/te/testDatabase/import",method = RequestMethod.POST)
 	public void importQuestionByFile(@RequestParam(value = "id",required = true)BigInteger testDatabaseId,
@@ -136,10 +138,15 @@ public class TestDatabaseController {
 	 *@description 新建题库 新建一个题库
 	 */
 	@RequestMapping(value = "/te/testDatabase/new",method = RequestMethod.POST)
-	public void newTestDatabase(@RequestParam(value = "name",required = true)String testDatabaseName,
+	public String addTestDatabase(@RequestParam(value = "name",required = true)String testDatabaseName,
 	                            @RequestParam(value = "introduce",required = true)String testDatabaseIntroduce,
+	                            @RequestParam("courseId")BigInteger courseId,
+	                            RedirectAttributes redirectAttributes,
 	                            Model model){
-
+				int result = testDatabaseService.addTestDatabase(testDatabaseName,testDatabaseIntroduce,courseId);
+				
+				redirectAttributes.addAttribute("courseId",courseId);
+				return "redirect:/te/testDatabase";
 	}
 	
 	

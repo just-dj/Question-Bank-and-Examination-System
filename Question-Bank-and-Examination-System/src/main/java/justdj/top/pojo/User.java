@@ -35,4 +35,5 @@ public class User implements Serializable{
 	
 	private Boolean use;
 	
+	private String code;
 }

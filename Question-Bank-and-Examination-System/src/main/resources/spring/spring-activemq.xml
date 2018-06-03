@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:jms="http://www.springframework.org/schema/jms"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://www.springframework.org/schema/jms
+	   http://www.springframework.org/schema/jms/spring-jms.xsd">
+	
+	
+	<!-- 真正可以产生Connection的ConnectionFactory，由对应的 JMS服务厂商提供-->
+	<bean id="targetConnectionFactory" class="org.apache.activemq.spring.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="${activemq.url}"/>
+		<property name="trustedPackages">
+			<list>
+				<value>*</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- Spring用于管理真正的ConnectionFactory的ConnectionFactory -->
+	<bean id="connectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">
+		<!-- 目标ConnectionFactory对应真实的可以产生JMS Connection的ConnectionFactory -->
+		<property name="targetConnectionFactory" ref="targetConnectionFactory"/>
+	</bean>
+	
+	
+	<!--配置生产者-->
+	<!-- Spring提供的JMS工具类，它可以进行消息发送、接收等，设置它为queue模式 -->
+	<bean id="jmsQueueTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<constructor-arg ref="connectionFactory" />
+		<!-- 非pub/sub模型（发布/订阅），即队列模式 -->
+		<property name="pubSubDomain" value="false" />
+		<!-- NON_PERSISTENT非持久化 1 ，PERSISTENT持久化 2 -->
+		<property name="deliveryMode" value="2"/>
+		
+		<property name="sessionTransacted" value="true"/>
+		
+		<!--<property name="sessionAcknowledgeMode" value="4"/>-->
+		
+		<property name="sessionAcknowledgeModeName" value="SESSION_TRANSACTED"/>
+		
+	</bean>
+	
+	<!-- 设置它为Topic模式-->
+	<bean id="jmsTopicTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<!-- 这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象 -->
+		<constructor-arg ref="connectionFactory" />
+		<!-- pub/sub模型（发布/订阅） -->
+		<property name="pubSubDomain" value="true" />
+	</bean>
+	
+	<!--设置队列消息目的地-->
+	<bean id="queueDestination" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg>
+			<!-- 构造参数的值是队列的名字 -->
+			<value>${activemq.queue}</value>
+		</constructor-arg>
+	</bean>
+	
+	
+	<!--设置主题消息目的地-->
+	<bean id="topicDestination" class="org.apache.activemq.command.ActiveMQTopic">
+		<constructor-arg value="${activemq.topic}"/>
+	</bean>
+	
+	
+	 <!--定义Queue监听器 :消息队列监听器-->
+	<jms:listener-container acknowledge="client"  connection-factory="connectionFactory" destination-type="queue" >
+		<!--定义监听器地址和监听器实现bean-->
+		<jms:listener destination="${activemq.queue}" ref="mySessionAwareMessageListener"/>
+	</jms:listener-container>
+	
+	<!-- 定义topic监听器 -->
+		<!--没实现，可以参考上面的实现-->
+	<!--<jms:listener-container destination-type="topic" >-->
+		<!--<jms:listener destination="${activemq.topic}" ref="topicConsumer"/>-->
+	<!--</jms:listener-container>-->
+	
+	
+	
+</beans>

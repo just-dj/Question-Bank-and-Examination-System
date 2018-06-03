@@ -2,10 +2,7 @@ package justdj.top.dao;
 
 import justdj.top.pojo.Question;
 import justdj.top.pojo.TestDatabase;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import javax.persistence.Column;
 import java.math.BigInteger;
@@ -13,11 +10,12 @@ import java.util.List;
 
 public interface TestDatabaseMapper {
 	
-	@Select("select  id,name,course_id from test_database where course_id = #{courseId}" +
+	@Select("select  id,name,introduce,course_id from test_database where course_id = #{courseId}" +
 			" order by id")
 	@Results({
 			@Result(id = true,column = "id",property = "id"),
 			@Result(column ="name" ,property = "name"),
+			@Result(column = "introduce",property = "introduce"),
 			@Result(column = "course_id",property = "courseId")
 	})
 	List<TestDatabase> selectTestDatabaseByCourseId(BigInteger courseId);
@@ -82,6 +80,9 @@ public interface TestDatabaseMapper {
 	})
 	List<Question> selectTestDatabaseQuestionByTDId(BigInteger testDataBaseId);
 	
-	
-	
+	@Insert("insert into test_database (name,introduce,course_id) values" +
+			"(#{name},#{introduce},#{courseId})")
+	Integer addTestDatabase(@Param("name") String name,
+	                        @Param("introduce") String introduce,
+	                        @Param("courseId")BigInteger courseId);
 }

@@ -17,7 +17,7 @@
 		</div>
 		
 		<div class="login_box_body">
-			<form id="form_login" name="form_login" action="/login" method="post">
+			<form id="form_login" name="form_login" action="/login" method="post" onsubmit="return check()">
 				<c:if test="${message != null}">
 					<div class="btn_box">
 						<div class="myCheckbox">
@@ -25,7 +25,7 @@
 						</div>
 					</div>
 				</c:if>
-				<input type="text" name="account" placeholder="请输入账号" /><br>
+				<input type="text" name="account" placeholder="请输入账号" value="${user.account}"/><br>
 				<input type="password" name="password" placeholder="请输入密码" /><br>
 				<div class="identify_box">
 					<div>
@@ -57,6 +57,30 @@
         var obj = document.getElementById("image");
         obj.src = "/getGifCode?a="+Math.random();
     }
+
+    function check() {
+        var condition = true;
+        var account = $("input[name='account']").val();
+        var password = $("input[name='password']").val();
+        var code = $("input[name='identifyNum']").val();
+
+        if (empty(account) ){
+            alert("账号不合法！");
+            condition = false;
+        }else  if(empty(password) || password < 6){
+            alert("密码不合法！");
+            condition = false;
+        }else if (empty(code)){
+            alert("验证码不能为空！");
+            condition = false;
+		}
+        return condition;
+    }
+
+    function empty(a) {
+        return a==null || a=="" || a.trim()=="";
+    }
 </script>
+<script src="/static/lib/jquery/jquery-3.2.1.min.js"></script>
 </body>
 </html>

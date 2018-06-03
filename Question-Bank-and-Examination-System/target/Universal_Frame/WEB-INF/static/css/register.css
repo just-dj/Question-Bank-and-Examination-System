@@ -1,8 +1,11 @@
 @charset "UTF-8";
 
+* a{
+	color: #ffffff;
+}
 .body_box {
 	width: 100%;
-	margin-top: 40px;
+	margin-top: 80px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -25,7 +28,8 @@
 
 .register_box_body {
 	width: 406px;
-	height: 460px;
+	height: 390px;
+	min-height: 390px;
 	text-align: center;
 	
 }
@@ -69,7 +73,7 @@
 }
 
 #submit {
-	margin-top: 40px;
+	margin-top: 20px;
 	cursor: pointer;
 	text-indent: 0px;
 }
@@ -90,4 +94,19 @@
 .register_box_footer a:hover {
 	color: #E50;
 	text-decoration: underline;
+}
+
+.submit{
+	background-color: rgba(91,192,222,1);
+	color: #FFFFFF;
+}
+
+.btn_box{
+	width: 174px;
+	height: 27px;
+	margin: auto;
+	margin-top: 20px;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
 }

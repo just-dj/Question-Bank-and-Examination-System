@@ -54,4 +54,20 @@ public class CourseServiceImpl implements CourseService{
 	public List <User> selectStudentByClassId(BigInteger classId) {
 		return courseMapper.selectStudentByClassId(classId);
 	}
+	
+	
+	@Override
+	public Integer deleteClass(BigInteger classId) {
+		return courseMapper.deleteClass(classId);
+	}
+	
+	@Override
+	public Integer deleteClassStudent(BigInteger classId, BigInteger studentId) {
+		return courseMapper.deleteClassStudent(classId,studentId);
+	}
+	
+	@Override
+	public Integer addStudentToClass(BigInteger classId, BigInteger studentId) {
+		return courseMapper.deleteClassStudent(classId,studentId);
+	}
 }

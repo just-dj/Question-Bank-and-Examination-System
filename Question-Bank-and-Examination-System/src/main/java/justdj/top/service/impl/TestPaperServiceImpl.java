@@ -58,4 +58,9 @@ public class TestPaperServiceImpl implements TestPaperService {
 	public List <Question> selectQuestionByTestPaperIdAndKindId(BigInteger paperId, BigInteger kindId) {
 		return testPaperMapper.selectQuestionByTestPaperIdAndKindId(paperId,kindId);
 	}
+	
+	@Override
+	public Integer addTestPaper(BigInteger courseId, String testPaperName, Boolean isUse) {
+		return testPaperMapper.addTestPaper(courseId,testPaperName,isUse);
+	}
 }

@@ -118,6 +118,6 @@
 	<!--<bean class="org.apache.shiro.authc.credential.DefaultPasswordService "></bean>-->
 	
 	<!--传声随机字符串的工具bean-->
-	<!--<bean class="org.apache.shiro.crypto.SecureRandomNumberGenerator"></bean>-->
+	<bean class="org.apache.shiro.crypto.SecureRandomNumberGenerator"></bean>
 
 </beans>

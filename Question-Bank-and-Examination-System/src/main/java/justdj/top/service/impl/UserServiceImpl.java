@@ -51,4 +51,9 @@ public class UserServiceImpl implements UserService {
 	public BigInteger selectClassByStudentIdAndCourseId(BigInteger studentId, BigInteger courseId) {
 		return userMapper.selectClassByStudentIdAndCourseId(studentId,courseId);
 	}
+	
+	@Override
+	public Integer changePassword(User user) {
+		return userMapper.changePassword(user);
+	}
 }

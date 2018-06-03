@@ -60,4 +60,8 @@ public interface UserMapper {
 			"where user.id=#{studentId} and course.id=#{courseId};")
 	BigInteger selectClassByStudentIdAndCourseId(@Param("studentId") BigInteger studentId,
 	                                          @Param("courseId") BigInteger courseId);
+	
+	@Update("update user set password = #{password} , salt = #{salt}" +
+			"where account = #{account}")
+	Integer changePassword(User user);
 }

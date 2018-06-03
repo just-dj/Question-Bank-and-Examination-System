@@ -104,7 +104,7 @@ public class MyRealm extends AuthorizingRealm {
 		User user = userService.selectUserByAccount(account) ;
 		if (user != null){
 			if (!user.getUse())
-				throw new AuthenticationException("当前账号不可用！") ;
+				throw new AuthenticationException("当前账号待管理员审核！") ;
 			//登录认证info
 			SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(user.getAccount(),user.getPassword
 					(), ByteSource.Util.bytes(user.getSalt()),getName()) ;
