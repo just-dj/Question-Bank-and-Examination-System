@@ -21,7 +21,6 @@ public interface CourseService {
 	
 	List<Clazz> selectClazzByCourseId(BigInteger courseId);
 	
-	@Deprecated
 	List<User> selectStudentByClassId(BigInteger classId);
 	
 	Integer deleteClass(BigInteger classId);

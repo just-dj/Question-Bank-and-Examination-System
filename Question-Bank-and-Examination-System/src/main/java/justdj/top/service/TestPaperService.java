@@ -17,20 +17,26 @@ public interface TestPaperService {
 	
 	List<TestPaper> selectTestPaperByExamId(BigInteger examId);
 	
-	@Deprecated
+
 	List<Question> selectQuestionByTestPaperId(BigInteger paperId);
 	
 	
 	List<Kind> selectQuestionKindByTestPaperId(BigInteger testPaperId);
 	
-	@Deprecated
+
 	List<Question> selectQuestionByTestPaperIdAndKindName(@Param("paperId") BigInteger paperId, @Param("kindName") String kindName);
 	
-	@Deprecated
+
 	List<Question>selectQuestionByTestPaperIdAndKindId(@Param("paperId") BigInteger paperId, @Param("kindId") BigInteger kindId);
 	
 	
 	Integer addTestPaper(@RequestParam("courseId") BigInteger courseId,
 	                     @RequestParam("name") String testPaperName,
 	                     @RequestParam("isUse") Boolean isUse);
+	
+	Integer deleteTestPaperQuestion(@Param("testPaperId") BigInteger testPaperId,
+	                                @Param("questionId") BigInteger questionId);
+	
+	Integer addQuestion(@Param("testPaperId") BigInteger testPaperId,
+	                    @Param("questionId") BigInteger questionId);
 }

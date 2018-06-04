@@ -21,7 +21,8 @@ import static org.junit.Assert.*;
 @RunWith(JUnit4ClassRunner.class)  //此处调用Spring单元测试类
 @WebAppConfiguration()//声明为集成测试加载的ApplicationContext应该是WebApplicationContext类型
 //下面的注解告诉测试运行器如何加载和配置WebApplicationContext
-@ContextConfiguration(locations = {"/spring/test_springContext.xml","/spring/test_spring-shiro.xml"})
+@ContextConfiguration(locations = {"/spring/test_springContext.xml","/spring/test_spring-shiro.xml",
+		"/test_springMVC.xml","/spring/test_spring-activemq.xml"})
 public class TestDatabaseServiceTest {
 	
 	@Autowired
@@ -70,4 +71,13 @@ public class TestDatabaseServiceTest {
 		System.err.println("\n" + JSON.toJSONString(list) + "\n");
 	}
 	
+	
+	@Test
+	public void selectQuestionByCondition() throws Exception{
+		List<Question> list = testDatabaseService.selectQuestionByCondition(BigInteger.valueOf(1),BigInteger.valueOf
+				(1),"");
+		assertNotNull(list);
+		assertNotEquals(0,list.size());
+		System.err.println("\n" +"selectQuestionByCondition()" + "\n" + "\n" + JSON.toJSONString(list) + "\n");
+	}
 }

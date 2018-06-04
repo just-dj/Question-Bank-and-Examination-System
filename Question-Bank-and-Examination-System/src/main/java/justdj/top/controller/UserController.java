@@ -43,6 +43,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.Random;
 
 
 @Controller
@@ -261,7 +262,12 @@ public class UserController {
 	                      Model model){
 		User user = new User();
 		user.setEmail(email);
-		user.setCode(secureRandomNumberGenerator.nextBytes().toString().substring(0,6));
+		Random random = new Random();
+		String result="";
+		for (int i=0;i<6;i++) {
+			result+=random.nextInt(10);
+		}
+		user.setCode(result);
 		HttpSession session = request.getSession(true);
 		session.setAttribute("code",user.getCode());
 		session.setAttribute("email",email);
@@ -307,6 +313,7 @@ public class UserController {
 		redirectAttributes.addFlashAttribute("user",user);
 		logger.info("注册用户信息："+JSON.toJSONString(user));
 		logger.info("当前用户验证信息"+ session.getAttribute("email").toString()+" "+session.getAttribute("code").toString());
+		//防止恶意注册
 		if (null == session.getAttribute("email") ||
 				null == session.getAttribute("code") ||
 				!session.getAttribute("code").toString().toLowerCase()
@@ -314,6 +321,7 @@ public class UserController {
 			redirectAttributes.addFlashAttribute("message","验证码错误！");
 			return "redirect:/register";
 		}
+		user.setEmail(session.getAttribute("email").toString());
 		User user1 = userService.selectUserByAccount(account);
 		if (null != user1){
 			redirectAttributes.addFlashAttribute("message","账号已存在！");

@@ -48,4 +48,9 @@ public class TestDatabaseServiceImpl implements TestDatabaseService {
 	public Integer addTestDatabase(String name, String introduce, BigInteger courseId) {
 		return testDatabaseMapper.addTestDatabase(name,introduce,courseId);
 	}
+	
+	@Override
+	public List <Question> selectQuestionByCondition(BigInteger testDatabaseId, BigInteger kindId, String keyWord) {
+		return testDatabaseMapper.selectQuestionByCondition(testDatabaseId,kindId,keyWord);
+	}
 }

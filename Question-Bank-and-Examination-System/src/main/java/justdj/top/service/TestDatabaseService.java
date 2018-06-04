@@ -12,11 +12,9 @@ public interface TestDatabaseService {
 	List<TestDatabase> selectTestDatabaseByCourseId(BigInteger courseId);
 	
 	//注意这个方法是不安全的，返回了question的所有信息
-	@Deprecated
 	List<Question> selectTestDatabaseQuestionByKindName(BigInteger testDatabaseId, String kindName);
 	
 	//注意这个方法是不安全的，返回了question的所有信息
-	@Deprecated
 	List<Question> selectTestDatabaseQuestionByKindId(BigInteger testDatabaseId,BigInteger kindId);
 	
 	List<Question> selectTestDatabaseQuestionByTDId(BigInteger testDataBaseId);
@@ -24,4 +22,8 @@ public interface TestDatabaseService {
 	Integer addTestDatabase(@Param("name") String name,
 	                        @Param("introduce") String introduce,
 	                        @Param("courseId")BigInteger courseId);
+	
+	List<Question> selectQuestionByCondition(BigInteger testDatabaseId,
+	                                         BigInteger kindId,
+	                                         String keyWord);
 }

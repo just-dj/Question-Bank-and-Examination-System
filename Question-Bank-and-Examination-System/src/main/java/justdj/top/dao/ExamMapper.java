@@ -2,13 +2,12 @@ package justdj.top.dao;
 
 import justdj.top.pojo.Exam;
 import justdj.top.pojo.TestPaper;
-import org.apache.ibatis.annotations.Many;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.FetchType;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.List;
 
 public interface ExamMapper {
@@ -70,4 +69,19 @@ public interface ExamMapper {
 	Exam selectExamByExamId(BigInteger examId);
 	
 	
+	@Insert("insert into exam (name,course_id,start_time,end_time,is_use)" +
+			"values (#{name},#{courseId},#{startTime},#{endTime},#{use})")
+	//	获取数据库内部生成主键,将返回值赋值给id属性
+	@Options(useGeneratedKeys = true,keyProperty = "id")
+	Integer insertExam(Exam exam);
+	
+	@Insert("insert into exam_class (exam_id,class_id)" +
+			"values (#{examId},#{classId})")
+	Integer insertExamClass(@Param("examId")BigInteger examId,
+	                        @Param("classId")BigInteger classId);
+	
+	@Insert("insert into exam_test_paper (exam_id,test_paper_id)" +
+			"values (#{examId},#{testPaperId})")
+	Integer insertExamTestPaper(@Param("examId")BigInteger examId,
+	                            @Param("testPaperId")BigInteger testPaperId);
 }

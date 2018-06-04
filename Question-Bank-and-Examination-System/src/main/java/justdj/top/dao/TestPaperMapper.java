@@ -1,5 +1,6 @@
 package justdj.top.dao;
 
+import justdj.top.dao.dynaSql.SelectTDQuestion;
 import justdj.top.pojo.Kind;
 import justdj.top.pojo.Question;
 import justdj.top.pojo.TestPaper;
@@ -115,16 +116,22 @@ public interface TestPaperMapper {
 	})
 	List<Question>selectQuestionByTestPaperIdAndKindId(@Param("paperId") BigInteger paperId, @Param("kindId") BigInteger kindId);
 
-
-
-
+	
 
 	@Insert("insert into test_paper (course_id,name,is_use)" +
 			"values (#{courseId},#{name},#{isUse})")
-	Integer addTestPaper(@RequestParam("courseId") BigInteger courseId,
-	                     @RequestParam("name") String testPaperName,
-	                     @RequestParam("isUse") Boolean isUse);
+	Integer addTestPaper(@Param("courseId") BigInteger courseId,
+	                     @Param("name") String testPaperName,
+	                     @Param("isUse") Boolean isUse);
+
+	@Delete("delete from test_paper_question " +
+			"where test_paper_id = #{testPaperId} and question_id = #{questionId}")
+	Integer deleteTestPaperQuestion(@Param("testPaperId") BigInteger testPaperId,
+	                                @Param("questionId") BigInteger questionId);
 	
 	
-	List<Question> selectQuestionByCondition();
+	@Insert("insert into test_paper_question (test_paper_id,question_id) " +
+			"values (#{testPaperId},#{questionId})")
+	Integer addQuestion(@Param("testPaperId") BigInteger testPaperId,
+	                    @Param("questionId") BigInteger questionId);
 }

@@ -53,7 +53,7 @@ public class MySessionAwareMessageListener implements SessionAwareMessageListene
 	
 	
 	private String getMailBody(User user){
-		return "验证码为" +user.getCode() +",如不是本人操作，请忽略。";
+		return "验证码为" +user.getCode() +",该邮箱正在被尝试绑定无限考试系统账号，如不是本人操作，请忽略。";
 	}
 	//看这里可以执行异步策略
 

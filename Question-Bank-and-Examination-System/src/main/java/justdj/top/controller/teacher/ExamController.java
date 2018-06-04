@@ -23,9 +23,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -95,7 +98,26 @@ public class ExamController {
 	 *@description 新建考试 待完善
 	 */
 	@RequestMapping(value = "/te/exam/new",method = RequestMethod.POST)
-	public void insertExam(){
+	public void insertExam(@RequestParam("courseId")BigInteger courseId,
+			               @RequestParam("classList")BigInteger[] classList,
+	                       @RequestParam("examName")String examName,
+	                       @RequestParam("startTime")Timestamp startTime,
+	                       @RequestParam("endTime")Timestamp endTime,
+	                       @RequestParam("testPaperList")BigInteger[] testPaperList,
+	                       RedirectAttributes redirectAttributes,
+	                       Model model){
+		Exam exam = new Exam();
+		exam.setCourseId(courseId);
+		exam.setName(examName);
+		exam.setStartTime(startTime);
+		exam.setEndTime(endTime);
+		//是否操作成功
+		try{
+			examService.insertExamAllInfo(exam, Arrays.asList(classList),Arrays.asList(testPaperList));
+		}catch (Exception e){
+		
+		}
+		
 	
 	}
 	

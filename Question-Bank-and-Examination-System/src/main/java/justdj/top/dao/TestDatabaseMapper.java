@@ -1,8 +1,10 @@
 package justdj.top.dao;
 
+import justdj.top.dao.dynaSql.SelectTDQuestion;
 import justdj.top.pojo.Question;
 import justdj.top.pojo.TestDatabase;
 import org.apache.ibatis.annotations.*;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.Column;
 import java.math.BigInteger;
@@ -85,4 +87,23 @@ public interface TestDatabaseMapper {
 	Integer addTestDatabase(@Param("name") String name,
 	                        @Param("introduce") String introduce,
 	                        @Param("courseId")BigInteger courseId);
+	
+	
+	
+	@SelectProvider(type = SelectTDQuestion.class,method = "selectTDQuestionByCondition")
+	@Results({
+			@Result(id = true,column = "id",property = "id"),
+			@Result(column = "kind_id",property = "kindId"),
+			@Result(column = "name",property = "kindName"),
+			@Result(column = "test_database_id",property = "testDatabaseId"),
+			@Result(column = "question",property = "question"),
+			@Result(column = "a",property = "a"),
+			@Result(column = "b",property = "b"),
+			@Result(column = "c",property = "c"),
+			@Result(column = "d",property = "d"),
+			@Result(column = "answer",property = "answer")
+	})
+	List<Question> selectQuestionByCondition(@Param("testDatabaseId") BigInteger testDatabaseId,
+	                                         @Param("kindId") BigInteger kindId,
+	                                         @Param("keyWord") String keyWord);
 }

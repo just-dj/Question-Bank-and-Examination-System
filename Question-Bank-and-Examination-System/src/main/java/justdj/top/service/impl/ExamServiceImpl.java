@@ -12,8 +12,11 @@ import justdj.top.pojo.Exam;
 import justdj.top.service.ExamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Service("examService")
@@ -40,5 +43,35 @@ public class ExamServiceImpl implements ExamService {
 	@Override
 	public Exam selectExamByExamId(BigInteger examId) {
 		return examMapper.selectExamByExamId(examId);
+	}
+	
+	
+	@Override
+	public Integer insertExam(Exam exam) {
+		return examMapper.insertExam(exam);
+	}
+	
+	@Override
+	public Integer insertExamClass(BigInteger examId, BigInteger classId) {
+		return examMapper.insertExamClass(examId,classId);
+	}
+	
+	@Override
+	public Integer insertExamTestPaper(BigInteger examId, BigInteger testPaperId) {
+		return examMapper.insertExamTestPaper(examId,testPaperId);
+	}
+	
+	@Override
+	@Transactional(readOnly = false,propagation= Propagation.REQUIRED,rollbackFor = Exception.class)
+	public Integer insertExamAllInfo(Exam exam, List <BigInteger> classId, List <BigInteger> testPaperId) throws Exception{
+		int result = examMapper.insertExam(exam);
+		for (BigInteger a:classId) {
+			insertExamClass(exam.getId(),a);
+		}
+		for (BigInteger a:testPaperId) {
+			insertExamTestPaper(exam.getId(),a);
+		}
+		
+		return result;
 	}
 }

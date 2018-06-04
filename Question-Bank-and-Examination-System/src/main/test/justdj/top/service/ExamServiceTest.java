@@ -9,8 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.terracotta.statistics.Time;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -48,4 +51,28 @@ public class ExamServiceTest {
 		System.err.println("\n selectExamByExamId() \n"+ JSON.toJSONString(exam) + "\n");
 	}
 	
+	
+	/**
+	 *@author  ShanDJ
+	 *@params []
+	 *@return  void
+	 *@date  18.6.4
+	 *@description 这个测试方法有很大风险，数据库设计一张试卷只能供一次
+	 * 考试使用，
+	 */
+	@Test
+	public void  insertExamAllInfo()throws Exception{
+//		Exam exam = new Exam();
+//		exam.setName("测试试卷2");
+//		exam.setCourseId(BigInteger.valueOf(1));
+//		exam.setStartTime(new Timestamp(Time.absoluteTime()));
+//		exam.setEndTime(new Timestamp(Time.absoluteTime() + 1000 * 3600 ));
+//		exam.setUse(Boolean.TRUE);
+//		List<BigInteger> classId = new ArrayList <>();
+//		classId.add(BigInteger.valueOf(1));
+//		List<BigInteger> testPaperId = new ArrayList <>();
+//		testPaperId.add(BigInteger.valueOf(1));
+//		int result = examService.insertExamAllInfo(exam,classId,testPaperId);
+//		assertNotEquals(0,result);
+	}
 }

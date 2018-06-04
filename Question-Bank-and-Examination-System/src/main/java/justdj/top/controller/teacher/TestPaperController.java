@@ -12,16 +12,21 @@ import com.alibaba.fastjson.JSON;
 import justdj.top.pojo.Question;
 import justdj.top.pojo.TestPaper;
 import justdj.top.service.KindService;
+import justdj.top.service.TestDatabaseService;
 import justdj.top.service.TestPaperService;
 import justdj.top.util.KindHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -38,7 +43,12 @@ public class TestPaperController {
 	@Qualifier("testPaperService")
 	private TestPaperService testPaperService;
 	
+	@Autowired
+	@Qualifier("testDatabaseService")
+	private TestDatabaseService testDatabaseService;
 	
+	
+	private static final Logger logger = LoggerFactory.getLogger(TestPaperController.class);
 	/**
 	 *@author  ShanDJ
 	 *@params [courseId, model]
@@ -145,15 +155,18 @@ public class TestPaperController {
 	 */
 	@RequestMapping(value = "/te/testDatabase/search",method = RequestMethod.POST)
 	@ResponseBody
-	public void getTestDatabaseQuestionByKey(@RequestParam(value = "id",required = true)BigInteger testDatabaseId,
+	public String  getTestDatabaseQuestionByKey(@RequestParam(value = "id",required = true)BigInteger testDatabaseId,
 	                                         @RequestParam(value = "kind",required = true)String kindName,
 	                                         @RequestParam(value = "key",required = false)String keyWord){
-		  
+		KindHelper.setKindService(kindService);
+		List<Question> questionList = testDatabaseService.selectQuestionByCondition(testDatabaseId,KindHelper.getKindId(kindName),keyWord);
+		
+		return JSON.toJSONString(questionList);
 	}
 	
 	
 	
-	/**
+	/** 还未测试 逻辑复杂有隐患
 	 *@author  ShanDJ
 	 *@params [testPaperId, questionId,model]
 	 *@return  void
@@ -162,10 +175,32 @@ public class TestPaperController {
 	 * 比较粗暴的是直接删除当前所有的联系 然后重新创建
 	 * questionId是一个字符串，题目Id之间用空格隔开
 	 */
+	@Transactional(rollbackFor = {Exception.class,RuntimeException.class})
 	@RequestMapping(value = "/te/testPaper/import",method = RequestMethod.POST)
-	public void updateTestPaperQuestion(@RequestParam("id")BigInteger testPaperId ,
-	                                    @RequestParam("questionId")BigInteger questionId,
-	                                    Model model){
+	public String updateTestPaperQuestion(@RequestParam("id")BigInteger testPaperId ,
+	                                      @RequestParam("questionId")String questionId,
+	                                      Model model,
+	                                      RedirectAttributes redirectAttributes){
+		if (null != questionId){
+			List<Question> questionList = testPaperService.selectQuestionByTestPaperId(testPaperId);
+			for (Question question : questionList){
+				testPaperService.deleteTestPaperQuestion(testPaperId,question.getId());
+			}
+			String[] idList= questionId.split(" ");
+
+			for (String id:idList){
+				testPaperService.addQuestion(testPaperId,new BigInteger("id"));
+			}
+			logger.info(JSON.toJSONString(questionList));
+			logger.info(questionId);
+			redirectAttributes.addAttribute("id",testPaperId);
+			return "redirect:/te/testPaper/import";
+		}
+		else{
+			redirectAttributes.addAttribute("message","数据出错,请联系管理员");
+			return "redirect:/te/testPaper/import";
+		}
+		
 		
 	}
 	

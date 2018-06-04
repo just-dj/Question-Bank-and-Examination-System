@@ -63,4 +63,14 @@ public class TestPaperServiceImpl implements TestPaperService {
 	public Integer addTestPaper(BigInteger courseId, String testPaperName, Boolean isUse) {
 		return testPaperMapper.addTestPaper(courseId,testPaperName,isUse);
 	}
+	
+	@Override
+	public Integer deleteTestPaperQuestion(BigInteger testPaperId, BigInteger questionId) {
+		return testPaperMapper.deleteTestPaperQuestion(testPaperId,questionId);
+	}
+	
+	@Override
+	public Integer addQuestion(BigInteger testPaperId, BigInteger questionId) {
+		return testPaperMapper.addQuestion(testPaperId,questionId);
+	}
 }
