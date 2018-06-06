@@ -19,8 +19,6 @@ public interface AnswerService {
 	
 	List<Answer> selectAnswerByExamId(BigInteger examId);
 	
-	List<Answer> selectAnswerByTestPaperId(BigInteger testPaperId);
-	
 	Answer selectAnswerByAnswerId(BigInteger answerId);
 	
 	Answer selectAnswerByExamIdAndStudentId(BigInteger examId,BigInteger studentId);
@@ -28,4 +26,11 @@ public interface AnswerService {
 	List<AnswerQuestion> selectAnswerQuestionByAnswerId(BigInteger answerId);
 	
 	List<Kind> selectQuestionKindByAnswerId(BigInteger answerId);
+	
+	Integer addAnswer(Answer answer);
+	
+	@Deprecated
+	Integer updateAnswer(Answer answer);
+	
+	Integer addAnswerQuestion(AnswerQuestion answerQuestion);
 }

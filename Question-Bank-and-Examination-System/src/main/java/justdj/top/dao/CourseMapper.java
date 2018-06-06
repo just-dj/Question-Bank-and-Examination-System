@@ -51,6 +51,14 @@ public interface CourseMapper {
 	@Select("select id,course_id,name,introduce from knowledge where course_id = #{courseId}")
 	List<Knowledge> selectKnowledgeByCourseId(BigInteger courseId);
 	
+	@Delete("delete from knowledge where id = #{knowledgeId}")
+	Integer deleteKnowledge(@Param("knowledgeId") BigInteger knowledgeId);
+	
+	@Insert("insert into knowledge (course_id,name,introduce)" +
+			"values (#{courseId},#{name},#{introduce})")
+	Integer addKnowledge(@Param("courseId")BigInteger courseId,
+	                     @Param("name")String name,
+	                     @Param("introduce")String introduce);
 //	班级
 	@Select("select id,course_id,name from class where course_id = #{courseId}")
 	@Results({

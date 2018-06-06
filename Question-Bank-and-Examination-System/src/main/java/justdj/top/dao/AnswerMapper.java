@@ -12,13 +12,14 @@ import java.util.List;
 public interface AnswerMapper {
 	
 	//当前考试的所有答卷
-	@Select("select answer.id,student_id,answer.test_paper_id,answer.start_time,answer.end_time,result,is_commit\n" +
-			"from exam join exam_test_paper join test_paper join answer\n" +
-			"on exam.id = exam_id and exam_test_paper.test_paper_id = test_paper.id and test_paper.id = answer.test_paper_id\n" +
-			"where exam.id = #{examId}")
+	@Select("select answer.id,student_id,exam_id,answer.test_paper_id,answer.start_time,answer.end_time,result," +
+			"is_commit \n" +
+			"from  answer \n" +
+			"where exam_id = #{examId};")
 	@Results({
 			@Result(id = true,column = "id",property = "id"),
 			@Result(column = "student_id",property = "studentId"),
+			@Result(column = "exam_id",property = "examId"),
 			@Result(column = "test_paper_id",property = "testPaperId"),
 			@Result(column = "start_time",property = "startTime"),
 			@Result(column = "end_time",property = "endTime"),
@@ -31,13 +32,14 @@ public interface AnswerMapper {
 	List<Answer> selectAnswerByExamId(BigInteger examId);
 	
 	//当前考试当前学生的答卷
-	@Select("select answer.id,student_id,answer.test_paper_id,answer.start_time,answer.end_time,result,is_commit\n" +
-			"from exam join exam_test_paper join test_paper join answer\n" +
-			"on exam.id = exam_id and exam_test_paper.test_paper_id = test_paper.id and test_paper.id = answer.test_paper_id\n" +
-			"where exam.id = #{examId} and answer.student_id = #{studentId}")
+	@Select("select answer.id,student_id,exam_id,answer.test_paper_id,answer.start_time,answer.end_time,result," +
+			"is_commit\n " +
+			"from  answer\n " +
+			"where exam_id = #{examId} and student_id =#{studentId};")
 	@Results({
 			@Result(id = true,column = "id",property = "id"),
 			@Result(column = "student_id",property = "studentId"),
+			@Result(column = "exam_id",property = "examId"),
 			@Result(column = "test_paper_id",property = "testPaperId"),
 			@Result(column = "start_time",property = "startTime"),
 			@Result(column = "end_time",property = "endTime"),
@@ -50,22 +52,6 @@ public interface AnswerMapper {
 	Answer selectAnswerByExamIdAndStudentId(@Param("examId") BigInteger examId,
 	                                        @Param("studentId") BigInteger studentId);
 	
-	
-	
-	
-	@Select("select answer.id,student_id,test_paper_id,start_time,end_time,result,is_commit\n" +
-			"from test_paper join answer\n" +
-			"on test_paper.id = test_paper_id\n" +
-			"where test_paper.id = #{testPaperId}")
-	@Results({
-			@Result(id = true,column = "id",property = "id"),
-			@Result(column = "student_id",property = "studentId"),
-			@Result(column = "test_paper_id",property = "testPaperId"),
-			@Result(column = "start_time",property = "startTime"),
-			@Result(column = "end_time",property = "endTime"),
-			@Result(column = "is_commit",property = "commit")
-	})
-	List<Answer> selectAnswerByTestPaperId(BigInteger testPaperId);
 	
 	@Select("select id,student_id,test_paper_id,start_time,end_time,result,is_commit\n" +
 			"from answer\n" +
@@ -110,4 +96,39 @@ public interface AnswerMapper {
 			"group by kind.id\n" +
 			"order by kind.id\n")
 	List<Kind> selectQuestionKindByAnswerId(BigInteger answerId);
+	
+	
+	@Insert("insert into answer (student_id,test_paper_id,start_time,is_commit)" +
+			"values (#{studentId},#{testPaperId},#{startTime},#{commit})")
+	Integer addAnswer(Answer answer);
+	
+	@Update("update answer set " +
+			"student_id = #{studentId}," +
+			"test_paper_id = #{testPaperId}," +
+			"start_time  = #{startTime}," +
+			"end_time = #{endTime}," +
+			"result = #{result}," +
+			"commit = #{commit} " +
+			"where id = #{id}")
+	Integer updateAnswer(Answer answer);
+	
+	@Insert("insert into answer_question (answer_id,question_id,answer,score)" +
+			"values (#{answerId},#{questionId},#{answer},#{score})")
+	Integer addAnswerQuestion(AnswerQuestion answerQuestion);
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

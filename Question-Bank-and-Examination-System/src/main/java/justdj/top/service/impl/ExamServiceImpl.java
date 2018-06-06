@@ -74,4 +74,10 @@ public class ExamServiceImpl implements ExamService {
 		
 		return result;
 	}
+	
+	
+	@Override
+	public Integer updateAnswerQuestionScore(BigInteger answerQuestionId, Integer score) {
+		return examMapper.updateAnswerQuestionScore(answerQuestionId,score);
+	}
 }

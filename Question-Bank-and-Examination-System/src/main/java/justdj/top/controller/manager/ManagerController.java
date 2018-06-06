@@ -44,7 +44,6 @@ public class ManagerController {
 		
 		model.addAttribute(user);
 		
-
 	}
 	
 	

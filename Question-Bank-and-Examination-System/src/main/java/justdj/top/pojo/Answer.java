@@ -20,6 +20,8 @@ public class Answer implements Serializable {
 	
 	private BigInteger studentId;
 	
+	private BigInteger examId;
+	
 	private BigInteger testPaperId;
 	
 	private Timestamp startTime;

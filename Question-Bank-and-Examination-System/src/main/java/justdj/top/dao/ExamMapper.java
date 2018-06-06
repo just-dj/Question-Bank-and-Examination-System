@@ -84,4 +84,10 @@ public interface ExamMapper {
 			"values (#{examId},#{testPaperId})")
 	Integer insertExamTestPaper(@Param("examId")BigInteger examId,
 	                            @Param("testPaperId")BigInteger testPaperId);
+	
+	
+	@Update("update answer_question set score =#{score} " +
+			"where id = #{answerQuestionId}")
+	Integer updateAnswerQuestionScore(@Param("answerQuestionId")BigInteger answerQuestionId,
+	                                      @Param("score")Integer score);
 }

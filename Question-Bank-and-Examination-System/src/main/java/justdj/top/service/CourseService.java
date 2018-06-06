@@ -19,6 +19,12 @@ public interface CourseService {
 	
 	List<Knowledge> selectKnowledgeByCourseId(BigInteger courseId);
 	
+	Integer deleteKnowledge(@Param("knowledgeId") BigInteger knowledgeId);
+	
+	Integer addKnowledge(@Param("courseId")BigInteger courseId,
+	                     @Param("name")String name,
+	                     @Param("introduce")String introduce);
+	
 	List<Clazz> selectClazzByCourseId(BigInteger courseId);
 	
 	List<User> selectStudentByClassId(BigInteger classId);

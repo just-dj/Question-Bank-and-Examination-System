@@ -15,7 +15,12 @@ import java.math.BigInteger;
 @Data
 public class AnswerQuestion implements Serializable {
 	
+	
 	private BigInteger id;
+	
+	private BigInteger answerId;
+	
+	private BigInteger questionId;
 	
 	private BigInteger kindId;
 	

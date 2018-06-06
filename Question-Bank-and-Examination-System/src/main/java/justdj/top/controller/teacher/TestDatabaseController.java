@@ -119,6 +119,7 @@ public class TestDatabaseController {
 	 *@date  18.5.29
 	 *@description 导入题目 向题库按题型插入数据 逻辑还没实现
 	 *涉及文件上传 现在还不能写
+	 * dao层已完成
 	 */
 	@RequestMapping(value = "/te/testDatabase/import",method = RequestMethod.POST)
 	public void importQuestionByFile(@RequestParam(value = "id",required = true)BigInteger testDatabaseId,

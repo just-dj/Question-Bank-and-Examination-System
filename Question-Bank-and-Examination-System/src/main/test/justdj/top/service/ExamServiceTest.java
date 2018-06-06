@@ -75,4 +75,10 @@ public class ExamServiceTest {
 //		int result = examService.insertExamAllInfo(exam,classId,testPaperId);
 //		assertNotEquals(0,result);
 	}
+	
+	@Test
+	public void updateAnswerQuestionScore()throws Exception{
+		int result= examService.updateAnswerQuestionScore(BigInteger.valueOf(6),10);
+		assertNotEquals(0,result);
+	}
 }

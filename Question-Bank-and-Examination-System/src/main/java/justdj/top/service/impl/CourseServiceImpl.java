@@ -46,6 +46,16 @@ public class CourseServiceImpl implements CourseService{
 	}
 	
 	@Override
+	public Integer deleteKnowledge(BigInteger knowledgeId) {
+		return courseMapper.deleteKnowledge(knowledgeId);
+	}
+	
+	@Override
+	public Integer addKnowledge(BigInteger courseId, String name, String introduce) {
+		return  courseMapper.addKnowledge(courseId,name,introduce);
+	}
+	
+	@Override
 	public List <Clazz> selectClazzByCourseId(BigInteger courseId) {
 		return courseMapper.selectClazzByCourseId(courseId);
 	}

@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 import java.math.BigInteger;
@@ -54,9 +55,14 @@ public class KnowledgeController {
 	 *@description 知识点管理 待完善 删除知识点 注意现在没有对知识点分级 分级的话要考虑级联删除
 	 */
 	@RequestMapping(value = "/te/knowledge/delete",method = RequestMethod.GET)
-	public void deleteKnowledge(@RequestParam("id") BigInteger knowledgeId,
-	                            Model model){
+	public String deleteKnowledge(@RequestParam("courseId")BigInteger courseId,
+			@RequestParam("id") BigInteger knowledgeId,
+            RedirectAttributes redirectAttributes,
+            Model model){
+		int result = courseService.deleteKnowledge(knowledgeId);
 		
+		redirectAttributes.addFlashAttribute("id",courseId);
+		return "redirect:/te/knowledge";
 
 	}
 	
@@ -68,9 +74,14 @@ public class KnowledgeController {
 	 *@description 添加知识点 待完善
 	 */
 	@RequestMapping(value = "/te/knowledge/add",method = RequestMethod.POST)
-	public void addKnowledge(@RequestParam("name")String name,
-	                         @RequestParam("introduce")String introduce,
-	                         Model  model){
-
+	public String addKnowledge(@RequestParam("courseId")BigInteger courseId,
+			@RequestParam("name")String name,
+            @RequestParam("introduce")String introduce,
+            RedirectAttributes redirectAttributes,
+            Model  model){
+			
+		int result = courseService.addKnowledge(courseId,name,introduce);
+		redirectAttributes.addFlashAttribute("id",courseId);
+		return "redirect:/te/knowledge";
 	}
 }

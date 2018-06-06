@@ -29,7 +29,7 @@ public class RoleController {
 	 */
 	@RequestMapping(value = "/ma/role",method = RequestMethod.GET)
 	public void roleManagerPage(){
-
+	
 	}
 	
 	/**

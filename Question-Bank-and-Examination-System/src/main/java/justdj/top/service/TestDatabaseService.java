@@ -26,4 +26,6 @@ public interface TestDatabaseService {
 	List<Question> selectQuestionByCondition(BigInteger testDatabaseId,
 	                                         BigInteger kindId,
 	                                         String keyWord);
+	
+	Integer addQuestion(Question question);
 }

@@ -36,14 +36,7 @@ public class AnswerServiceTest {
 		
 	}
 	
-	@Test
-	public void selectAnswerByTestPaperId() throws Exception {
-		List<Answer> list = answerService.selectAnswerByTestPaperId(BigInteger.valueOf(1));
-		assertNotNull(list);
-		assertNotEquals(0,list.size());
-		System.err.println("\n selectAnswerByTestPaperId() \n"+ JSON.toJSONString(list) + "\n");
-	}
-	
+
 	@Test
 	public void selectAnswerByAnswerId() throws Exception {
 		Answer answer = answerService.selectAnswerByAnswerId(BigInteger.valueOf(1));

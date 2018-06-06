@@ -11,6 +11,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import justdj.top.pojo.*;
 import justdj.top.service.*;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -19,13 +21,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.terracotta.statistics.Time;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.sql.Timestamp;
+import java.util.*;
 
 @Controller
 public class StudentController {
@@ -124,7 +126,7 @@ public class StudentController {
 	public void selectExamByCourseId(@RequestParam("id")BigInteger courseId,
 	                                 Model model){
 		BigInteger studentId = BigInteger.valueOf(1);
-		//注意这里获得课程考试信息 不是学生考试信息
+		//这里获得学生对应的考试信息
 		List<Exam> examList = examService.selectStudentExamByCourseId(courseId);
 		List<Exam> newExamList = new ArrayList <>();
 		BigInteger classId = userService.selectClassByStudentIdAndCourseId(studentId,courseId);
@@ -151,23 +153,45 @@ public class StudentController {
 	@RequestMapping(value = "/st/course/exam",method = RequestMethod.GET)
 	public String startExam(@RequestParam("id") BigInteger examId,
 	                      Model model){
+		Subject subject = SecurityUtils.getSubject();
+		//获得考试使用的所有试卷
 		List<TestPaper> testPaperList =  testPaperService.selectTestPaperByExamId(examId);
 		
-		//这里应该随机获取试卷
+		Answer answer = answerService.selectAnswerByExamIdAndStudentId(examId,
+				userService.selectUserByAccount(subject.getPrincipal().toString()).getId());
+		BigInteger randomTestPaper  = BigInteger.valueOf(1);
+		if (null == answer){
+			//多张试卷并且是第一次访问的时候进行一下随机算法，,这里应该随机获取试卷
+			int random = new Random().nextInt(testPaperList.size());
+			randomTestPaper = testPaperList.get(random).getId();
+			//将Answer插入数据库
+			Answer newAnswer = new Answer();
+			newAnswer.setTestPaperId(randomTestPaper);
+			newAnswer.setStartTime(new Timestamp(Time.absoluteTime()));
+			newAnswer.setCommit(false);
+			newAnswer.setStudentId(userService.selectUserByAccount(subject.getPrincipal().toString()).getId());
+			answerService.addAnswer(newAnswer);
+		}else{
+			randomTestPaper = answer.getTestPaperId();
+		}
 		
-		Integer randomNum = 0;
 		
 		//假设随机到第一张试卷
 		//获取到试卷的所有题型
-		List<Kind> kindList = testPaperService.selectQuestionKindByTestPaperId(testPaperList.get(randomNum).getId());
+		List<Kind> kindList = testPaperService.selectQuestionKindByTestPaperId(randomTestPaper);
 		//获取到试卷对应的全部的问题
-		List<Question> questionList = testPaperService.selectQuestionByTestPaperId(testPaperList.get(randomNum).getId());
+		List<Question> questionList = testPaperService.selectQuestionByTestPaperId(randomTestPaper);
 		
 		//根据题型获取试卷问题
 //		List<Question> questionList1 =
 //				testPaperService.selectQuestionByTestPaperIdAndKindId(testPaperList.get(randomNum).getId(),);
 		
-		model.addAttribute("testPaper",testPaperList.get(randomNum));
+		for (TestPaper testPaper:testPaperList){
+			if (testPaper.getId().equals(randomTestPaper)){
+				model.addAttribute("testPaper",testPaper);
+				break;
+			}
+		}
 		model.addAttribute("kindList",kindList);
 		model.addAttribute("questionList",questionList);
 		
@@ -186,12 +210,39 @@ public class StudentController {
 	 *@description 开始考试提交 这是个学生提交答案的接口 具体逻辑还没实现
 	 */
 	@RequestMapping(value = "/st/course/exam",method = RequestMethod.POST)
-	@ResponseBody
-	public String saveAnswer(HttpServletRequest request){
+	public String saveAnswer(
+			@RequestParam("courseId")BigInteger courseId,
+			@RequestParam("examId")BigInteger examId,
+			@RequestParam("testPaperId")BigInteger testPaperId,
+			RedirectAttributes redirectAttributes,
+			HttpServletRequest request){
+		Subject subject = SecurityUtils.getSubject();
+		Answer answer = answerService.selectAnswerByExamIdAndStudentId(examId,
+				userService.selectUserByAccount(subject.getPrincipal().toString()).getId());
+		
+		//插入AnswerQuestion
+		List<Question> questionList = testPaperService.selectQuestionByTestPaperId(testPaperId);
 		System.out.println(request.getParameter("1"));
-		
-		
-	return "success";
+		//更新答案提交时间
+		answer.setEndTime(new Timestamp(Time.absoluteTime()));
+		answerService.updateAnswer(answer);
+		//获取答卷信息并评分
+		for (Question question:questionList){
+			AnswerQuestion answerQuestion = new AnswerQuestion();
+			answerQuestion.setQuestionId(question.getId());
+			answerQuestion.setAnswerId(answer.getId());
+			answerQuestion.setAnswer(request.getParameter(question.getId().toString()));
+			if (question.getKindName().equals("单选题")
+					|| question.getKindName().equals("多选题")
+					|| question.getKindName().equals("填空题")){
+				if (answer.equals(question.getAnswer())){
+					answerQuestion.setScore(question.getScore());
+				}
+			}
+			answerService.addAnswerQuestion(answerQuestion);
+		}
+		redirectAttributes.addFlashAttribute("id",courseId);
+		return "redirect:/st/course/examInfo";
 	}
 	
 	/**

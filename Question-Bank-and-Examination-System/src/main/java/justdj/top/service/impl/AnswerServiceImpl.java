@@ -30,10 +30,6 @@ public class AnswerServiceImpl implements AnswerService{
 		return answerMapper.selectAnswerByExamId(examId);
 	}
 	
-	@Override
-	public List <Answer> selectAnswerByTestPaperId(BigInteger testPaperId) {
-		return answerMapper.selectAnswerByTestPaperId(testPaperId);
-	}
 	
 	@Override
 	public Answer selectAnswerByAnswerId(BigInteger answerId) {
@@ -53,5 +49,21 @@ public class AnswerServiceImpl implements AnswerService{
 	@Override
 	public List <Kind> selectQuestionKindByAnswerId(BigInteger answerId) {
 		return answerMapper.selectQuestionKindByAnswerId(answerId);
+	}
+	
+	
+	@Override
+	public Integer addAnswer(Answer answer) {
+		return answerMapper.addAnswer(answer);
+	}
+	
+	@Override
+	public Integer updateAnswer(Answer answer) {
+		return answerMapper.updateAnswer(answer);
+	}
+	
+	@Override
+	public Integer addAnswerQuestion(AnswerQuestion answerQuestion) {
+		return answerMapper.addAnswerQuestion(answerQuestion);
 	}
 }
