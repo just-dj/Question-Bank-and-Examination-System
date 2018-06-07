@@ -2,6 +2,7 @@ package justdj.top.dao;
 
 import justdj.top.pojo.User;
 import org.apache.ibatis.annotations.*;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -64,4 +65,12 @@ public interface UserMapper {
 	@Update("update user set password = #{password} , salt = #{salt}" +
 			"where account = #{account}")
 	Integer changePassword(User user);
+	
+	@Insert("insert into user_role (user_id,role_id) " +
+			"values (#{userId},#{roleId})")
+	Integer addRoleToUser(@RequestParam("userId") BigInteger userId,
+	                      @RequestParam("roleId")BigInteger roleId);
+	
+	@Delete("delete from user_role where user_id = #{userId}")
+	Integer deleteRole(@Param("userId") BigInteger userId);
 }

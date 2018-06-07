@@ -26,7 +26,7 @@
 					</div>
 				</c:if>
 				<input type="text" name="account" placeholder="请输入账号" value="${user.account}"/><br>
-				<input type="password" name="password" placeholder="请输入密码" /><br>
+				<input type="password" name="password" placeholder="请输入密码" value="${user.password}"/><br>
 				<div class="identify_box">
 					<div>
 						<input id="identify" type="text" name="identifyNum" placeholder="请输入验证码"/>

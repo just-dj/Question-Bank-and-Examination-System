@@ -2,6 +2,7 @@ package justdj.top.service;
 
 import justdj.top.pojo.User;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -22,4 +23,8 @@ public interface UserService {
 	                                          @Param("courseId") BigInteger courseId);
 	
 	Integer changePassword(User user);
+	
+	Integer addUserWithRole(User user,List<BigInteger> roleList) throws Exception;
+	
+	Integer updateRole(BigInteger userId,List<BigInteger> roleList);
 }

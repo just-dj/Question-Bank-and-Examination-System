@@ -47,11 +47,11 @@
 				/register=anon
 				/getGifCode=anon
 				/sendEmail=anon
+				/logout=anon
 				
 				/static/**=anon
 				/favicon.ico=anon
 				<!--需要登录认证-->
-				/logout=authc
 				
 				<!-- roles[manager]表示访问此连接需要用户的角色为manager -->
 				/st/*=roles[student]
@@ -144,5 +144,7 @@
 	
 	<!--传声随机字符串的工具bean-->
 	<bean class="org.apache.shiro.crypto.SecureRandomNumberGenerator"></bean>
-
+	
+	
+	
 </beans>

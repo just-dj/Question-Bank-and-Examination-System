@@ -96,6 +96,7 @@ public class ExamController {
 	@RequestMapping(value = "/te/exam/new",method = RequestMethod.GET)
 	public void createExam(){
 	
+	
 	}
 	
 	/**

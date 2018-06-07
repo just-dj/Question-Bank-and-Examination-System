@@ -10,11 +10,20 @@
 <html>
 <head>
     <title>权限错误</title>
+    <link rel="stylesheet" href="/static/lib/bootstrap-3.3.7-dist/css/bootstrap.css" >
 </head>
 
 <body>
-<h1>对不起，您没有权限请求此连接！</h1>
-<img alt="" src="/static/img/1.jpg">
+<h1 class="text-warning">对不起，您没有权限请求此连接！</h1>
+<div><a class="text-primary" onclick="back()">返回上一页</a></div>
 
+<img alt="" src="/static/img/warn.jpg">
+
+<script type="text/javascript">
+    function back() {
+        window.location.href = document.referrer;
+        window.history.back(-2);
+    }
+</script>
 </body>
 </html>

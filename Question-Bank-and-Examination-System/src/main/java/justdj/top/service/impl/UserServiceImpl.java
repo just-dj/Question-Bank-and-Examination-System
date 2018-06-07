@@ -12,6 +12,7 @@ import justdj.top.pojo.User;
 import justdj.top.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -55,5 +56,34 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Integer changePassword(User user) {
 		return userMapper.changePassword(user);
+	}
+	
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public Integer addUserWithRole(User user, List <BigInteger> roleList) throws Exception{
+		User oldUser = userMapper.selectUserByAccount(user.getAccount());
+		if (null == oldUser)
+			throw new Exception("账号已存在！");
+		int result = userMapper.insertUser(user);
+		if (null == user.getId())
+			throw new Exception("用户插入失败。");
+		for (BigInteger roleId:roleList) {
+			result = userMapper.addRoleToUser(user.getId(),roleId);
+		}
+		return result;
+	}
+	
+	
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public Integer updateRole(BigInteger userId, List <BigInteger> roleList)  {
+		int result = 0;
+		result = userMapper.deleteRole(userId);
+		
+		for (BigInteger roleId:roleList) {
+			result = userMapper.addRoleToUser(userId,roleId);
+		}
+		
+		return result;
 	}
 }

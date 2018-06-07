@@ -14,8 +14,10 @@ import justdj.top.service.CourseService;
 import justdj.top.service.UserService;
 import org.apache.commons.net.util.SubnetUtils;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -51,15 +53,23 @@ public class TeacherController {
 	 *@description 教师主页
 	 */
 	@RequestMapping("/te")
-	public String teacherMainPage(@RequestParam("id")BigInteger teacherId,
+	@RequiresRoles({"teacher"})
+	public String teacherMainPage(@RequestParam(value = "id",required = false)BigInteger teacherId,
 	                            Model model){
-		User user = userService.selectUserById(teacherId);
+		User user = null;
+		if (null == teacherId || "".equals(teacherId)){
+			Subject subject = SecurityUtils.getSubject();
+			user = userService.selectUserByAccount(subject.getPrincipal().toString());
+			teacherId = user.getId();
+		}else {
+			user = userService.selectUserById(teacherId);
+		}
 		List<Course> courseList = courseService.selectCourseByTeacherId(teacherId);
 		
 		model.addAttribute("user",user);
 		model.addAttribute("courseList",courseList);
 		
-		return "userInfo";
+		return "/te/teacherView";
 	}
 	
 	/**

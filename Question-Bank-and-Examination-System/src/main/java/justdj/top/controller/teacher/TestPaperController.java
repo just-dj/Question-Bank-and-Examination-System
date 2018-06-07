@@ -10,6 +10,7 @@ package justdj.top.controller.teacher;
 
 import com.alibaba.fastjson.JSON;
 import justdj.top.pojo.Question;
+import justdj.top.pojo.TestDatabase;
 import justdj.top.pojo.TestPaper;
 import justdj.top.service.KindService;
 import justdj.top.service.TestDatabaseService;
@@ -126,7 +127,8 @@ public class TestPaperController {
 	 * 还需要一个筛选题库题目的接口
 	 */
 	@RequestMapping(value = "/te/testPaper/import",method = RequestMethod.GET)
-	public void importQuestion(@RequestParam(value = "id")BigInteger testPaperId,
+	public void importQuestion(@RequestParam("courseId")BigInteger courseId,
+			@RequestParam(value = "testPaperId")BigInteger testPaperId,
 	                           Model model){
 		
 		KindHelper.setKindService(kindService);
@@ -141,9 +143,12 @@ public class TestPaperController {
 		//调用函数计数
 		TestDatabaseController.getQuestionNumByKind(resultList,questionList,kindNameList);
 		
+		List<TestDatabase> testDatabaseList = testDatabaseService.selectTestDatabaseByCourseId(courseId);
+		
 		model.addAttribute(kindNameList);
 		model.addAttribute(questionList);
 		model.addAttribute(resultList);
+		model.addAttribute(testDatabaseList);
 	}
 	
 	/**

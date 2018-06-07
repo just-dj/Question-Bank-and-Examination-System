@@ -81,7 +81,6 @@ public class UserController {
 	 */
 	@RequestMapping(value="/login",method= RequestMethod.GET)
 	public String loginForm(Model model){
-		model.addAttribute("user", new User());
 		return "/user/login";
 	}
 	
@@ -99,6 +98,7 @@ public class UserController {
 	        @RequestParam(value = "rember",required = false)String[] rememberMe,
 	         RedirectAttributes redirectAttributes,
 	         HttpServletRequest request,
+	         HttpSession session,
 	         Model model){
 		User user= new User();
 		user.setAccount(account);
@@ -106,9 +106,9 @@ public class UserController {
 		Boolean remember = false;
 		redirectAttributes.addFlashAttribute("user",user);
 		//验证码判断
-		if (!codeIdentify(vcode,redirectAttributes)){
-			return "redirect:/login";
-		}
+//		if (!codeIdentify(vcode,redirectAttributes)){
+//			return "redirect:/login";
+//		}
 		
 		if (null != rememberMe && rememberMe[0].equals("true"))
 			remember = true;
@@ -145,19 +145,21 @@ public class UserController {
 		
 		//判断是否是从其他页跳转过来的
 		String temp = getForwardUrl(request);
+		session.setAttribute("user",userNow);
+//		forward redirect
 		if (temp != null)
-			return "forward:"+temp;
+			return "redirect:"+temp;
 		else{
 			//				这里应该有一段判断跳转到哪里的逻辑
 			if (subject.hasRole("teacher")){
 				model.addAttribute("courseList",courseService.selectCourseByTeacherId(userNow.getId()));
-				return "redirect:/te?id="+userNow.getId();
+				return "redirect:/te";
 			}else if (subject.hasRole("student")){
-				return "redirect:/st?id="+userNow.getId();
+				return "redirect:/st";
 			}else if (subject.hasRole("manager")){
-				return "redirect:/ma?id=" + userNow.getId();
+				return "redirect:/ma";
 			}else {
-				return "redirect:/st?id="+userNow.getId();
+			return "redirect:/st";
 			}
 		}
 		
@@ -174,8 +176,8 @@ public class UserController {
 	 */
 	@RequestMapping(value="/logout",method= RequestMethod.GET)
 	public String logout(@RequestParam(value = "message",required = false)String message,
+			HttpSession session,
 			RedirectAttributes redirectAttributes ){
-		
 		Subject subject = SecurityUtils.getSubject();
 		if (subject.isAuthenticated() || subject.isRemembered()) {
 			//	这里会将记住密码功能保存的也给删除掉
@@ -382,7 +384,7 @@ public class UserController {
 		//	返回跳转前界面 暂时没没有bug啦
 		if (request!=null  && WebUtils.getSavedRequest(request)!= null){
 			String url = WebUtils.getSavedRequest(request).getRequestUrl();
-			if (url != null){
+			if (url != null && !url.equals("") && !url.equals("/")){
 				logger.info("登陆前界面: " + url);
 				return url;
 			}

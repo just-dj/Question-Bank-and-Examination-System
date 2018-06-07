@@ -80,7 +80,37 @@
 		</property>
 	</bean>
 	
-
-
+	
+	<!--
+	   1.配置lifecycleBeanPostProcessor，可以在Spring IOC容器中调用shiro的生命周期方法.
+   -->
+	<!--<bean class="org.apache.shiro.spring.LifecycleBeanPostProcessor" id="lifecycleBeanPostProcessor" />-->
+	
+	<!--
+		2.启用Spring IOC容器Shiro注解，但必须配置了lifecycleBeanPostProcessor后才可以使用
+	-->
+	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor" />
+	
+	<!--
+		3.开启Spring AOC Shiro注解支持
+	-->
+	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager"/>
+	</bean>
+	
+	
+	<!-- shiro为集成springMvc 拦截异常-->
+	<bean
+			class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<!-- 这里你可以根据需要定义N多个错误异常转发 -->
+				<prop key="org.apache.shiro.authz.UnauthorizedException">redirect:/403</prop>
+				<prop key="org.apache.shiro.authz.UnauthenticatedException">redirect:/403</prop>
+				<prop key="java.lang.IllegalArgumentException">/error.jsp</prop>  <!-- 参数错误(bizError.jsp) -->
+				<prop key="java.lang.Exception">/error.jsp</prop>  <!-- 其他错误为'未定义错误'(unknowError.jsp) -->
+			</props>
+		</property>
+	</bean>
 	
 </beans>

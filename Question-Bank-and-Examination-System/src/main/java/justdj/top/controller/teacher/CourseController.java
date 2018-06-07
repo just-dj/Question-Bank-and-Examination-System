@@ -53,7 +53,7 @@ public class CourseController {
 	 *@description 课程信息界面
 	 */
 	@RequestMapping(value = "/te/course",method = RequestMethod.GET)
-	public void myCourse(@RequestParam("id") BigInteger courseId, Model model){
+	public String myCourse(@RequestParam("id") BigInteger courseId, Model model){
 		
 		List<Clazz> classList = courseService.selectClazzByCourseId(courseId);
 		
@@ -74,6 +74,8 @@ public class CourseController {
 		model.addAttribute("testPaperList",testPaperList);
 		
 		model.addAttribute("examList",examList);
+		
+		return "/te/courseInfo";
 	}
 	
 	

@@ -17,20 +17,40 @@ public class SelectTDQuestion {
 	
 	public String selectTDQuestionByCondition(Map<String, Object> para){
 		StringBuffer buffer = new StringBuffer();
-		buffer.append("select question.id,kind_id,kind.name,test_database_id,question,a,b,c,d,answer \n" +
-				"from kind join question join test_database \n" +
-				"on kind.id = kind_id and test_database_id = test_database.id \n" +
-				"where test_database.id =  '" + para.get("testDatabaseId") +"'");
-		
-		if (null != para.get("kindId") ){
-			buffer.append("and kind.id = '" + para.get("kindId") +"'" );
+		if (BigInteger.valueOf(-1).equals(para.get("testDatabaseId"))){
+			buffer.append("select question.id,kind_id,kind.name,test_database_id,question,a,b,c,d,answer \n" +
+					"from kind join question join test_database \n" +
+					"on kind.id = kind_id and test_database_id = test_database.id \n" );
+			boolean temp = false;
+			if (null != para.get("kindId") ){
+				temp = true;
+				buffer.append(" where  kind.id = '" + para.get("kindId") +"'" );
+			}
+			if (null != para.get("keyWord")){
+				if (temp){
+					buffer.append(" and question like '%" + para.get("keyWord") + "%' ");
+				}else {
+					buffer.append(" where question like '%" + para.get("keyWord") + "%' ");
+				}
+			}
+			
+		}else{
+			buffer.append("select question.id,kind_id,kind.name,test_database_id,question,a,b,c,d,answer \n" +
+					"from kind join question join test_database \n" +
+					"on kind.id = kind_id and test_database_id = test_database.id \n" +
+					"where test_database.id =  '" + para.get("testDatabaseId") +"'");
+			
+			if (null != para.get("kindId") ){
+				buffer.append(" and kind.id = '" + para.get("kindId") +"'" );
+			}
+			
+			if (null != para.get("keyWord")){
+				buffer.append(" and question like '%" + para.get("keyWord") + "%' ");
+			}
+			
 		}
-		
-		if (null != para.get("keyWord")){
-			buffer.append("and question like '%" + para.get("keyWord") + "%' ");
-		}
-		
 		buffer.append(" order by question.id");
+		
 		return buffer.toString();
 	}
 }
