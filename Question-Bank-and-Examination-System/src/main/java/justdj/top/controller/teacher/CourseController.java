@@ -75,6 +75,8 @@ public class CourseController {
 		
 		model.addAttribute("examList",examList);
 		
+		model.addAttribute("courseId",courseId);
+		
 		return "/te/courseInfo";
 	}
 	

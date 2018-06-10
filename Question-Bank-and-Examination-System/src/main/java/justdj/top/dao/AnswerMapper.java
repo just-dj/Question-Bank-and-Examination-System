@@ -110,10 +110,12 @@ public interface AnswerMapper {
 			"result = #{result}," +
 			"commit = #{commit} " +
 			"where id = #{id}")
+	@Options(flushCache = true)
 	Integer updateAnswer(Answer answer);
 	
 	@Insert("insert into answer_question (answer_id,question_id,answer,score)" +
 			"values (#{answerId},#{questionId},#{answer},#{score})")
+	@Options(flushCache = true)
 	Integer addAnswerQuestion(AnswerQuestion answerQuestion);
 	
 	

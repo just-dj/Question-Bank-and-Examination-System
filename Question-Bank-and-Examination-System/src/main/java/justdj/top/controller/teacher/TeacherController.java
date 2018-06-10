@@ -72,45 +72,6 @@ public class TeacherController {
 		return "/te/teacherView";
 	}
 	
-	/**
-	 *@author  ShanDJ
-	 *@params [studentId, model]
-	 *@return  void
-	 *@date  18.5.27
-	 *@description 老师个人中心
-	 */
-	@RequestMapping(value = "/te/info",method = RequestMethod.GET)
-	public void teacherInfo(@RequestParam(value = "id",required = true) BigInteger teacherId,
-	                        Model model){
-		User user = userService.selectUserById(teacherId);
-		
-		model.addAttribute("user",user);
-		
-	}
+
 	
-	/**
-	 *@author  ShanDJ
-	 *@params [password]
-	 *@return  void
-	 *@date  18.6.3
-	 *@description 修改密码 
-	 */
-	@RequestMapping(value = "/te/changePassword",method = RequestMethod.POST)
-	public  String changePassword(@RequestParam("password")String password,
-	                            RedirectAttributes redirectAttributes){
-	
-//		注意获取用户账号
-//		User userNow = userService.selectUserByAccount(SecurityUtils.getSubject().getPrincipal().toString());
-		User userNow = userService.selectUserByAccount("1");
-		String salt = secureRandomNumberGenerator.nextBytes().toHex();
-		//加密两次 盐为用户名+随机数
-		String cryptedPwd = new SimpleHash("MD5",password , ByteSource.Util.bytes(salt),2).toHex();
-		userNow.setPassword(cryptedPwd);
-		userNow.setSalt(salt);
-		int result = userService.changePassword(userNow);
-		System.out.println("密码修改结果" +result);
-		
-		redirectAttributes.addFlashAttribute("message","密码修改成功，请重新登录。");
-		return "redirect:/logout";
-	}
 }

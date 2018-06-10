@@ -22,8 +22,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(JUnit4ClassRunner.class)  //此处调用Spring单元测试类
 @WebAppConfiguration()//声明为集成测试加载的ApplicationContext应该是WebApplicationContext类型
 //下面的注解告诉测试运行器如何加载和配置WebApplicationContext
-@ContextConfiguration(locations = {"/spring/test_springContext.xml","/spring/test_spring-shiro.xml",
-		"/test_springMVC.xml","/spring/test_spring-activemq.xml"})
+@ContextConfiguration(locations = {"/spring/test_*.xml","/test_mybatis.xml","/test_shiro-ehcache.xml",
+		"/test_springMVC.xml" })
 public class TestPaperControllerTest {
 	
 	private MockMvc mockMvc;
@@ -63,14 +63,13 @@ public class TestPaperControllerTest {
 	
 	@Test
 	public void importQuestion() throws Exception {
-		mockMvc.perform(get("/te/testPaper/import?id=1"))
-				.andExpect(status().isOk())
+		mockMvc.perform(get("/te/testPaper/import?courseId=1&testPaperId=1"))
 				.andDo(print());
 	}
 	
 	@Test
 	public void getTestDatabaseQuestionByKey() throws Exception {
-		mockMvc.perform(get("/te/testDatabase/search?id=1"))
+		mockMvc.perform(post("/te/testDatabase/search?id=1&kind=单选题"))
 				.andDo(print());
 	}
 	

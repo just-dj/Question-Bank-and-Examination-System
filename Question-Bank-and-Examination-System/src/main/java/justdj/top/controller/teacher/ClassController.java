@@ -44,13 +44,13 @@ public class ClassController {
 	 *@description 班级管理界面
 	 */
 	@RequestMapping("/te/class")
-	public void classManager(@RequestParam("id") BigInteger courseId,
+	public String classManager(@RequestParam("id") BigInteger courseId,
 	                         Model model){
 		List<Clazz> classList = courseService.selectClazzByCourseId(courseId);
 		
 		
 		model.addAttribute("classList",classList);
-//		return "班级管理界面";
+		return "/te/classManager";
 	}
 	
 	/**

@@ -75,6 +75,7 @@ public class TestPaperController {
 			getQuestionNumByQuestionKind(questionList,kindNameList,testPaperInfo[i].get(0),testPaperInfo[i].get(1));
 		}
 		
+		
 		model.addAttribute("testPaperList",testPaperList);
 		model.addAttribute("testPaperInfo",testPaperInfo);
 		
@@ -137,18 +138,15 @@ public class TestPaperController {
 		List<Question> questionList  = testPaperService.selectQuestionByTestPaperId(testPaperId);
 		
 		List<Integer> resultList = new ArrayList <>();
-		for (String a : kindNameList) {
-			resultList.add(0);
-		}
 		//调用函数计数
 		TestDatabaseController.getQuestionNumByKind(resultList,questionList,kindNameList);
 		
 		List<TestDatabase> testDatabaseList = testDatabaseService.selectTestDatabaseByCourseId(courseId);
 		
-		model.addAttribute(kindNameList);
-		model.addAttribute(questionList);
-		model.addAttribute(resultList);
-		model.addAttribute(testDatabaseList);
+		model.addAttribute("kindNameList",kindNameList);
+		model.addAttribute("questionList",questionList);
+		model.addAttribute("resultList",resultList);
+		model.addAttribute("testDatabaseList",testDatabaseList);
 	}
 	
 	/**
@@ -164,7 +162,10 @@ public class TestPaperController {
 	                                         @RequestParam(value = "kind",required = true)String kindName,
 	                                         @RequestParam(value = "key",required = false)String keyWord){
 		KindHelper.setKindService(kindService);
+		System.out.println(testDatabaseId + kindName + keyWord);
 		List<Question> questionList = testDatabaseService.selectQuestionByCondition(testDatabaseId,KindHelper.getKindId(kindName),keyWord);
+		
+		System.out.println(JSON.toJSONString(questionList));
 		
 		return JSON.toJSONString(questionList);
 	}
@@ -218,7 +219,7 @@ public class TestPaperController {
 	 *@description 计算试卷中题型对应的题目数量和分值
 	 *
 	 */
-	private void getQuestionNumByQuestionKind(List<Question> questionList,
+	public static void getQuestionNumByQuestionKind(List<Question> questionList,
 	                                          List<String> kindNameList,
 	                                          List<Integer> resultList,
 	                                          List<Integer> sumList){

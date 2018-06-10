@@ -53,7 +53,7 @@ public class MybatisRedisCache implements Cache {
 		final String keyString = key.toString();
 		final Object valuef = value;
 		final long liveTime = 86400;
-		logger.warn("加入缓存： key :" + keyString + " value :" + value);
+		logger.warn("加入缓存： key :" + keyString );
 		redisTemplate.execute(new RedisCallback<Long>() {
 			@Override
 			public Long doInRedis(RedisConnection connection) throws DataAccessException {

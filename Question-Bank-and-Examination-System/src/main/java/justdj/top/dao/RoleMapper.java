@@ -7,6 +7,7 @@ import org.apache.ibatis.mapping.FetchType;
 import java.math.BigInteger;
 import java.util.List;
 
+//@CacheNamespace(implementation = justdj.top.cache.MybatisRedisCache.class)
 public interface RoleMapper {
 	
 	@Select("select id,role_name from role where id = #{roleId}" )

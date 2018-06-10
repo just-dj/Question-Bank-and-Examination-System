@@ -86,4 +86,9 @@ public class UserServiceImpl implements UserService {
 		
 		return result;
 	}
+	
+	@Override
+	public Integer updateUserImg(User user) {
+		return userMapper.updateUserImg(user);
+	}
 }

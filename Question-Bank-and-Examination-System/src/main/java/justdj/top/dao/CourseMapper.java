@@ -10,6 +10,7 @@ import org.apache.ibatis.mapping.FetchType;
 import java.math.BigInteger;
 import java.util.List;
 
+//@CacheNamespace(implementation = justdj.top.cache.MybatisRedisCache.class)
 public interface CourseMapper {
 	
 	@Select("select id,teacher_id,name,introduce from course where teacher_id = #{teacherId}")
@@ -52,10 +53,12 @@ public interface CourseMapper {
 	List<Knowledge> selectKnowledgeByCourseId(BigInteger courseId);
 	
 	@Delete("delete from knowledge where id = #{knowledgeId}")
+	@Options(flushCache = true)
 	Integer deleteKnowledge(@Param("knowledgeId") BigInteger knowledgeId);
 	
 	@Insert("insert into knowledge (course_id,name,introduce)" +
 			"values (#{courseId},#{name},#{introduce})")
+	@Options(flushCache = true)
 	Integer addKnowledge(@Param("courseId")BigInteger courseId,
 	                     @Param("name")String name,
 	                     @Param("introduce")String introduce);
@@ -76,14 +79,17 @@ public interface CourseMapper {
 	List<User> selectStudentByClassId(BigInteger classId);
 	
 	@Delete("delete from class where id = #{classId}")
+	@Options(flushCache = true)
 	Integer deleteClass(BigInteger classId);
 	
 	@Delete("delete from class_student where class_id = #{classId} && student_id = #{studentId}")
+	@Options(flushCache = true)
 	Integer deleteClassStudent(@Param("classId") BigInteger classId,
 	                           @Param("studentId") BigInteger studentId);
 	
 	@Insert("insert into class_student (class_id,studentId)" +
 			"values (#{classId},#{studentId})")
+	@Options(flushCache = true)
 	Integer addStudentToClass(@Param("classId") BigInteger classId,
 	                          @Param("studentId") BigInteger studentId);
 }

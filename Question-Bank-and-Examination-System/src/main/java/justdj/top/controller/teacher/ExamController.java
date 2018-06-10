@@ -9,17 +9,13 @@
 package justdj.top.controller.teacher;
 
 
-import justdj.top.pojo.Answer;
-import justdj.top.pojo.AnswerQuestion;
-import justdj.top.pojo.Exam;
-import justdj.top.pojo.User;
-import justdj.top.service.AnswerService;
-import justdj.top.service.CourseService;
-import justdj.top.service.ExamService;
-import justdj.top.service.UserService;
+import justdj.top.pojo.*;
+import justdj.top.service.*;
+import justdj.top.util.KindHelper;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +28,7 @@ import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 @Controller
@@ -54,6 +51,15 @@ public class ExamController {
 	@Qualifier("userService")
 	private UserService userService;
 	
+	@Autowired
+	@Qualifier("testPaperService")
+	private TestPaperService testPaperService;
+	
+	
+	@Autowired
+	@Qualifier("kindService")
+	private KindService kindService;
+	
 	/**
 	 *@author  ShanDJ
 	 *@params [courseId, model]
@@ -62,8 +68,9 @@ public class ExamController {
 	 *@description 考试管理
 	 */
 	@RequestMapping(value = "/te/exam",method = RequestMethod.GET)
-	public void examManager(@RequestParam("id")BigInteger courseId,
-	                        Model model){
+	public String examManager(@RequestParam("id")BigInteger courseId,
+	                          Model model,
+	                          HttpServletRequest request){
 		
 		List<Exam> examList = examService.selectExamByCourseId(courseId);
 		List<Integer> studentNum = new ArrayList <>();
@@ -82,8 +89,10 @@ public class ExamController {
 			}
 		}
 
-		model.addAttribute("examList",examList);
-		model.addAttribute("studentNum",studentNum);
+		request.setAttribute("examList",examList);
+		request.setAttribute("studentNum",studentNum);
+		
+		return "/te/examManager";
 	}
 	
 	/**
@@ -94,9 +103,38 @@ public class ExamController {
 	 *@description 新建考试界面 待完善
 	 */
 	@RequestMapping(value = "/te/exam/new",method = RequestMethod.GET)
-	public void createExam(){
-	
-	
+	public void createExam(@RequestParam("courseId")BigInteger courseId,
+	                       RedirectAttributes redirectAttributes,
+	                       Model model){
+		List<TestPaper> testPaperList = testPaperService.selectTestPaperByCourseId(courseId);
+		
+		List<Clazz> clazzList = courseService.selectClazzByCourseId(courseId);
+		
+		KindHelper.setKindService(kindService);
+		
+		List<String> kindNameList = KindHelper.getKindNameList();
+		//获得题型对应的题目数量 和分值
+		List<List<Integer>> testPaperInfo[] = new ArrayList[testPaperList.size()] ;
+		for (int i = 0;i < testPaperList.size(); i++) {
+			List<Question> questionList = testPaperService.selectQuestionByTestPaperId(testPaperList.get(i).getId());
+			if (null == testPaperInfo[i])
+				testPaperInfo[i] = new ArrayList <>();
+			testPaperInfo[i].add(new ArrayList <>());
+			testPaperInfo[i].add(new ArrayList <>());
+			TestPaperController.getQuestionNumByQuestionKind(questionList,kindNameList,testPaperInfo[i].get(0),
+					testPaperInfo[i].get(1));
+		}
+		
+		List<List<Integer>> questionCount = new ArrayList <>();
+		for (List<List<Integer>> info:testPaperInfo) {
+			questionCount.add(info.get(0));
+		}
+		
+		model.addAttribute(clazzList);
+		
+		model.addAttribute(testPaperList);
+		
+		model.addAttribute("testPaperInfo",questionCount);
 	}
 	
 	/**

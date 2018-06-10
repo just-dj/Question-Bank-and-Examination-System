@@ -89,7 +89,7 @@
   
   <!-- Session超时30分钟(零或负数表示会话永不超时) -->
   <session-config>
-    <session-timeout>30</session-timeout>
+    <session-timeout>120</session-timeout>
   </session-config>
 
 </web-app>

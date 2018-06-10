@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>课程信息</title>
 	<link rel="stylesheet" href="/static/lib/font-awesome-4.7.0/css/font-awesome.min.css" >
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+	<%--<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">--%>
 	<script src="/static/lib/jquery/jquery-3.2.1.min.js"></script>
 	<script src="/static/lib/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
 <style>
@@ -94,7 +94,7 @@
 <div class="body">
     	<div class="body-left">
     		<div class="add" id="add1">
-    			<a href=""><i class="fa fa-user-circle fa-5x add-pic"></i></a>
+    			<a href="/te/class?id=${courseId}"><i class="fa fa-user-circle fa-5x add-pic"></i></a>
     			<p class="word">${classList.size()}个</p>
     			<p class="word">班级管理</p>
     		</div>
@@ -104,7 +104,7 @@
     			<p class="word">试卷管理</p>
     		</div>
     		<div class="add" id="add3">
-    			<a href=""><i class="fa fa-address-card fa-5x add-pic"></i></a>
+    			<a href="/te/exam?id=${courseId}"><i class="fa fa-address-card fa-5x add-pic"></i></a>
     			<p class="word">${examList.size()}个</p>
     			<p class="word">考试管理</p>
     		</div>
@@ -118,7 +118,7 @@
 
     	<div class="body-right">
     		<div class="add-right">
-    			<a href=""><i class="fa fa-plus-circle fa-10x right-pic"></i></a>
+    			<a href=""><i class="fa fa-plus-circle fa-5x right-pic" style="font-size: 10em"></i></a>
     			<p class="right-word">知识点管理</p>
     		</div>
     	</div>

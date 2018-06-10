@@ -33,6 +33,8 @@ public class User implements Serializable{
 	
 	private char sex;
 	
+	private String img;
+	
 	private Boolean use;
 	
 	private String code;

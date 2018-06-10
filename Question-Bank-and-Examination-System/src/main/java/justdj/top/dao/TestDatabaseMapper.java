@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import java.math.BigInteger;
 import java.util.List;
 
+//@CacheNamespace(implementation = justdj.top.cache.MybatisRedisCache.class)
 public interface TestDatabaseMapper {
 	
 	@Select("select  id,name,introduce,course_id from test_database where course_id = #{courseId}" +
@@ -84,6 +85,7 @@ public interface TestDatabaseMapper {
 	
 	@Insert("insert into test_database (name,introduce,course_id) values" +
 			"(#{name},#{introduce},#{courseId})")
+	@Options(flushCache = true)
 	Integer addTestDatabase(@Param("name") String name,
 	                        @Param("introduce") String introduce,
 	                        @Param("courseId")BigInteger courseId);
@@ -109,5 +111,6 @@ public interface TestDatabaseMapper {
 	
 	@Insert("insert into question (kind_id,test_database_id,question,a,b,c,d,answer)" +
 			"values(#{kindId},#{testDatabaseId},#{question},#{a},#{b},#{c},#{d},#{answer})")
+	@Options(flushCache = true)
 	Integer addQuestion(Question question);
 }

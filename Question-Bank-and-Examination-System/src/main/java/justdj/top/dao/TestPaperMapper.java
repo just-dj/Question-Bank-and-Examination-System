@@ -1,11 +1,9 @@
 package justdj.top.dao;
 
-import justdj.top.dao.dynaSql.SelectTDQuestion;
 import justdj.top.pojo.Kind;
 import justdj.top.pojo.Question;
 import justdj.top.pojo.TestPaper;
 import org.apache.ibatis.annotations.*;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -77,7 +75,7 @@ public interface TestPaperMapper {
 	})
 	List<Kind> selectQuestionKindByTestPaperId(@Param("testPaperId") BigInteger testPaperId);
 	
-	@Select("select question.id,kind_id,kind.name,test_database_id,question,a,b,c,d,answer \n" +
+	@Select("select question.id,kind_id,kind.name,test_database_id,question,a,b,c,d,answer,score \n" +
 			"from kind join question join test_paper_question join test_paper\n" +
 			"on kind.id = kind_id and question.id = question_id and test_paper_id = test_paper.id\n" +
 			"where test_paper.id = #{paperId} and kind.name = #{kindName}\n" +
@@ -92,12 +90,13 @@ public interface TestPaperMapper {
 			@Result(column = "b",property = "b"),
 			@Result(column = "c",property = "c"),
 			@Result(column = "d",property = "d"),
-			@Result(column = "answer",property = "answer")
+			@Result(column = "answer",property = "answer"),
+			@Result(column = "score",property = "score")
 	})
 	List<Question> selectQuestionByTestPaperIdAndKindName(@Param("paperId") BigInteger paperId,
 	                                                      @Param("kindName") String kindName);
 	
-	@Select("select question.id,kind_id,kind.name,test_database_id,question,a,b,c,d,answer \n" +
+	@Select("select question.id,kind_id,kind.name,test_database_id,question,a,b,c,d,answer,score \n" +
 			"from kind join question join test_paper_question join test_paper\n" +
 			"on kind.id = kind_id and question.id = question_id and test_paper_id = test_paper.id\n" +
 			"where test_paper.id = #{paperId} and kind.id = #{kindId}\n" +
@@ -112,7 +111,8 @@ public interface TestPaperMapper {
 			@Result(column = "b",property = "b"),
 			@Result(column = "c",property = "c"),
 			@Result(column = "d",property = "d"),
-			@Result(column = "answer",property = "answer")
+			@Result(column = "answer",property = "answer"),
+			@Result(column = "score",property = "score")
 	})
 	List<Question>selectQuestionByTestPaperIdAndKindId(@Param("paperId") BigInteger paperId, @Param("kindId") BigInteger kindId);
 
@@ -126,12 +126,14 @@ public interface TestPaperMapper {
 
 	@Delete("delete from test_paper_question " +
 			"where test_paper_id = #{testPaperId} and question_id = #{questionId}")
+	@Options(flushCache = true)
 	Integer deleteTestPaperQuestion(@Param("testPaperId") BigInteger testPaperId,
 	                                @Param("questionId") BigInteger questionId);
 	
 	
 	@Insert("insert into test_paper_question (test_paper_id,question_id) " +
 			"values (#{testPaperId},#{questionId})")
+	@Options(flushCache = true)
 	Integer addQuestion(@Param("testPaperId") BigInteger testPaperId,
 	                    @Param("questionId") BigInteger questionId);
 }

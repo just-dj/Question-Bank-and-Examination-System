@@ -8,6 +8,7 @@
 package justdj.top.controller;
 
 import com.alibaba.fastjson.JSON;
+import justdj.top.pojo.Question;
 import justdj.top.pojo.User;
 import justdj.top.service.CourseService;
 import justdj.top.vcode.Captcha;
@@ -15,6 +16,7 @@ import justdj.top.vcode.GifCaptcha;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.annotation.RequiresUser;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.session.Session;
@@ -28,12 +30,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.jms.Destination;
@@ -43,6 +47,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.List;
 import java.util.Random;
 
 
@@ -69,8 +78,13 @@ public class UserController {
 	@Autowired
 	private Destination queueDestination;
 	
-	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	private static Logger logger = LoggerFactory.getLogger(UserController.class);
 	
+	
+	@RequestMapping("/")
+	public String main(){
+		return "redirect:/login";
+	}
 	
 	/**
 	 *@author  ShanDJ
@@ -259,11 +273,19 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/sendEmail",method = RequestMethod.POST)
-	public void sendEmail(@RequestParam("email")String email,
+	@ResponseBody
+	public String sendEmail(@RequestParam(value = "email",required = false)String email,
 	                      HttpServletRequest request,
 	                      Model model){
-		User user = new User();
-		user.setEmail(email);
+		User user =  new User();
+		if (null == email || email.equals("")){
+			Subject subject = SecurityUtils.getSubject();
+			User userNow = userService.selectUserByAccount(subject.getPrincipal().toString());
+			user.setEmail(userNow.getEmail());
+		}else {
+			user.setEmail(email);
+		}
+		
 		Random random = new Random();
 		String result="";
 		for (int i=0;i<6;i++) {
@@ -272,7 +294,7 @@ public class UserController {
 		user.setCode(result);
 		HttpSession session = request.getSession(true);
 		session.setAttribute("code",user.getCode());
-		session.setAttribute("email",email);
+		session.setAttribute("email",user.getEmail());
 		System.out.println(user.getEmail() + "  "+ user.getCode());
 		
 		jmsQueueTemplate.send(queueDestination, new MessageCreator() {
@@ -283,9 +305,48 @@ public class UserController {
 			}
 		});
 		
+		return "已发送";
 	}
 	
-	
+	/**
+	 *@author  ShanDJ
+	 *@params [password]
+	 *@return  void
+	 *@date  18.6.3
+	 *@description 修改密码
+	 */
+	@RequestMapping(value = "/changePassword",method = RequestMethod.POST)
+	@ResponseBody
+	public  String changePassword(@RequestParam("identifyCode")String identifyCode,
+			@RequestParam("password")String password,
+			                      HttpServletRequest request){
+		HttpSession session = request.getSession(true);
+		System.err.println(identifyCode + password);
+		//		注意获取用户账号
+		Subject subject = SecurityUtils.getSubject();
+		User userNow = userService.selectUserByAccount(subject.getPrincipal().toString());
+
+		
+		logger.info("当前用户验证信息 "+ userNow.getEmail()+"  ");
+//		防止恶意修改
+		if (null == session.getAttribute("email") ||
+				null == session.getAttribute("code") ||
+				!session.getAttribute("code").toString().toLowerCase()
+						.trim().equals(identifyCode.trim().toLowerCase())){
+			logger.warn(userNow.getAccount() +" 修改密码失败，验证码错误");
+			return "修改密码失败，验证码错误";
+		}
+		
+		String salt = secureRandomNumberGenerator.nextBytes().toHex();
+		//加密两次 盐为用户名+随机数
+		String cryptedPwd = new SimpleHash("MD5",password , ByteSource.Util.bytes(salt),2).toHex();
+		userNow.setPassword(cryptedPwd);
+		userNow.setSalt(salt);
+		int result = userService.changePassword(userNow);
+		
+		logger.warn(userNow.getAccount() +"修改密码成功。");
+		return "密码修改成功!";
+	}
 	
 	/**
 	 *@author  ShanDJ
@@ -341,6 +402,88 @@ public class UserController {
 		return "redirect:/register";
 	}
 	
+	@RequestMapping(value = "/changeImg",method = RequestMethod.POST)
+	@ResponseBody
+	public String changeImg(
+			@RequestParam(value = "file") MultipartFile uploadFile,
+			HttpServletRequest request,
+			RedirectAttributes redirectAttributes){
+		
+		Subject subject = SecurityUtils.getSubject();
+		User user = userService.selectUserByAccount(subject.getPrincipal().toString());
+		if (!uploadFile.isEmpty()) {
+//			判断文件大小
+			if (uploadFile.getSize() > (1 * 1024 * 1024)){
+				logger.warn(user.getAccount() +"尝试上传过大头像图片");
+				return "失败！文件最大尺寸1M";
+			}
+
+//			保存文件路径
+			String realPath = request.getServletContext().getRealPath("/upload/");
+			String webPath = "";
+			
+			String prefix=uploadFile.getOriginalFilename().substring(uploadFile.getOriginalFilename().lastIndexOf(".")+1);
+			String time = new Timestamp(org.terracotta.statistics.Time.absoluteTime()).toString();
+			time = time.replace(':','-');
+			String fileName = time+" " +user.getAccount()+ "." +prefix;
+			File filePath = new File(realPath,fileName);
+			if (!filePath.getParentFile().exists()){
+				filePath.getParentFile().mkdirs();
+			}
+//			保存文件
+			try{
+				uploadFile.transferTo(filePath);
+				webPath = "/upload"+File.separator+ time+" " +user.getAccount()+"."+prefix;
+			}catch (IOException e){
+				e.printStackTrace();
+				logger.warn(user.getAccount() +"上传的图片保存失败！"
+						+webPath+e.getCause());
+				return "图片保存失败！请稍后重试。";
+			}
+			
+			user.setImg(webPath);
+			userService.updateUserImg(user);
+			logger.warn(user.getAccount() +"上传的图片保存成功！" + filePath + webPath);
+			return webPath;
+		} else {
+			return "文件上传失败！请稍后重试。";
+		}
+		
+	}
+	
+	
+	@RequestMapping("/defaultImg")
+	@Transactional
+	public String setDefaultImg(){
+		Subject subject = SecurityUtils.getSubject();
+		User user = userService.selectUserByAccount(subject.getPrincipal().toString());
+		user.setImg("");
+		userService.updateUserImg(user);
+		return "redirect:/info";
+	}
+	
+	
+	/**
+	 *@author  ShanDJ
+	 *@params [studentId, model]
+	 *@return  void
+	 *@date  18.5.27
+	 *@description 老师个人中心
+	 */
+	@RequestMapping(value = "/info",method = RequestMethod.GET)
+	public String teacherInfo(
+			Model model){
+		Subject subject = SecurityUtils.getSubject();
+		
+		User user = userService.selectUserByAccount(subject.getPrincipal().toString());
+		
+		model.addAttribute("user",user);
+		
+		return "/user/personalCenter";
+	}
+	
+	
+	
 	/**
 	 *@author  ShanDJ
 	 *@params [vcode, redirectAttributes]
@@ -371,6 +514,7 @@ public class UserController {
 			return true;
 		}
 	}
+	
 	
 	/**
 	 *@author  ShanDJ

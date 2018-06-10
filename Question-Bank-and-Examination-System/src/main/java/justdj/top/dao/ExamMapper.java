@@ -10,6 +10,7 @@ import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.List;
 
+//@CacheNamespace(implementation = justdj.top.cache.MybatisRedisCache.class)
 public interface ExamMapper {
 	
 	@Select("select exam.id,exam.name,course_id,start_time,end_time,is_use\n" +
@@ -71,23 +72,27 @@ public interface ExamMapper {
 	
 	@Insert("insert into exam (name,course_id,start_time,end_time,is_use)" +
 			"values (#{name},#{courseId},#{startTime},#{endTime},#{use})")
+	
 	//	获取数据库内部生成主键,将返回值赋值给id属性
-	@Options(useGeneratedKeys = true,keyProperty = "id")
+	@Options(useGeneratedKeys = true,keyProperty = "id",flushCache = true)
 	Integer insertExam(Exam exam);
 	
 	@Insert("insert into exam_class (exam_id,class_id)" +
 			"values (#{examId},#{classId})")
+	@Options(flushCache = true)
 	Integer insertExamClass(@Param("examId")BigInteger examId,
 	                        @Param("classId")BigInteger classId);
 	
 	@Insert("insert into exam_test_paper (exam_id,test_paper_id)" +
 			"values (#{examId},#{testPaperId})")
+	@Options(flushCache = true)
 	Integer insertExamTestPaper(@Param("examId")BigInteger examId,
 	                            @Param("testPaperId")BigInteger testPaperId);
 	
 	
 	@Update("update answer_question set score =#{score} " +
 			"where id = #{answerQuestionId}")
+	@Options(flushCache = true)
 	Integer updateAnswerQuestionScore(@Param("answerQuestionId")BigInteger answerQuestionId,
 	                                      @Param("score")Integer score);
 }

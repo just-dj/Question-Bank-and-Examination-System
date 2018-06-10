@@ -48,6 +48,7 @@
 				/getGifCode=anon
 				/sendEmail=anon
 				/logout=anon
+				/=anon
 				
 				/static/**=anon
 				/favicon.ico=anon
@@ -58,13 +59,14 @@
 				/te/*=roles[teacher]
 				/ma/*=roles[manager]
 				
-				
-				
+				<!--使用remberme功能-->
+				<!--而“/** = user”表示访问该地址的用户是身份验证通过或RememberMe登录的都可/以-->
+				/changeImg=user
+				/changePassword=user
 				
 				
 				
 				<!-- anon表示此地址不需要任何权限即可访问 -->
-				/st/*=anon
 				/images/*=anon
 				/test=anon
 				/upload=anon

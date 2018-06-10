@@ -27,12 +27,21 @@
             <div class="introduce">
                 <div class="introduce_bg">
                     <div class="circle_img">
-                        <img class="circle_img" src="/static/img/teacher.jpg" alt="">
+                        <c:choose>
+                            <c:when test="${user.img == null || user.img == ''}">
+                                <img id="headImg" class="circle_img" src="/static/img/teacher.png"/>
+                            </c:when>
+                            <c:otherwise>
+                                <img id="headImg" class="circle_img" src="${user.img}"/>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
                     <div class="name"><span>${user.name}</span></div>
                     <div class="edit">
-                        <i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>
-                        <span>个人中心</span>
+                        <a href="/info" style="color: black;">
+                            <i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>
+                            <span>个人中心</span>
+                        </a>
                     </div>
                 </div>
             </div>

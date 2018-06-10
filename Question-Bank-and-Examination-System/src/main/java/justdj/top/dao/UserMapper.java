@@ -20,6 +20,7 @@ public interface UserMapper {
 			@Result(column = "name",property = "name"),
 			@Result(column = "age",property = "age"),
 			@Result(column = "sex",property = "sex"),
+			@Result(column = "img",property = "img"),
 			@Result(column = "is_use",property = "use")
 	})
 	User selectUserById(BigInteger userId);
@@ -34,6 +35,7 @@ public interface UserMapper {
 			@Result(column = "name",property = "name"),
 			@Result(column = "age",property = "age"),
 			@Result(column = "sex",property = "sex"),
+			@Result(column = "img",property = "img"),
 			@Result(column = "is_use",property = "use")
 	})
 	User selectUserByAccount(String userAccount);
@@ -51,7 +53,7 @@ public interface UserMapper {
 	@Insert(value = "insert into user (account,email,password,salt,name,age,sex,is_use) \n" +
 			"values (#{account},#{email},#{password},#{salt},#{name},#{age},#{sex},#{use})")
 	//	获取数据库内部生成主键,将返回值赋值给id属性
-	@Options(useGeneratedKeys = true,keyProperty = "id")
+	@Options(useGeneratedKeys = true,keyProperty = "id",flushCache = true)
 	Integer insertUser(User user);
 	
 	
@@ -64,13 +66,20 @@ public interface UserMapper {
 	
 	@Update("update user set password = #{password} , salt = #{salt}" +
 			"where account = #{account}")
+	@Options(flushCache = true)
 	Integer changePassword(User user);
 	
 	@Insert("insert into user_role (user_id,role_id) " +
 			"values (#{userId},#{roleId})")
+	@Options(flushCache = true)
 	Integer addRoleToUser(@RequestParam("userId") BigInteger userId,
 	                      @RequestParam("roleId")BigInteger roleId);
 	
 	@Delete("delete from user_role where user_id = #{userId}")
+	@Options(flushCache = true)
 	Integer deleteRole(@Param("userId") BigInteger userId);
+	
+	@Update("update user set img=#{img} where id = #{id}")
+	Integer updateUserImg(User user);
+	
 }

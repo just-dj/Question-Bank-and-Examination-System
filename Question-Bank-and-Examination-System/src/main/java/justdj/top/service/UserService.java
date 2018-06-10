@@ -27,4 +27,6 @@ public interface UserService {
 	Integer addUserWithRole(User user,List<BigInteger> roleList) throws Exception;
 	
 	Integer updateRole(BigInteger userId,List<BigInteger> roleList);
+	
+	Integer updateUserImg(User user);
 }
