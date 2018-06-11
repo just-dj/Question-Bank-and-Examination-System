@@ -468,7 +468,7 @@ public class UserController {
 	 *@params [studentId, model]
 	 *@return  void
 	 *@date  18.5.27
-	 *@description 老师个人中心
+	 *@description 个人中心
 	 */
 	@RequestMapping(value = "/info",method = RequestMethod.GET)
 	public String teacherInfo(

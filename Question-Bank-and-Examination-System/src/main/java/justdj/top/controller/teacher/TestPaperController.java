@@ -117,6 +117,29 @@ public class TestPaperController {
 		
 	}
 	
+	/**
+	 *@author  ShanDJ
+	 *@params [testPaperId, questionId, status, score, redirectAttributes]
+	 *@return  java.lang.String
+	 *@date  18.6.10
+	 *@description 删除或增加试卷题目 返回结果是数据库处理影响条数 1 正确 0 失败
+	 */
+	@RequestMapping(value = "/te/testPaper/question",method = RequestMethod.POST)
+	@ResponseBody
+	public String managerQuestion(@RequestParam(value = "testPaperId")BigInteger testPaperId,
+	                              @RequestParam("questionId")BigInteger questionId,
+	                              @RequestParam("status")Integer status,
+	                              @RequestParam("score")Integer score,
+	                              RedirectAttributes redirectAttributes){
+		Integer result = 0;
+		if (1 == status){
+			result = testPaperService.addQuestion(testPaperId,questionId,score);
+		}else {
+			result = testPaperService.deleteTestPaperQuestion(testPaperId,questionId);
+		}
+		
+		return  result.toString();
+	}
 	
 	/**
 	 *@author  ShanDJ
@@ -149,6 +172,10 @@ public class TestPaperController {
 		model.addAttribute("testDatabaseList",testDatabaseList);
 	}
 	
+	
+	
+	
+	
 	/**
 	 *@author  ShanDJ
 	 *@params [testDatabaseId, kindName, keyWord]
@@ -170,6 +197,8 @@ public class TestPaperController {
 		return JSON.toJSONString(questionList);
 	}
 	
+	
+
 	
 	
 	/** 还未测试 逻辑复杂有隐患
@@ -195,7 +224,7 @@ public class TestPaperController {
 			String[] idList= questionId.split(" ");
 
 			for (String id:idList){
-				testPaperService.addQuestion(testPaperId,new BigInteger("id"));
+				testPaperService.addQuestion(testPaperId,new BigInteger("id"),0);
 			}
 			logger.info(JSON.toJSONString(questionList));
 			logger.info(questionId);

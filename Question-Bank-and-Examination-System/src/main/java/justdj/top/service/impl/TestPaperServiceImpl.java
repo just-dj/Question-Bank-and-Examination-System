@@ -12,6 +12,7 @@ import justdj.top.pojo.Kind;
 import justdj.top.pojo.Question;
 import justdj.top.pojo.TestPaper;
 import justdj.top.service.TestPaperService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,7 +71,7 @@ public class TestPaperServiceImpl implements TestPaperService {
 	}
 	
 	@Override
-	public Integer addQuestion(BigInteger testPaperId, BigInteger questionId) {
-		return testPaperMapper.addQuestion(testPaperId,questionId);
+	public Integer addQuestion(BigInteger testPaperId, BigInteger questionId,Integer score) {
+		return testPaperMapper.addQuestion(testPaperId,questionId,score);
 	}
 }

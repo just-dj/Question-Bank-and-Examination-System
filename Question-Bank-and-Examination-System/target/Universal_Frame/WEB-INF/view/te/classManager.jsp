@@ -14,14 +14,14 @@
 	<%@ include file="../head.jsp" %>
 
 	<div class="classManager_box">
-		<c:forEach items="classList" var="clazz">
+		<c:forEach items="${classList}" var="clazz">
 			<div class="classManager_item" >
 				<div class="item_row">
 					<span>班级名称：</span>
 						${clazz.name}<br>
 				</div>
 				<div class="item_row">
-					<span>班级人数：${clazz.userList}</span>
+					<span>班级人数：${clazz.userList.size()}</span>
 					<span>人</span><br>
 				</div>
 				<div class="item_btn_group">

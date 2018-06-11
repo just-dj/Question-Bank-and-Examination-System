@@ -131,9 +131,10 @@ public interface TestPaperMapper {
 	                                @Param("questionId") BigInteger questionId);
 	
 	
-	@Insert("insert into test_paper_question (test_paper_id,question_id) " +
-			"values (#{testPaperId},#{questionId})")
+	@Insert("insert into test_paper_question (test_paper_id,question_id,score) " +
+			"values (#{testPaperId},#{questionId},#{score})")
 	@Options(flushCache = true)
 	Integer addQuestion(@Param("testPaperId") BigInteger testPaperId,
-	                    @Param("questionId") BigInteger questionId);
+	                    @Param("questionId") BigInteger questionId,
+	                    @Param("score")Integer score);
 }

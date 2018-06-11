@@ -38,5 +38,6 @@ public interface TestPaperService {
 	                                @Param("questionId") BigInteger questionId);
 	
 	Integer addQuestion(@Param("testPaperId") BigInteger testPaperId,
-	                    @Param("questionId") BigInteger questionId);
+	                    @Param("questionId") BigInteger questionId,
+	                    @Param("score")Integer score);
 }
