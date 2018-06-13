@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="/static/lib/bootstrap-3.3.7-dist/css/bootstrap.css" >
     <script src="/static/lib/jquery/jquery-3.2.1.min.js"></script>
     <script src="/static/lib/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+    <script src="/static/lib/layer-v3.1.1/layer/layer.js"></script>
 </head>
 <body>
 

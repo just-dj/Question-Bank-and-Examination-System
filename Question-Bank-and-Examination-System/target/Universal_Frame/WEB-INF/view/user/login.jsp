@@ -48,7 +48,7 @@
 		</div>
 		
 		<div class="login_box_footer">
-			<a href="/register">还没有账号？马上注册>></a>
+			<a href="/register" style="color: #ffffff">还没有账号？马上注册>></a>
 		</div>
 	</div>
 </div>
@@ -67,13 +67,16 @@
         var code = $("input[name='identifyNum']").val();
 
         if (empty(account) ){
-            alert("账号不合法！");
+            layer.msg("账号不合法！");
+//            alert("账号不合法！");
             condition = false;
         }else  if(empty(password) || password < 6){
-            alert("密码不合法！");
+            layer.msg("密码不合法！");
+//            alert("密码不合法！");
             condition = false;
         }else if (empty(code)){
-            alert("验证码不能为空！");
+            layer.msg("验证码不能为空！");
+//            alert("验证码不能为空！");
             condition = false;
 		}
         return condition;
@@ -84,5 +87,6 @@
     }
 </script>
 <script src="/static/lib/jquery/jquery-3.2.1.min.js"></script>
+<script src="/static/lib/layer-v3.1.1/layer/layer.js"></script>
 </body>
 </html>

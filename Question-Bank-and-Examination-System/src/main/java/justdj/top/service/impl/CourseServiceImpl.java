@@ -14,6 +14,7 @@ import justdj.top.pojo.Knowledge;
 import justdj.top.pojo.User;
 import justdj.top.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
@@ -77,7 +78,7 @@ public class CourseServiceImpl implements CourseService{
 	}
 	
 	@Override
-	public Integer addStudentToClass(BigInteger classId, BigInteger studentId) {
-		return courseMapper.deleteClassStudent(classId,studentId);
+	public Integer addStudentToClass(BigInteger classId, BigInteger studentId) throws DataIntegrityViolationException {
+		return courseMapper.addStudentToClass(classId,studentId);
 	}
 }

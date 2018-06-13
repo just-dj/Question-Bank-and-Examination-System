@@ -2,14 +2,16 @@
 
 .classManager_box {
 	box-sizing: border-box;
-	width: 1366px;
-	height: 768px;
-	border: 1px solid #CCCCCC;
+	width: 100%;
+	/*border: 1px solid #CCCCCC;*/
 	/*padding:  120px 120px 50px 50px;*/
 	padding-left: 120px;
 	padding-right: 120px;
 	padding-top: 50px;
 	padding-bottom: 50px;
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
 }
 
 .classManager_box_body {
@@ -18,7 +20,6 @@
 	height: 668px;
 	flex-wrap: wrap;
 	align-content: flex-start;
-	overflow: scroll;
 }
 
 .classManager_item {
@@ -62,7 +63,7 @@
 .item_btn_look {
 	width: 109px;
 	height: 45px;
-	background-color: rgba(40,189,185,1);
+	background-color: rgba(91,192,222,1);
 	border: 1px solid rgba(255,255,255,1);
 	border-radius: 5px;
 	font-size: 14px;

@@ -73,9 +73,22 @@ public interface CourseMapper {
 	List<Clazz> selectClazzByCourseId(BigInteger courseId);
 	
 	
-	@Select("select user.id,account,password,salt,name,age,sex from class_student join user \n" +
+	@Select("select user.id,account,password,salt,name,age,sex,email,img,is_use " +
+			"from class_student join user \n" +
 			"where student_id = user.id " +
 			"and class_id = #{classId};\n")
+	@Results({
+			@Result(id = true,column = "id",property = "id"),
+			@Result(column = "account",property = "account"),
+			@Result(column = "email",property = "email"),
+			@Result(column = "password",property = "password"),
+			@Result(column = "salt",property = "salt"),
+			@Result(column = "name",property = "name"),
+			@Result(column = "age",property = "age"),
+			@Result(column = "sex",property = "sex"),
+			@Result(column = "img",property = "img"),
+			@Result(column = "is_use",property = "use")
+	})
 	List<User> selectStudentByClassId(BigInteger classId);
 	
 	@Delete("delete from class where id = #{classId}")
@@ -87,7 +100,7 @@ public interface CourseMapper {
 	Integer deleteClassStudent(@Param("classId") BigInteger classId,
 	                           @Param("studentId") BigInteger studentId);
 	
-	@Insert("insert into class_student (class_id,studentId)" +
+	@Insert("insert into class_student (class_id,student_id) " +
 			"values (#{classId},#{studentId})")
 	@Options(flushCache = true)
 	Integer addStudentToClass(@Param("classId") BigInteger classId,

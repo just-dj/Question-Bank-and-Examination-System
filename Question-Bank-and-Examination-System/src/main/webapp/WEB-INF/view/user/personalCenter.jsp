@@ -131,6 +131,7 @@
 </body>
 <script src="/static/lib/jquery/jquery-3.2.1.min.js"></script>
 <script src="/static/lib/vue/vue.js"></script>
+<script src="/static/lib/layer-v3.1.1/layer/layer.js"></script>
 <%--<script src="../js/personalCenter.js"></script>--%>
 <script>
 
@@ -148,11 +149,11 @@
             })
                 .done(function(data) {
                     if (data.toString().indexOf("失败") >=0){
-                        alert(data.toString());
+                        layer.msg(data.toString());
                         return;
                     }else {
                         window.location.href="localhost:8080/logout";
-                        alert(data.toString());
+                        layer.msg(data.toString());
                     }
                 })
                 .fail(function() {
@@ -172,16 +173,19 @@
         var password2 = $("input[name='check_pwd']").val();
 
         if ( empty(code) || code.length > 6){
-            alert("验证码不合法！");
+            layer.msg("验证码不合法！");
             condition = true;
         }else  if (empty(password1) || password1.length < 6){
-            alert("密码不合法！");
+            layer.msg("密码不合法");
+//            alert("密码不合法！");
             condition = true;
         }else  if(empty(password2) || password2 < 6){
-            alert("密码不合法！");
+            layer.msg("两次输入的密码不匹配！")
+//            alert("密码不合法！");
             condition=true
         }else if (password1 != password2){
-            alert("两次输入的密码不匹配！");
+            layer.msg("两次输入的密码不匹配！")
+//            alert("两次输入的密码不匹配！");
             condition = true;
         }
         return (!condition);
@@ -206,7 +210,8 @@ var timer = 65;
 var t;
 function sendEmail(){
     if (timer < 60){
-        alert("邮件发送过于频繁，请 "+ (60 - timer) +" S之后重试")
+        layer.msg("邮件发送过于频繁，请 "+ (60 - timer) +" S之后重试");
+//        alert("邮件发送过于频繁，请 "+ (60 - timer) +" S之后重试")
         return;
     }
 
@@ -217,11 +222,13 @@ function sendEmail(){
     })
         .done(function(data) {
             console.log("success");
-            alert("已发送邮件，请查收！ 如遇网络延迟请耐心等待或重试。");
+            layer.msg("已发送邮件，请查收！ 如遇网络延迟请耐心等待或重试。");
+//            alert("已发送邮件，请查收！ 如遇网络延迟请耐心等待或重试。");
         })
         .fail(function() {
             console.log("error");
-            alert("邮件发送失败，请稍后重试！。");
+            layer.msg("邮件发送失败，请稍后重试！。");
+//            alert("邮件发送失败，请稍后重试！。");
         })
         .always(function() {
             console.log("complete");
@@ -248,7 +255,8 @@ $("#pic_upload").click(function () {
     var formData = new FormData($('#uploadForm')[0]);
 
 	if (jQuery("input[type='file']").val()==""){
-        alert("请选择文件！");
+	    layer.msg("请选择文件！");
+//        alert("请选择文件！");
         return;
 	}
 
@@ -268,7 +276,8 @@ $("#pic_upload").click(function () {
     })
         .done(function(data) {
             if (data.toString().indexOf("失败") >=0){
-                alert(data.toString());
+                layer.msg(data.toString());
+//                alert(data.toString());
                 return;
 			}else {
                 $("#headImg").attr('src',data.toString());
@@ -304,10 +313,13 @@ function checkFileExt(filename)
     if(flag) {
 
     }else {
-        alert("请选择正确的图片文件！");
+        layer.msg("请选择正确的图片文件！");
+//        alert("请选择正确的图片文件！");
         var file = document.getElementById('chooseFile');
         file.value = ''; //虽然file的value不能设为有字符的值，但是可以设置为空值
     }
 }
+
+
 </script>
 </html>

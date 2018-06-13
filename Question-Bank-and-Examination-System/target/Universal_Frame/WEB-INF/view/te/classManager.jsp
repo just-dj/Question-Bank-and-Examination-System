@@ -10,32 +10,48 @@
 	<link rel="stylesheet"  href="/static/css/classManager.css">
 </head>
 <body>
-	
 	<%@ include file="../head.jsp" %>
 
 	<div class="classManager_box">
-		<c:forEach items="${classList}" var="clazz">
-			<div class="classManager_item" >
-				<div class="item_row">
-					<span>班级名称：</span>
-						${clazz.name}<br>
-				</div>
-				<div class="item_row">
-					<span>班级人数：${clazz.userList.size()}</span>
-					<span>人</span><br>
-				</div>
-				<div class="item_btn_group">
-					<div class="item_btn_delete" id="item_btn_delete">
-						<span>删除</span>
-					</div>
-					<div class="item_btn_look" id="item_btn_look">
-						<span>查看</span>
-					</div>
-				</div>
+		<div class="classManager_box_body">
+			<!-- 新建班级  -->
+			<div class="classAdd">
+				<a class="classAdd_box" alt="">
+					<img src="/static/img/classManager.png" height="76px" width="76px"/>
+					<span>新建班级</span>
+				</a>
 			</div>
-		</c:forEach>
+
+			<c:forEach items="${classList}" var="clazz">
+				<div class="classManager_item">
+					<div class="item_row">
+						<span>班级名称：</span>
+						${clazz.name}<br>
+					</div>
+					<div class="item_row">
+						<span>班级人数：</span>
+						${clazz.userList.size()}
+						<span>人</span><br>
+					</div>
+					<div class="item_btn_group">
+						<div class="item_btn_look" id="item_btn_look">
+							<a href="/te/class/student?id=${clazz.id}">
+								<span style="color: #ffffff">查看</span>
+							</a>
+
+						</div>
+
+						<div class="item_btn_delete" id="item_btn_delete">
+							<span>删除</span>
+						</div>
+
+					</div>
+				</div>
+			</c:forEach>
+			<!-- 班级情况  -->
+		</div>
 	</div>
 </body>
-<script src="/static/lib/jquery/jquery-3.2.1.min.js"></script>
-<script src="/static/lib/vue/vue.js"></script>
+	<script src="/static/lib/jquery/jquery-3.2.1.min.js"></script>
+	<script src="/static/lib/vue/vue.js"></script>
 </html>

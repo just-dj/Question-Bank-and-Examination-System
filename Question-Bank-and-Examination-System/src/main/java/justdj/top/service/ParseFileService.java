@@ -8,12 +8,14 @@
 package justdj.top.service;
 
 import justdj.top.pojo.Question;
+import justdj.top.pojo.User;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,6 +100,25 @@ public class ParseFileService {
 		list.add(question);
 		
 		return list;
+	}
+	
+	
+	public List<String>  parseStudentAccountFile(InputStream inputStream){
+		List<String> list = new ArrayList<>();
+		InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+		BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+		String lineString = "";
+		try {
+			while (null != (lineString = bufferedReader.readLine())){
+//				if (!list.contains(lineString))
+					list.add(lineString);
+			}
+		}catch (Exception e){
+			list = null;
+		}
+		
+		return list;
+		
 	}
 	
 	public List<Question> parseChooseFile(InputStream inputStream){

@@ -48,7 +48,7 @@
 			</form>
 		</div>
 		<div class="register_box_footer">
-			<a href="/login">已有账号，马上登录>></a>
+			<a href="/login" style="color: #ffffff">已有账号，马上登录>></a>
 		</div>
 	</div>
 </div>
@@ -58,7 +58,7 @@
 	var t;
     function sendEmail(){
         if (timer < 60){
-            alert("邮件发送过于频繁，请 "+ (60 - timer) +" S之后重试")
+            layer.msg("邮件发送过于频繁，请 "+ (60 - timer) +" S之后重试");
             return;
 		}
 
@@ -66,7 +66,7 @@
 
         var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/;
         if (email == null || email == "" || !reg.test(email)) {
-            alert('邮箱格式不正确，请重新填写!');
+            layer.msg('邮箱格式不正确，请重新填写!');
             return ;
         }
         $.ajax({
@@ -78,16 +78,18 @@
         })
             .done(function(data) {
                 console.log(email);
+                layer.msg("已向 "  +  email + " 发送邮件，请查收！ 如遇网络延迟请耐心等待或重试。")
             })
             .fail(function() {
                 console.log("error");
+                layer.msg("邮件发送失败，请稍后重试！")
             })
             .always(function() {
                 console.log("complete");
             });
         	timer = 0;
 			timedCount();
-        alert("已向 "  +  email + " 发送邮件，请查收！ 如遇网络延迟请耐心等待或重试。")
+
     }
 
     function timedCount()
@@ -114,19 +116,19 @@
 		var code = $("input[name='identifyCode']").val();
 
         if ( empty(name) || name.length > 100){
-            alert("用户名不合法！");
+            layer.msg("用户名不合法！");
             condition = true;
 		}else  if (empty(account) || account.length < 6){
-            alert("账号不合法！");
+            layer.msg("账号不合法！");
             condition = true;
 		}else  if(empty(password) || password < 6){
-            alert("密码不合法！");
+		    layer.msg("密码不合法！");
             condition=true
 		}else if (password != password1){
-            alert("两次输入的密码不匹配！");
+		    layer.msg("两次输入的密码不匹配！");
             condition = true;
 		}else if (empty(code)){
-            alert("验证码不能为空！");
+		    layer.msg("验证码不能为空！");
             condition = true;
 		}
 
@@ -140,5 +142,6 @@
 
 </script>
 <script src="/static/lib/jquery/jquery-3.2.1.min.js"></script>
+<script src="/static/lib/layer-v3.1.1/layer/layer.js"></script>
 </body>
 </html>

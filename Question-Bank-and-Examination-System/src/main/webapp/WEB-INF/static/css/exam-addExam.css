@@ -1,0 +1,91 @@
+@charset "UTF-8";
+body,html {
+	width:100%;
+	height:100%;
+}
+.top-subtitle {
+	height:42px;
+	width:85%;
+	border:0;
+	margin:auto;
+}
+.subtitle-cont {
+	width:100%;
+	height:100%;
+	display:flex;
+	padding:0;
+	flex-direction:row;
+	list-style:none;
+}
+.subtitle-cont-li{
+	font-size:16px;
+	line-height:42px;
+	list-style-type:none;
+	border-bottom:2px solid #5cb85c;
+}
+.subtitle-cont-li:after
+{
+	content:"|";
+	margin-left:20px;
+	color:#d9d9d9;
+}
+.empty-li {
+	flex-grow:1;
+	list-style-type:none;
+	border-bottom:2px solid #d9d9d9;	
+}
+.test-title{
+	margin: auto;
+	margin-top:30px;
+	width:80%;
+}
+.test-title td {
+	min-width: 120px;
+	height:40px;
+}
+.test-info-main {
+	margin: auto;
+	width: 85%;
+}
+.test-info-main table {
+	width:100%;
+	margin-top: 20px;
+}
+.test-info-main td{
+	width:10%;
+	border:1px solid #cccccc;
+	text-align: center;
+	border-collapse: collapse;
+	height:35px;
+} 
+.view-bnt {
+	background-color: #5bc0de;
+	color: white;
+	width: 60px;
+	border:0;
+	border-radius:5px;
+	height:30px;
+}
+.paperlist {
+	/*background-color: #cccccc;*/
+}
+
+body .my-layui .layui-layer-title {
+	padding: 0 80px 0 20px;
+	height: 42px;
+	line-height: 42px;
+	font-size: 14px;
+	background:#5bc0de;
+	color:#fff;
+	border: none;
+}
+
+body .my-layui .layui-layer-content {
+	padding: 20px;
+	min-height: 250px;
+	max-height: 250px;
+	word-break: break-all;
+	white-space:normal;
+	OVERFLOW-Y: auto;
+	OVERFLOW-X:hidden;
+}

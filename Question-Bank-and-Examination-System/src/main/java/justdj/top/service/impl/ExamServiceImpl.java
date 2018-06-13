@@ -62,7 +62,7 @@ public class ExamServiceImpl implements ExamService {
 	}
 	
 	@Override
-	@Transactional(readOnly = false,propagation= Propagation.REQUIRED,rollbackFor = Exception.class)
+	@Transactional(readOnly = false,propagation= Propagation.REQUIRED,rollbackFor = RuntimeException.class)
 	public Integer insertExamAllInfo(Exam exam, List <BigInteger> classId, List <BigInteger> testPaperId) throws Exception{
 		int result = examMapper.insertExam(exam);
 		for (BigInteger a:classId) {
@@ -71,7 +71,6 @@ public class ExamServiceImpl implements ExamService {
 		for (BigInteger a:testPaperId) {
 			insertExamTestPaper(exam.getId(),a);
 		}
-		
 		return result;
 	}
 	

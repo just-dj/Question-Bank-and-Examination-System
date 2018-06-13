@@ -9,10 +9,14 @@
 package justdj.top.controller.teacher;
 
 
+import com.alibaba.fastjson.JSON;
 import justdj.top.pojo.*;
 import justdj.top.service.*;
 import justdj.top.util.KindHelper;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpRequest;
@@ -21,15 +25,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigInteger;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class ExamController {
@@ -60,6 +62,8 @@ public class ExamController {
 	@Qualifier("kindService")
 	private KindService kindService;
 	
+	private static Logger logger = LoggerFactory.getLogger(ExamController.class);
+	
 	/**
 	 *@author  ShanDJ
 	 *@params [courseId, model]
@@ -89,8 +93,9 @@ public class ExamController {
 			}
 		}
 
-		request.setAttribute("examList",examList);
-		request.setAttribute("studentNum",studentNum);
+		model.addAttribute("examList",examList);
+		model.addAttribute("studentNum",studentNum);
+		model.addAttribute("courseId",courseId);
 		
 		return "/te/examManager";
 	}
@@ -103,9 +108,11 @@ public class ExamController {
 	 *@description 新建考试界面 待完善
 	 */
 	@RequestMapping(value = "/te/exam/new",method = RequestMethod.GET)
-	public void createExam(@RequestParam("courseId")BigInteger courseId,
+	public String createExam(@RequestParam("courseId")BigInteger courseId,
 	                       RedirectAttributes redirectAttributes,
 	                       Model model){
+		Subject subject = SecurityUtils.getSubject();
+		
 		List<TestPaper> testPaperList = testPaperService.selectTestPaperByCourseId(courseId);
 		
 		List<Clazz> clazzList = courseService.selectClazzByCourseId(courseId);
@@ -130,11 +137,17 @@ public class ExamController {
 			questionCount.add(info.get(0));
 		}
 		
-		model.addAttribute(clazzList);
+		logger.info("教师 " + subject.getPrincipal() + " 访问 课程 " + courseId +" 新建考试界面");
 		
-		model.addAttribute(testPaperList);
+		model.addAttribute("courseId",courseId);
+		
+		model.addAttribute("classList",clazzList);
+		
+		model.addAttribute("testPaperList",testPaperList);
 		
 		model.addAttribute("testPaperInfo",questionCount);
+		
+		return "/te/exam-addExam";
 	}
 	
 	/**
@@ -145,6 +158,7 @@ public class ExamController {
 	 *@description 新建考试 待完善
 	 */
 	@RequestMapping(value = "/te/exam/new",method = RequestMethod.POST)
+	@ResponseBody
 	public String insertExam(@RequestParam("courseId")BigInteger courseId,
 			               @RequestParam("classList")BigInteger[] classList,
 	                       @RequestParam("examName")String examName,
@@ -153,25 +167,29 @@ public class ExamController {
 	                       @RequestParam("testPaperList")BigInteger[] testPaperList,
 	                       RedirectAttributes redirectAttributes,
 	                       Model model){
+		Map<String,String> resultMap = new HashMap <>();
 		Exam exam = new Exam();
 		exam.setCourseId(courseId);
 		exam.setName(examName);
 		exam.setStartTime(startTime);
 		exam.setEndTime(endTime);
+		exam.setUse(true);
+		
 		//班级或者试卷是否为空
 		if (null == classList || classList.length == 0 || null == testPaperList || testPaperList.length == 0){
-			redirectAttributes.addFlashAttribute("message","请完善班级或试卷信息！");
-			return "redirect:/te/exam";
+			resultMap.put("message","请完善班级或试卷信息！");
+			return JSON.toJSONString(resultMap);
 		}
-
 		//是否操作成功
 		try{
 			examService.insertExamAllInfo(exam, Arrays.asList(classList),Arrays.asList(testPaperList));
+			resultMap.put("message","新建考试成功！");
 		}catch (Exception e){
-		
+			logger.warn("教师" + AccountService.getAccount() + "新建考试失败" + e.getMessage());
+			resultMap.put("message","新建考试失败，请稍后重试！");
 		}
-		return "redirect:/te/exam";
-	
+		
+		return JSON.toJSONString(resultMap);
 	}
 	
 	
