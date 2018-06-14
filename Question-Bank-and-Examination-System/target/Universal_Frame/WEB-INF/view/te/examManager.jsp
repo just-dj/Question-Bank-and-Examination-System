@@ -98,8 +98,8 @@
 </body>
 <script src="/static/lib/jquery/jquery-3.2.1.min.js"></script>
 <script type="text/javascript">
-	$("#getNewExam").click(function(){
-		window.location.href="newTest.jsp";
-	})
+//	$("#getNewExam").click(function(){
+//		window.location.href="newTest.jsp";
+//	})
 </script>
 </html>

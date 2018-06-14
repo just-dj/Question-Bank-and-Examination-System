@@ -54,7 +54,7 @@ body{
 </style>
 </head>
 <div class="head-header">
-	<div id="head-title">试卷管理系统</div>
+	<div id="head-title">题库与考试系统</div>
 	<div class="head-dropdown">
 
 		<button class="head-dropdown-user">${sessionScope.user.name},你好！</button>

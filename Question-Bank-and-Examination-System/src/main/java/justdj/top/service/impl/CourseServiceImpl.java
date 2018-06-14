@@ -81,4 +81,15 @@ public class CourseServiceImpl implements CourseService{
 	public Integer addStudentToClass(BigInteger classId, BigInteger studentId) throws DataIntegrityViolationException {
 		return courseMapper.addStudentToClass(classId,studentId);
 	}
+	
+	
+	@Override
+	public Integer addClass(Clazz clazz) {
+		return courseMapper.addClass(clazz);
+	}
+	
+	@Override
+	public Integer addCourse(Course course) {
+		return courseMapper.addCourse(course);
+	}
 }

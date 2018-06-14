@@ -45,7 +45,9 @@
                     </div>
                 </div>
             </div>
-            <div class="new_btn">新建课程</div>
+            <a href="/te/course/add">
+                <div class="new_btn">新建课程</div>
+            </a>
         </div>
         <!-- 右侧 -->
         <div class="col-md-9 column">

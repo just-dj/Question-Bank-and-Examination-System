@@ -9,6 +9,7 @@
 package justdj.top.controller.teacher;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import justdj.top.pojo.Question;
 import justdj.top.pojo.TestDatabase;
 import justdj.top.pojo.TestPaper;
@@ -23,10 +24,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigInteger;
@@ -58,7 +56,7 @@ public class TestPaperController {
 	 *@description 试卷管理 提供所有试卷队列  和相关的题目信息
 	 */
 	@RequestMapping(value = "/te/testPaper",method = RequestMethod.GET)
-	public void getAllTestPaperByCourseId(@RequestParam(value = "id",required = true)BigInteger courseId,
+	public String getAllTestPaperByCourseId(@RequestParam(value = "id",required = true)BigInteger courseId,
 	                                      Model model){
 		KindHelper.setKindService(kindService);
 		
@@ -76,9 +74,26 @@ public class TestPaperController {
 		}
 		
 		
+		for (List list:testPaperInfo) {
+			int allNum = 0;
+			for (Integer num:((List<Integer>)list.get(0))){
+				allNum += num;
+			}
+			((List<Integer>)list.get(0)).add(allNum);
+			
+			int soreNum = 0;
+			for (Integer score:((List<Integer>)list.get(1))){
+				soreNum += score;
+			}
+			((List<Integer>)list.get(1)).add(soreNum);
+			
+		}
+		
+		model.addAttribute("kindName",kindNameList);
 		model.addAttribute("testPaperList",testPaperList);
 		model.addAttribute("testPaperInfo",testPaperInfo);
 		
+		return "/te/testPaperManager";
 		
 	}
 	
@@ -100,6 +115,17 @@ public class TestPaperController {
 	}
 	
 	
+	@RequestMapping(value = "/te/testPaper/question",method = RequestMethod.GET)
+	public String viewTestPaper(@RequestParam("id")BigInteger testPaperId,
+	                            Model model){
+		
+		KindHelper.setKindService(kindService);
+		
+		model.addAttribute("kinList",KindHelper.getKindNameList());
+		model.addAttribute("testPaperId",testPaperId);
+		return "/te/testPaper-viewQuestions";
+	}
+	
 	/**
 	 *@author  ShanDJ
 	 *@params [testPaperId, kindName]
@@ -107,13 +133,15 @@ public class TestPaperController {
 	 *@date  18.5.29
 	 *@description 预览试卷 根据试卷试题类型获取对应题目
 	 */
-	@RequestMapping(value = "/te/testPaper/question",method = RequestMethod.GET)
+	@RequestMapping(value = "/te/testPaper/question",method = RequestMethod.POST)
+	@ResponseBody
 	public String getTestPaperQuestionByKindName(@RequestParam(value = "id",required = true)BigInteger testPaperId,
 	                                           @RequestParam(value = "kind",required = true)String kindName){
+		
 		List<Question> questionList = testPaperService.selectQuestionByTestPaperIdAndKindName(testPaperId,kindName);
 		
-		
-		return JSON.toJSONString(questionList);
+		return JSON.toJSONString(questionList, SerializerFeature.WriteNullStringAsEmpty,SerializerFeature
+				.WriteNullListAsEmpty,SerializerFeature.WriteNullNumberAsZero);
 		
 	}
 	
@@ -124,11 +152,11 @@ public class TestPaperController {
 	 *@date  18.6.10
 	 *@description 删除或增加试卷题目 返回结果是数据库处理影响条数 1 正确 0 失败
 	 */
-	@RequestMapping(value = "/te/testPaper/question",method = RequestMethod.POST)
+	@RequestMapping(value = "/te/testPaper/question/{status}",method = RequestMethod.POST)
 	@ResponseBody
 	public String managerQuestion(@RequestParam(value = "testPaperId")BigInteger testPaperId,
 	                              @RequestParam("questionId")BigInteger questionId,
-	                              @RequestParam("status")Integer status,
+	                              @PathVariable("status")Integer status,
 	                              @RequestParam("score")Integer score,
 	                              RedirectAttributes redirectAttributes){
 		Integer result = 0;

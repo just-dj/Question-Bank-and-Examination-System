@@ -68,8 +68,35 @@ public class ClassController {
 		logger.warn("教师 "+subject.getPrincipal().toString() + " 管理 课程" + courseId + "班级");
 		
 		model.addAttribute("classList",classList);
+		model.addAttribute("courseId",courseId);
 		return "/te/classManager";
 	}
+	
+	
+	@RequestMapping(value = "/te/class/add",method = RequestMethod.GET)
+	public String addClassPage(@RequestParam("courseId")BigInteger courseId,
+	                       Model model){
+		
+		model.addAttribute("courseId",courseId);
+		
+		return "/te/class-addClass";
+	}
+	
+	
+	@RequestMapping(value = "/te/class/add",method = RequestMethod.POST)
+	public String addClass(Clazz clazz,
+	                     RedirectAttributes redirectAttributes){
+		Subject subject = SecurityUtils.getSubject();
+		
+		logger.info(" 教师 " + subject.getPrincipal().toString() +" 新建班级 " + clazz.toString());
+		int result = courseService.addClass(clazz);
+		
+//		redirectAttributes.addFlashAttribute("id",clazz.getCourseId());
+		
+		return "redirect:/te/class?id="+ clazz.getCourseId();
+	}
+	
+	
 	
 	/**
 	 *@author  ShanDJ

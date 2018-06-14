@@ -37,4 +37,9 @@ public interface CourseService {
 	
 	Integer addStudentToClass(@Param("classId") BigInteger classId,
 	                          @Param("studentId") BigInteger studentId) throws DataIntegrityViolationException;
+	
+	
+	Integer addClass(Clazz clazz);
+	
+	Integer addCourse(Course course);
 }

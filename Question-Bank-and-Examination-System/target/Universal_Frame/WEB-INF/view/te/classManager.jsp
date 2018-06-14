@@ -16,7 +16,7 @@
 		<div class="classManager_box_body">
 			<!-- 新建班级  -->
 			<div class="classAdd">
-				<a class="classAdd_box" alt="">
+				<a class="classAdd_box" href="/te/class/add?courseId=${courseId}">
 					<img src="/static/img/classManager.png" height="76px" width="76px"/>
 					<span>新建班级</span>
 				</a>

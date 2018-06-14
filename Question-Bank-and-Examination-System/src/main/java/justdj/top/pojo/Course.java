@@ -23,6 +23,8 @@ public class Course implements Serializable {
 	
 	private String introduce;
 	
+	private String img;
+	
 	private List<Knowledge> knowledgeList;
 	
 	private List<Clazz> clazzList;

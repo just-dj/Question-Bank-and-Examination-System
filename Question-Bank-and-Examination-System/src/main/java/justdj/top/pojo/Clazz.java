@@ -17,7 +17,13 @@ import java.util.List;
 public class Clazz implements Serializable{
 	private BigInteger id;
 	
+	private BigInteger courseId;
+	
 	private String name;
+	
+	private String time;
+	
+	private String place;
 	
 	private List<User> userList;
 	

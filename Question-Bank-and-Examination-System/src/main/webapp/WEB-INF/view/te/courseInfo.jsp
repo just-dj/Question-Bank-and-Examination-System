@@ -37,6 +37,10 @@
 		float: left;
 		margin-top: 3%;
 		margin-left: 3%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
 	}
 	#add1{
 		background-color: #5bc0de;
@@ -56,7 +60,7 @@
 		background-color: gray;
 	}
 	.add-pic{
-		margin-left: 35%;
+		/*margin-left: 35%;*/
 		color: white;
 		margin-top: 20px;
 	}
@@ -99,7 +103,7 @@
     			<p class="word">班级管理</p>
     		</div>
     		<div class="add" id="add2">
-    			<a href=""><i class="fa fa-file fa-5x add-pic"></i></a>
+    			<a href="/te/testPaper?id=${courseId}"><i class="fa fa-file fa-5x add-pic"></i></a>
     			<p class="word">${testPaperList.size()}个</p>
     			<p class="word">试卷管理</p>
     		</div>

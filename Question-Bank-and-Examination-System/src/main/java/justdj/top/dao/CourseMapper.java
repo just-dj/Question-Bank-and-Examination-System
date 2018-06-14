@@ -13,16 +13,17 @@ import java.util.List;
 //@CacheNamespace(implementation = justdj.top.cache.MybatisRedisCache.class)
 public interface CourseMapper {
 	
-	@Select("select id,teacher_id,name,introduce from course where teacher_id = #{teacherId}")
+	@Select("select id,teacher_id,name,introduce,img from course where teacher_id = #{teacherId}")
 	@Results({
 			@Result(id = true,column = "id",property = "id"),
 			@Result(column = "teacher_id",property = "teacherId"),
 			@Result(column = "name",property = "name"),
-			@Result(column = "introduce",property = "introduce")
+			@Result(column = "introduce",property = "introduce"),
+			@Result(column = "img",property = "img")
 	})
 	List<Course> selectCourseByTeacherId(BigInteger teacherId);
 	
-	@Select("select course.id,teacher_id,course.name,course.introduce\n" +
+	@Select("select course.img,course.id,teacher_id,course.name,course.introduce\n" +
 			"from user inner join class_student inner join class inner join course\n" +
 			"on user.id = student_id and class_id = class.id and course_id = course.id\n" +
 			"where user.id = #{studentId}")
@@ -30,16 +31,18 @@ public interface CourseMapper {
 			@Result(id = true,column = "id",property = "id"),
 			@Result(column = "teacher_id",property = "teacherId"),
 			@Result(column = "name",property = "name"),
-			@Result(column = "introduce",property = "introduce")
+			@Result(column = "introduce",property = "introduce"),
+			@Result(column = "img",property = "img")
 	})
 	List<Course> selectCourseByStudentId(BigInteger studentId);
 	
-	@Select("select id,teacher_id,name,introduce from course where id = #{courseId}")
+	@Select("select course.img,id,teacher_id,name,introduce from course where id = #{courseId}")
 	@Results({
 			@Result(id = true,column = "id",property = "id"),
 			@Result(column = "teacher_id",property = "teacherId"),
 			@Result(column = "name",property = "name"),
 			@Result(column = "introduce",property = "introduce"),
+			@Result(column = "img",property = "img"),
 			@Result(column = "id",property = "knowledgeList",
 			many = @Many(select = "justdj.top.dao.CourseMapper.selectKnowledgeByCourseId",fetchType = FetchType.EAGER)),
 			@Result(column = "id",property = "clazzList",
@@ -50,6 +53,11 @@ public interface CourseMapper {
 	
 //	知识点
 	@Select("select id,course_id,name,introduce from knowledge where course_id = #{courseId}")
+	@Results({
+			@Result(id = true,column = "id",property = "id"),
+			@Result(column = "name",property = "name"),
+			@Result(column = "introduce",property = "introduce")
+	})
 	List<Knowledge> selectKnowledgeByCourseId(BigInteger courseId);
 	
 	@Delete("delete from knowledge where id = #{knowledgeId}")
@@ -63,10 +71,12 @@ public interface CourseMapper {
 	                     @Param("name")String name,
 	                     @Param("introduce")String introduce);
 //	班级
-	@Select("select id,course_id,name from class where course_id = #{courseId}")
+	@Select("select id,course_id,name,time,place from class where course_id = #{courseId}")
 	@Results({
 			@Result(id = true,column = "id",property = "id"),
 			@Result (column = "name",property = "name"),
+			@Result(column = "time",property = "time"),
+			@Result(column = "place",property = "place"),
 			@Result(column = "id",property = "userList",
 					many = @Many(select = "justdj.top.dao.CourseMapper.selectStudentByClassId",fetchType =  FetchType.EAGER))
 	})
@@ -105,4 +115,14 @@ public interface CourseMapper {
 	@Options(flushCache = true)
 	Integer addStudentToClass(@Param("classId") BigInteger classId,
 	                          @Param("studentId") BigInteger studentId);
+	
+	
+	@Insert("insert into class (course_id,name,time,place) " +
+			"values (#{courseId},#{name},#{time},#{place})")
+	Integer addClass(Clazz clazz);
+	
+	
+	@Insert("insert into course (teacher_id,name,introduce,img) " +
+			"values (#{teacherId},#{name},#{introduce},#{img})")
+	Integer addCourse(Course course);
 }

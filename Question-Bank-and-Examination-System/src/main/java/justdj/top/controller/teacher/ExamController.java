@@ -208,6 +208,8 @@ public class ExamController {
 		
 		model.addAttribute(exam);
 		model.addAttribute(answerList);
+		System.out.println(JSON.toJSONString(exam));
+		System.out.println(JSON.toJSONString(answerList));
  	}
 	
 	
