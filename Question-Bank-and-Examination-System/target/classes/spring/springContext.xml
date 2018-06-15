@@ -30,14 +30,14 @@
 	
 	<!--使用PropertyOverrideConfigure后处理器加载数据源参数-->
 	<!--我说为啥不用配置数据源账号密码也行-->
-	<!--<context:property-override location="classpath:property/db.properties"/>-->
+	<context:property-override location="classpath:property/db.properties"/>
 	
 	<!--配置c3p0数据源-->
-	<!--<bean  id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close"-->
-	<!--p:driverClass="${dataSource.driverClass}"-->
-	<!--p:jdbcUrl="${dataSource.jdbcUrl}"-->
-	<!--p:user="${dataSource.user}"-->
-	<!--p:password="${dataSource.password}"/>-->
+	<bean  id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close"
+	p:driverClass="${dataSource.driverClass}"
+	p:jdbcUrl="${dataSource.jdbcUrl}"
+	p:user="${dataSource.user}"
+	p:password="${dataSource.password}"/>
 	
 	
 	<!--mybatis社区用于整合Spring的bean-->
@@ -70,80 +70,80 @@
 	
 	
 	
-	<!--spring 实现主从配置-->
-	<!-- 定义数据源，使用自己实现的数据源 -->
-	<bean  id="dataSource" class="justdj.top.master_slave_aspect.DynamicDataSource">
-		<!-- 设置多个数据源 -->
-		<property name="targetDataSources">
-			<map key-type="java.lang.String">
-				<!-- 这个key需要和程序中的key一致 -->
-				<entry key="master" value-ref="masterDataSource"/>
-				<entry key="slave" value-ref="slave01DataSource"/>
-			</map>
-		</property>
-		<!-- 设置默认的数据源，这里默认走写库 -->
-		<property name="defaultTargetDataSource" ref="masterDataSource"/>
-	</bean>
-	
-	<!-- 配置连接池 -->
-	<bean id="masterDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
-		  destroy-method="close"
-		  p:driverClass="${jdbc.master.driver}"
-		  p:jdbcUrl="${jdbc.master.url}"
-		  p:user="${jdbc.master.username}"
-		  p:password="${jdbc.master.password}">
-	</bean>
-	
-	<!-- 配置连接池 -->
-	<bean id="slave01DataSource"  class="com.mchange.v2.c3p0.ComboPooledDataSource"
-		  destroy-method="close"
-		  p:driverClass="${jdbc.slave01.driver}"
-		  p:jdbcUrl="${jdbc.slave01.url}"
-		  p:user="${jdbc.slave01.username}"
-		  p:password="${jdbc.slave01.password}">
-	</bean>
-	
-	<!-- 定义AOP切面处理器 -->
-	<bean id="dataSourceAspect" class="justdj.top.master_slave_aspect.DataSourceAspect" >
-		<!-- 指定事务策略 -->
-		<property name="txAdvice" ref="txAdvice"/>
-		<!-- 指定slave方法的前缀（非必须） -->
-		<property name="slaveMethodStart" value="query,find,get"/>
-	</bean>
-	
-	<!-- 定义事务策略 -->
-	<!--事务增强-->
-	<tx:advice id="txAdvice" transaction-manager="transactionManager" >
-		
-		<tx:attributes>
-			<!--定义查询方法都是只读的 -->
-			<!--很多配置属性的方法-->
-			<tx:method name="query*" read-only="true" propagation="REQUIRED" isolation="DEFAULT" timeout="-1"/>
-			<tx:method name="find*" read-only="true" />
-			<tx:method name="get*" read-only="true" />
-			<tx:method name="select*" read-only="true" />
-			
-			<!-- 主库执行操作，事务传播行为定义为默认行为 -->
-			<tx:method name="save*" propagation="REQUIRED" />
-			<tx:method name="update*" propagation="REQUIRED" />
-			<tx:method name="delete*" propagation="REQUIRED" />
-			
-			<!--其他方法使用默认事务策略 -->
-			<tx:method name="*" />
-		</tx:attributes>
-	</tx:advice>
-	
-	<aop:config>
-		<!-- 定义切面，所有的service的所有方法 -->
-		<aop:pointcut id="txPointcut" expression="execution(* justdj.top.service.impl.*.*(..))" />
-		<!-- 应用事务策略到Service切面 -->
-		<aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut"/>
-		
-		<!-- 将切面应用到自定义的切面处理器上，-9999保证该切面优先级最高执行 -->
-		<aop:aspect ref="dataSourceAspect" order="-9999">
-			<aop:before method="before" pointcut-ref="txPointcut" />
-		</aop:aspect>
-	</aop:config>
+	<!--&lt;!&ndash;spring 实现主从配置&ndash;&gt;-->
+	<!--&lt;!&ndash; 定义数据源，使用自己实现的数据源 &ndash;&gt;-->
+	<!--<bean  id="dataSource" class="justdj.top.master_slave_aspect.DynamicDataSource">-->
+		<!--&lt;!&ndash; 设置多个数据源 &ndash;&gt;-->
+		<!--<property name="targetDataSources">-->
+			<!--<map key-type="java.lang.String">-->
+				<!--&lt;!&ndash; 这个key需要和程序中的key一致 &ndash;&gt;-->
+				<!--<entry key="master" value-ref="masterDataSource"/>-->
+				<!--<entry key="slave" value-ref="slave01DataSource"/>-->
+			<!--</map>-->
+		<!--</property>-->
+		<!--&lt;!&ndash; 设置默认的数据源，这里默认走写库 &ndash;&gt;-->
+		<!--<property name="defaultTargetDataSource" ref="masterDataSource"/>-->
+	<!--</bean>-->
+	<!---->
+	<!--&lt;!&ndash; 配置连接池 &ndash;&gt;-->
+	<!--<bean id="masterDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"-->
+		  <!--destroy-method="close"-->
+		  <!--p:driverClass="${jdbc.master.driver}"-->
+		  <!--p:jdbcUrl="${jdbc.master.url}"-->
+		  <!--p:user="${jdbc.master.username}"-->
+		  <!--p:password="${jdbc.master.password}">-->
+	<!--</bean>-->
+	<!---->
+	<!--&lt;!&ndash; 配置连接池 &ndash;&gt;-->
+	<!--<bean id="slave01DataSource"  class="com.mchange.v2.c3p0.ComboPooledDataSource"-->
+		  <!--destroy-method="close"-->
+		  <!--p:driverClass="${jdbc.slave01.driver}"-->
+		  <!--p:jdbcUrl="${jdbc.slave01.url}"-->
+		  <!--p:user="${jdbc.slave01.username}"-->
+		  <!--p:password="${jdbc.slave01.password}">-->
+	<!--</bean>-->
+	<!---->
+	<!--&lt;!&ndash; 定义AOP切面处理器 &ndash;&gt;-->
+	<!--<bean id="dataSourceAspect" class="justdj.top.master_slave_aspect.DataSourceAspect" >-->
+		<!--&lt;!&ndash; 指定事务策略 &ndash;&gt;-->
+		<!--<property name="txAdvice" ref="txAdvice"/>-->
+		<!--&lt;!&ndash; 指定slave方法的前缀（非必须） &ndash;&gt;-->
+		<!--<property name="slaveMethodStart" value="query,find,get"/>-->
+	<!--</bean>-->
+	<!---->
+	<!--&lt;!&ndash; 定义事务策略 &ndash;&gt;-->
+	<!--&lt;!&ndash;事务增强&ndash;&gt;-->
+	<!--<tx:advice id="txAdvice" transaction-manager="transactionManager" >-->
+		<!---->
+		<!--<tx:attributes>-->
+			<!--&lt;!&ndash;定义查询方法都是只读的 &ndash;&gt;-->
+			<!--&lt;!&ndash;很多配置属性的方法&ndash;&gt;-->
+			<!--<tx:method name="query*" read-only="true" propagation="REQUIRED" isolation="DEFAULT" timeout="-1"/>-->
+			<!--<tx:method name="find*" read-only="true" />-->
+			<!--<tx:method name="get*" read-only="true" />-->
+			<!--<tx:method name="select*" read-only="true" />-->
+			<!---->
+			<!--&lt;!&ndash; 主库执行操作，事务传播行为定义为默认行为 &ndash;&gt;-->
+			<!--<tx:method name="save*" propagation="REQUIRED" />-->
+			<!--<tx:method name="update*" propagation="REQUIRED" />-->
+			<!--<tx:method name="delete*" propagation="REQUIRED" />-->
+			<!---->
+			<!--&lt;!&ndash;其他方法使用默认事务策略 &ndash;&gt;-->
+			<!--<tx:method name="*" />-->
+		<!--</tx:attributes>-->
+	<!--</tx:advice>-->
+	<!---->
+	<!--<aop:config>-->
+		<!--&lt;!&ndash; 定义切面，所有的service的所有方法 &ndash;&gt;-->
+		<!--<aop:pointcut id="txPointcut" expression="execution(* justdj.top.service.impl.*.*(..))" />-->
+		<!--&lt;!&ndash; 应用事务策略到Service切面 &ndash;&gt;-->
+		<!--<aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut"/>-->
+		<!---->
+		<!--&lt;!&ndash; 将切面应用到自定义的切面处理器上，-9999保证该切面优先级最高执行 &ndash;&gt;-->
+		<!--<aop:aspect ref="dataSourceAspect" order="-9999">-->
+			<!--<aop:before method="before" pointcut-ref="txPointcut" />-->
+		<!--</aop:aspect>-->
+	<!--</aop:config>-->
 	
 	
 </beans>

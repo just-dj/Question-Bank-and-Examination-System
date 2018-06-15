@@ -41,5 +41,7 @@ public interface CourseService {
 	
 	Integer addClass(Clazz clazz);
 	
-	Integer addCourse(Course course);
+	Integer addCourse(Course course) throws RuntimeException;
+	
+	Clazz selectClass(BigInteger classId);
 }

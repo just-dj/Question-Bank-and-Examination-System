@@ -28,8 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class TestPaperController {
@@ -92,6 +91,7 @@ public class TestPaperController {
 		model.addAttribute("kindName",kindNameList);
 		model.addAttribute("testPaperList",testPaperList);
 		model.addAttribute("testPaperInfo",testPaperInfo);
+		model.addAttribute("courseId",courseId);
 		
 		return "/te/testPaperManager";
 		
@@ -136,12 +136,13 @@ public class TestPaperController {
 	@RequestMapping(value = "/te/testPaper/question",method = RequestMethod.POST)
 	@ResponseBody
 	public String getTestPaperQuestionByKindName(@RequestParam(value = "id",required = true)BigInteger testPaperId,
-	                                           @RequestParam(value = "kind",required = true)String kindName){
+	                                           @RequestParam(value = "kind",required = true)BigInteger kindId){
 		
-		List<Question> questionList = testPaperService.selectQuestionByTestPaperIdAndKindName(testPaperId,kindName);
+		List<Question> questionList = testPaperService.selectQuestionByTestPaperIdAndKindId(testPaperId,kindId);
 		
-		return JSON.toJSONString(questionList, SerializerFeature.WriteNullStringAsEmpty,SerializerFeature
-				.WriteNullListAsEmpty,SerializerFeature.WriteNullNumberAsZero);
+		System.err.println(JSON.toJSONString(questionList));
+		
+		return JSON.toJSONString(questionList);
 		
 	}
 	
@@ -179,7 +180,7 @@ public class TestPaperController {
 	 * 还需要一个筛选题库题目的接口
 	 */
 	@RequestMapping(value = "/te/testPaper/import",method = RequestMethod.GET)
-	public void importQuestion(@RequestParam("courseId")BigInteger courseId,
+	public String importQuestion(@RequestParam("courseId")BigInteger courseId,
 			@RequestParam(value = "testPaperId")BigInteger testPaperId,
 	                           Model model){
 		
@@ -196,8 +197,12 @@ public class TestPaperController {
 		
 		model.addAttribute("kindNameList",kindNameList);
 		model.addAttribute("questionList",questionList);
-		model.addAttribute("resultList",resultList);
+		model.addAttribute("quesNum",resultList);
 		model.addAttribute("testDatabaseList",testDatabaseList);
+		model.addAttribute("testPaperId",testPaperId);
+		model.addAttribute("courseId",courseId);
+		
+		return "/te/testPaper-importQuestions";
 	}
 	
 	
@@ -213,12 +218,16 @@ public class TestPaperController {
 	 */
 	@RequestMapping(value = "/te/testDatabase/search",method = RequestMethod.POST)
 	@ResponseBody
-	public String  getTestDatabaseQuestionByKey(@RequestParam(value = "id",required = true)BigInteger testDatabaseId,
-	                                         @RequestParam(value = "kind",required = true)String kindName,
-	                                         @RequestParam(value = "key",required = false)String keyWord){
+	public String  getTestDatabaseQuestionByKey(
+			@RequestParam("courseId")BigInteger courseId,
+			@RequestParam(value = "id",required = true)BigInteger testDatabaseId,
+             @RequestParam(value = "kind",required = true)String kindName,
+             @RequestParam(value = "key",required = false)String keyWord){
 		KindHelper.setKindService(kindService);
 		System.out.println(testDatabaseId + kindName + keyWord);
-		List<Question> questionList = testDatabaseService.selectQuestionByCondition(testDatabaseId,KindHelper.getKindId(kindName),keyWord);
+
+		List<Question> questionList = testDatabaseService.selectQuestionByCondition(courseId,testDatabaseId,KindHelper
+				.getKindId(kindName),keyWord);
 		
 		System.out.println(JSON.toJSONString(questionList));
 		
@@ -238,34 +247,69 @@ public class TestPaperController {
 	 * 比较粗暴的是直接删除当前所有的联系 然后重新创建
 	 * questionId是一个字符串，题目Id之间用空格隔开
 	 */
-	@Transactional(rollbackFor = {Exception.class,RuntimeException.class})
 	@RequestMapping(value = "/te/testPaper/import",method = RequestMethod.POST)
-	public String updateTestPaperQuestion(@RequestParam("id")BigInteger testPaperId ,
+	@ResponseBody
+	public String updateTestPaperQuestion(@RequestParam("paperId")BigInteger testPaperId ,
 	                                      @RequestParam("questionId")String questionId,
-	                                      Model model,
-	                                      RedirectAttributes redirectAttributes){
-		if (null != questionId){
-			List<Question> questionList = testPaperService.selectQuestionByTestPaperId(testPaperId);
-			for (Question question : questionList){
-				testPaperService.deleteTestPaperQuestion(testPaperId,question.getId());
+	                                      @RequestParam(value = "value",required = false)String score,
+	                                      @RequestParam("operation")Integer operation,
+	                                      @RequestParam(value = "kindId",required = false)BigInteger kindId,
+	                                      Model model){
+		Map<String,String> result = new HashMap <>();
+		String[] questionIdArray = questionId.split(" ");
+		String[] scoreArray = null;
+		
+		logger.info("操作试卷");
+		
+		if (1 == operation){
+			scoreArray = score.split(" ");
+			
+			System.err.println(Arrays.asList(questionIdArray));
+			System.err.println(Arrays.asList(scoreArray));
+			
+			//添加
+			int sum = 0;
+			for (int i = 0;i < questionIdArray.length;++i){
+				try{
+					testPaperService.addQuestion(testPaperId,new BigInteger(questionIdArray[i]),
+							Integer.parseInt(scoreArray[i]));
+					sum ++;
+				}catch (RuntimeException e){
+					//题目重复了
+					logger.info("重复题型");
+				}
 			}
-			String[] idList= questionId.split(" ");
-
-			for (String id:idList){
-				testPaperService.addQuestion(testPaperId,new BigInteger("id"),0);
+			result.put("message","共添加成功" + sum +"题。"+ "<br>" + " 失败 "+(questionIdArray.length-sum) +"题（已在试卷中）");
+			return JSON.toJSONString(result);
+		}else  if (0 == operation){
+			for (int i = 0;i < questionIdArray.length;++i){
+				testPaperService.deleteTestPaperQuestion(testPaperId,new BigInteger(questionIdArray[i]));
 			}
-			logger.info(JSON.toJSONString(questionList));
-			logger.info(questionId);
-			redirectAttributes.addAttribute("id",testPaperId);
-			return "redirect:/te/testPaper/import";
-		}
-		else{
-			redirectAttributes.addAttribute("message","数据出错,请联系管理员");
-			return "redirect:/te/testPaper/import";
+			List<Question> questionList = testPaperService.selectQuestionByTestPaperIdAndKindId(testPaperId,kindId);
+			return JSON.toJSONString(questionList);
 		}
 		
 		
+		return "数据错误";
 	}
+	
+
+	
+	@RequestMapping(value = "/te/testPaper/info",method = RequestMethod.POST)
+	@ResponseBody
+	public String getInfo(@RequestParam("id")BigInteger testPaperId){
+		
+		List<Question> questionList = testPaperService.selectQuestionByTestPaperId(testPaperId);
+		
+		KindHelper.setKindService(kindService);
+		List<Integer> resultList = new ArrayList <>();
+		List<Integer> sumList = new ArrayList <>();
+		
+		getQuestionNumByQuestionKind(questionList,KindHelper.getKindNameList(),resultList,sumList);
+		
+		return JSON.toJSONString(resultList);
+	}
+	
 	
 	
 	/**

@@ -6,7 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>新建班级</title>
-<link href="/static/css/class-addClass.css" rel="stylesheet">
+	<link href="/static/css/class-addClass.css" rel="stylesheet">
 </head>
 <body>
 	<%@ include file="../head.jsp" %>

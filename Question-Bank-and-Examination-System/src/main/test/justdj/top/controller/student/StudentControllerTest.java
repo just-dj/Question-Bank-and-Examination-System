@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration()//声明为集成测试加载的ApplicationContext应该是WebApplicationContext类型
 //下面的注解告诉测试运行器如何加载和配置WebApplicationContext
 @ContextConfiguration(locations = {"/spring/test_springContext.xml","/spring/test_spring-shiro.xml",
-		"/test_springMVC.xml"})
+		"/test_springMVC.xml","/spring/test_spring-activemq.xml"})
 public class StudentControllerTest {
 	
 	private MockMvc mockMvc;

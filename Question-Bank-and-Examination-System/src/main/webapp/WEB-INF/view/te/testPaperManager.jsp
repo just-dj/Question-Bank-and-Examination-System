@@ -81,7 +81,7 @@
 				</td>
 				<td class="paper-tab-cont paper-tab-cont-last">
 				    <button class="basic-bnt delete-bnt" id="addPaperQuestion" onclick="deletePaper(${testPaper.getId()})">删除试卷</button>
-					<a href="#">
+					<a href="/te/testPaper/import?courseId=${courseId}&testPaperId=${testPaper.id}">
 						<button class="basic-bnt" id="addPaperQuestion" onclick="toViewPaper()" >导入试题</button>
 					</a>
 					<a href="/te/testPaper/question?id=${testPaper.id}">

@@ -13,8 +13,13 @@ import com.sun.org.apache.xpath.internal.operations.Mod;
 import justdj.top.pojo.Question;
 import justdj.top.pojo.TestDatabase;
 import justdj.top.service.KindService;
+import justdj.top.service.ParseFileService;
 import justdj.top.service.TestDatabaseService;
 import justdj.top.util.KindHelper;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -26,10 +31,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class TestDatabaseController {
@@ -42,6 +46,12 @@ public class TestDatabaseController {
 	@Qualifier("kindService")
 	private KindService kindService;
 	
+	@Autowired
+	@Qualifier("parseFileService")
+	private ParseFileService parseFileService;
+	
+	
+	private static Logger logger  = LoggerFactory.getLogger(TestDatabaseController.class);
 	
 	/**
 	 *@author  ShanDJ
@@ -51,7 +61,7 @@ public class TestDatabaseController {
 	 *@description 题库管理界面 要统计题库题目类型对应的题数
 	 */
 	@RequestMapping("/te/testDatabase")
-	public void testDatabase(@RequestParam("id")BigInteger courseId,
+	public String testDatabase(@RequestParam("id")BigInteger courseId,
 	                         Model model){
 
 		KindHelper.setKindService(kindService);
@@ -68,8 +78,11 @@ public class TestDatabaseController {
 			}
 		
 		model.addAttribute("testDatabaseList",testDatabaseList);
-		model.addAttribute("questionNumList",questionNumList);
-		System.out.println(JSON.toJSONString(questionNumList));
+		model.addAttribute("quesNum",questionNumList);
+		model.addAttribute("courseId",courseId);
+		
+		
+		return "/te/testDatabaseManager";
 	}
 	
 	/**
@@ -79,8 +92,8 @@ public class TestDatabaseController {
 	 *@date  18.5.29
 	 *@description 查看题库  可以增加一个按题库题目类型获取问题的接口
 	 */
-	@RequestMapping("/te/testDatabase/question")
-	public void getDatabaseQuestion(@RequestParam("id")BigInteger testDatabaseId,
+	@RequestMapping(value = "/te/testDatabase/question")
+	public String getDatabaseQuestion(@RequestParam("id")BigInteger testDatabaseId,
 	                                Model model){
 		KindHelper.setKindService(kindService);
 		List<String> kindName = KindHelper.getKindNameList();
@@ -90,6 +103,9 @@ public class TestDatabaseController {
 		
 		List<Question> list = testDatabaseService.selectTestDatabaseQuestionByTDId(testDatabaseId);
 		model.addAttribute("questionList",list);
+		model.addAttribute("testDatabaseId",testDatabaseId);
+		
+		return "/te/testDatabase-viewQuestions";
 	}
 	
 	
@@ -101,7 +117,7 @@ public class TestDatabaseController {
 	 *@date  18.5.29
 	 *@description 查看题库 备用接口
 	 */
-	@RequestMapping(value = "/te/testDatabase/ques",method = RequestMethod.GET)
+	@RequestMapping(value = "/te/testDatabase/ques",method = RequestMethod.POST)
 	@ResponseBody
 	public String getDatabaseQuestionByKindName(@RequestParam(value = "id",required = true)BigInteger testDatabaseId,
 	                                @RequestParam(value = "kindName",required = true)String kindName,
@@ -122,12 +138,69 @@ public class TestDatabaseController {
 	 * dao层已完成
 	 */
 	@RequestMapping(value = "/te/testDatabase/import",method = RequestMethod.POST)
-	public void importQuestionByFile(@RequestParam(value = "id",required = true)BigInteger testDatabaseId,
+	@ResponseBody
+	public String importQuestionByFile(@RequestParam(value = "id",required = true)BigInteger testDatabaseId,
 	                                 @RequestParam(value = "kind",required = true)String kindName,
 	                                 @RequestParam("file")MultipartFile uploadFile,
 	                                 Model model){
+		Map<String,String> map = new HashMap <>();
+		map.put("result","");
+		map.put("message","");
 		
+		if (uploadFile.isEmpty()){
+			map.put("message","上传文件错误，请稍后重试！");
+			return JSON.toJSONString(map);
+		}
 		
+		KindHelper.setKindService(kindService);
+
+		Subject subject  = SecurityUtils.getSubject();
+
+		String userAccount = subject.getPrincipal().toString();
+
+		List<Question> questionList = null;
+
+		try{
+			if(kindName.equals("单选题") || kindName.equals("多选题")){
+				questionList = parseFileService.parseSelectFile(uploadFile.getInputStream());
+			}else  if (kindName.equals("判断题")){
+				questionList = parseFileService.parseJudgementFile(uploadFile.getInputStream());
+			}else if(kindName.equals("填空题")){
+				questionList = parseFileService.parseEmptyFile(uploadFile.getInputStream());
+			}else if (kindName.equals("简答题")){
+				questionList = parseFileService.parseQuestionFile(uploadFile.getInputStream());
+			}
+			logger.info("教师"+ userAccount +"尝试向题库"+testDatabaseId+"导入问题"+"文件解析成功！");
+		}catch(IOException e){
+
+			logger.warn("教师"+ userAccount +"尝试向题库"+testDatabaseId+"导入问题失败" + "文件读取失败！");
+			map.put("message","文件读取失败，请稍后重试！");
+			return JSON.toJSONString(map);
+		}
+
+		List<String> errorQuestion = new ArrayList <>();
+
+		if (null != questionList){
+			for (int i = 0;i <questionList.size();++i) {
+				Question question = questionList.get(i);
+				question.setTestDatabaseId(testDatabaseId);
+				question.setKindId(KindHelper.getKindId(kindName));
+				try{
+					testDatabaseService.addQuestion(question);
+					errorQuestion.add("<br><span class='text-success'>"+"第 " +i + " 条插入成功" + "</span>");
+				}catch (RuntimeException e){
+					errorQuestion.add("<span class='text-warn'>"+"第 " +i + " 条插入失败" + "</span>");
+				}
+
+			}
+		}
+
+		logger.info("教师"+ userAccount +"尝试向题库"+testDatabaseId+"导入问题成功！");
+
+		map.put("message","导入成功，详细情况如下:<br>");
+		map.put("result",errorQuestion.toString());
+		
+		return JSON.toJSONString(map);
 		
 	}
 	
@@ -139,7 +212,8 @@ public class TestDatabaseController {
 	 *@description 新建题库 新建一个题库
 	 */
 	@RequestMapping(value = "/te/testDatabase/new",method = RequestMethod.POST)
-	public String addTestDatabase(@RequestParam(value = "name",required = true)String testDatabaseName,
+	@ResponseBody
+	public String addTestDatabase(@RequestParam(value = "testDatabaseName",required = true)String testDatabaseName,
 	                            @RequestParam(value = "introduce",required = true)String testDatabaseIntroduce,
 	                            @RequestParam("courseId")BigInteger courseId,
 	                            RedirectAttributes redirectAttributes,
@@ -147,7 +221,8 @@ public class TestDatabaseController {
 				int result = testDatabaseService.addTestDatabase(testDatabaseName,testDatabaseIntroduce,courseId);
 				
 				redirectAttributes.addAttribute("courseId",courseId);
-				return "redirect:/te/testDatabase";
+				
+				return "创建成功";
 	}
 	
 	

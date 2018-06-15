@@ -217,6 +217,9 @@ body,html {
 }
 
 body .my-layui .layui-layer-title {
+	/*min-width: 450px;*/
+	/*width: 450px;*/
+	/*max-width: 450px;*/
 	padding: 0 80px 0 20px;
 	height: 42px;
 	line-height: 42px;
@@ -230,6 +233,9 @@ body .my-layui .layui-layer-content {
 	padding: 20px;
 	min-height: 250px;
 	max-height: 250px;
+	min-width: 450px;
+	width: 450px;
+	max-width: 450px;
 	word-break: break-all;
 	white-space:normal;
 	OVERFLOW-Y: auto;

@@ -105,9 +105,11 @@ public interface TestDatabaseMapper {
 			@Result(column = "d",property = "d"),
 			@Result(column = "answer",property = "answer")
 	})
-	List<Question> selectQuestionByCondition(@Param("testDatabaseId") BigInteger testDatabaseId,
-	                                         @Param("kindId") BigInteger kindId,
-	                                         @Param("keyWord") String keyWord);
+	List<Question> selectQuestionByCondition(
+			@Param("courseId")BigInteger courseId,
+			@Param("testDatabaseId") BigInteger testDatabaseId,
+         @Param("kindId") BigInteger kindId,
+         @Param("keyWord") String keyWord);
 	
 	@Insert("insert into question (kind_id,test_database_id,question,a,b,c,d,answer)" +
 			"values(#{kindId},#{testDatabaseId},#{question},#{a},#{b},#{c},#{d},#{answer})")

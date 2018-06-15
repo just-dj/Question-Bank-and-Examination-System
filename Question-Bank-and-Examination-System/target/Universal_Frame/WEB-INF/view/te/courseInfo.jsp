@@ -113,7 +113,7 @@
     			<p class="word">考试管理</p>
     		</div>
     		<div class="add" id="add4">
-    			<a href=""><i class="fa fa-database fa-5x add-pic"></i></a>
+    			<a href="/te/testDatabase?id=${courseId}"><i class="fa fa-database fa-5x add-pic"></i></a>
     			<p class="word">${testDatabaseList.size()}个</p>
     			<p class="word">题库管理</p>
     		</div>

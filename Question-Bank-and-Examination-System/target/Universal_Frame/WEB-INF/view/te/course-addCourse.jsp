@@ -12,7 +12,7 @@
 	<%@ include file="../head.jsp" %>
 	<div class="addCourse_body_box">
 		<div class="addCourse_box">
-			<form id="form_addCourse" action="" method="post">
+			<form id="dataForm" action="" method="post" onsubmit="return false">
 				<div class="left_item">
 					<div class="row_type">
 						<span>课程名称：</span>
@@ -31,7 +31,7 @@
 						<div class="text-warning" >支持jpg、jpeg和png格式，最大1M</div>
 					</div>
 					<div class="row_type">
-						<input id="submit_addCourse" type="submit" name="submit_addCourse" value="新建"/>
+						<input id="submit_addCourse" type="submit" onclick="sendData()" name="submit_addCourse" value="新建"/>
 					</div>
 				</div>
 			</form>
@@ -64,6 +64,66 @@
             var file = document.getElementById('chooseFile');
             file.value = ''; //虽然file的value不能设为有字符的值，但是可以设置为空值
         }
+    }
+
+    function sendData() {
+
+        var name = $("input[name='name']").val();
+        var introduce = $("input[name='introduce']").val();
+
+        if (isEmpty({data: name})){
+            layer.msg("请输入课程名！");
+            return;
+		}else if(isEmpty({data: introduce})){
+            layer.msg("请输课程介绍！");
+			return;
+		}
+
+
+        if (jQuery("input[type='file']").val()==""){
+            layer.msg("请选择文件！");
+//        alert("请选择文件！");
+            return;
+        }
+
+        var formData = new FormData(document.getElementById("dataForm"));//表单id
+
+        $.ajax({
+            url: '/te/course/add',
+            //type是无所谓的 但是get只能传递1kb数据
+            type: 'POST',
+            dataType:'json',
+            // dataType: 'default: Intelligent Guess (Other values: xml, json, script, or html)',
+            data:formData,
+            //上传文件不需要缓存
+            cache:false,
+            //data值是FormData对象，不需要对数据做处理
+            processData:false,
+            // 且已经声明了属性enctype="multipart/form-data"，所以这里设置为false
+            contentType:false
+        }).done(function(data) {
+            layer.open({
+                type: 1,
+                skin: 'my-layui', //样式类名
+                closeBtn: 0, //不显示关闭按钮
+                anim: 2,
+                shadeClose: true, //开启遮罩关闭
+                content: data.message + '<br>' +
+                "<a class='btn btn-primary' style='margin='auto';' href='/te"+"'>查看" + "</a>" ,
+            });
+        })
+            .fail(function() {
+                console.log("error");
+            })
+            .always(function() {
+                console.log("complete");
+
+            });
+    }
+
+    function isEmpty(parameters) {
+        var data = parameters.data;
+        return data == null || data.toString() == "";
     }
 
 

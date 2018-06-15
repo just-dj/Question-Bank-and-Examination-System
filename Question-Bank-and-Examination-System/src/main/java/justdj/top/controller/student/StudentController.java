@@ -248,6 +248,9 @@ public class StudentController {
 			}
 			answerService.addAnswerQuestion(answerQuestion);
 		}
+		
+//		更新一下answer的分值
+		
 		redirectAttributes.addFlashAttribute("id",courseId);
 		return "redirect:/st/course/examInfo";
 	}
@@ -289,6 +292,10 @@ public class StudentController {
 		Answer answer = answerService.selectAnswerByExamIdAndStudentId(examId,BigInteger.valueOf(1));
 		List<AnswerQuestion> answerQuestionList = answerService.selectAnswerQuestionByAnswerId(answer.getId());
 		List<Kind> kindList = answerService.selectQuestionKindByAnswerId(answer.getId());
+		
+		System.err.println(JSON.toJSONString(answer));
+		System.err.println(JSON.toJSONString(answerQuestionList));
+		System.err.println(JSON.toJSONString(kindList));
 		
 		model.addAttribute("answer",answer);
 		model.addAttribute("answerQuestionList",answerQuestionList);

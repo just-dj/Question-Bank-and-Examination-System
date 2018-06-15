@@ -34,4 +34,6 @@ public class Exam implements Serializable {
 	private List<TestPaper> testPaperList;
 	
 	private List<BigInteger> classList;
+	
+	private List<Clazz> clazzList;
 }

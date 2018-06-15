@@ -92,12 +92,14 @@ padding:0;
 	border-radius:5px;
 	background-color:#5ac1df;
 	color: #ffffff;
+	text-decoration: none;
 }
 
 .see-bnt:hover{
 	color: #337ab7;
 	-webkit-transition: all .3s linear;
 	transition: all .3s linear;
+	text-decoration: none;
 }
 .get-bnt {
 	border:0;

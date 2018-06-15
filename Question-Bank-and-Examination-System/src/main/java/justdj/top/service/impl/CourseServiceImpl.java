@@ -89,7 +89,13 @@ public class CourseServiceImpl implements CourseService{
 	}
 	
 	@Override
-	public Integer addCourse(Course course) {
+	public Integer addCourse(Course course) throws RuntimeException{
 		return courseMapper.addCourse(course);
+	}
+	
+	
+	@Override
+	public Clazz selectClass(BigInteger classId) {
+		return courseMapper.selectClass(classId);
 	}
 }

@@ -48,7 +48,7 @@ public class TestDatabaseControllerTest {
 	
 	@Test
 	public void getDatabaseQuestion ()throws  Exception{
-		mockMvc.perform(get("/te/testDatabase/question?id=1"))
+		mockMvc.perform(get("/te/testDatabase/question?id=2"))
 				.andExpect(status().isOk())
 				.andExpect(model().attributeExists("kindName"))
 				.andExpect(model().attributeExists("questionList"))

@@ -23,9 +23,11 @@ public interface TestDatabaseService {
 	                        @Param("introduce") String introduce,
 	                        @Param("courseId")BigInteger courseId);
 	
-	List<Question> selectQuestionByCondition(BigInteger testDatabaseId,
+	List<Question> selectQuestionByCondition(
+			@Param("courseId")BigInteger courseId,
+			BigInteger testDatabaseId,
 	                                         BigInteger kindId,
 	                                         String keyWord);
 	
-	Integer addQuestion(Question question);
+	Integer addQuestion(Question question) throws RuntimeException;
 }

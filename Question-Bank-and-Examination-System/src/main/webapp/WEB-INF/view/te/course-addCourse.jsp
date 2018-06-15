@@ -12,7 +12,7 @@
 	<%@ include file="../head.jsp" %>
 	<div class="addCourse_body_box">
 		<div class="addCourse_box">
-			<form id="form_addCourse" action="" method="post" onsubmit="return false">
+			<form id="dataForm" action="" method="post" onsubmit="return false">
 				<div class="left_item">
 					<div class="row_type">
 						<span>课程名称：</span>
@@ -71,10 +71,10 @@
         var name = $("input[name='name']").val();
         var introduce = $("input[name='introduce']").val();
 
-        if (isEmpty(name)){
+        if (isEmpty({data: name})){
             layer.msg("请输入课程名！");
             return;
-		}else if(isEmpty(introduce)){
+		}else if(isEmpty({data: introduce})){
             layer.msg("请输课程介绍！");
 			return;
 		}
@@ -92,7 +92,7 @@
             url: '/te/course/add',
             //type是无所谓的 但是get只能传递1kb数据
             type: 'POST',
-//            dataType:'json',
+            dataType:'json',
             // dataType: 'default: Intelligent Guess (Other values: xml, json, script, or html)',
             data:formData,
             //上传文件不需要缓存
@@ -108,8 +108,8 @@
                 closeBtn: 0, //不显示关闭按钮
                 anim: 2,
                 shadeClose: true, //开启遮罩关闭
-                content: data.toString() +
-                "<a class='btn btn-primary' href='/te/class/student?id="+12+"'>查看" + "</a>" ,
+                content: data.message + '<br>' +
+                "<a class='btn btn-primary' style='margin='auto';' href='/te"+"'>查看" + "</a>" ,
             });
         })
             .fail(function() {
@@ -120,6 +120,12 @@
 
             });
     }
+
+    function isEmpty(parameters) {
+        var data = parameters.data;
+        return data == null || data.toString() == "";
+    }
+
 
 </script>
 

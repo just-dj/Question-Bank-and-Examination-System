@@ -34,4 +34,6 @@ public class Answer implements Serializable {
 	
 	private User student;
 	
+	private TestPaper testPaper;
+	
 }

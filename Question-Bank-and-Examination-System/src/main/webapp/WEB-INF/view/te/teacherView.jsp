@@ -68,7 +68,15 @@
             <c:forEach items="${courseList}" var="course" varStatus="status">
                 <div class="item">
                     <div class="item_up">
-                        <img class="child_item" src="/static/img/course.jpg" alt="">
+                        <c:choose>
+                            <c:when test="${course.img == null || course.img ==''}">
+                                <img class="child_item" src="/static/img/course.jpg" alt="">
+                            </c:when>
+                            <c:otherwise>
+                                <img class="child_item" src="${course.img}" alt="">
+                            </c:otherwise>
+                        </c:choose>
+
                     </div>
                     <div class="item_down">
                         <div class="class_name"><h4>课程名称：${course.name}</h4>

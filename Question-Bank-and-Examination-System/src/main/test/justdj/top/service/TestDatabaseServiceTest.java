@@ -74,7 +74,8 @@ public class TestDatabaseServiceTest {
 	
 	@Test
 	public void selectQuestionByCondition() throws Exception{
-		List<Question> list = testDatabaseService.selectQuestionByCondition(BigInteger.valueOf(1),BigInteger.valueOf
+		List<Question> list = testDatabaseService.selectQuestionByCondition(BigInteger.valueOf(1),BigInteger.valueOf(1),
+				BigInteger.valueOf
 				(1),"");
 		assertNotNull(list);
 		assertNotEquals(0,list.size());

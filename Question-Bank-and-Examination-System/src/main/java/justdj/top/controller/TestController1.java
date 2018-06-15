@@ -83,7 +83,7 @@ public class TestController1 {
 //			System.err.println(JSON.toJSONString(list));
 			
 			//问答题
-			List<Question> list1 = parseFileService.parseQuestionFile(uploadFile.getInputStream());
+			List<Question> list1 = parseFileService.parseJudgementFile(uploadFile.getInputStream());
 			System.out.println(JSON.toJSONString(list1));
 			
 			redirectAttributes.addFlashAttribute("message","上传成功"+uploadFile.getOriginalFilename());

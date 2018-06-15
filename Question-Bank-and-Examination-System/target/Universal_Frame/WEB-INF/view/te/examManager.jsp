@@ -88,8 +88,14 @@
    				</tr>
    			</table>
    			<div class="exam-cont-see">
-				<button class="see-bnt" style="background: #d9534f">删除</button>
-   				<button class="see-bnt">查看</button>
+				<a>
+					<button class="see-bnt" style="background: #d9534f">删除</button>
+				</a>
+
+				<a href="/te/exam/info?id=${exam.id}">
+					<button class="see-bnt">查看</button>
+				</a>
+
    			</div>
    		</div>
        </c:forEach>

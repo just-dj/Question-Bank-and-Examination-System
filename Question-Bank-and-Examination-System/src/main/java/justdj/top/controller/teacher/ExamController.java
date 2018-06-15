@@ -201,15 +201,30 @@ public class ExamController {
 	 *@description 查看试卷
 	 */
 	@RequestMapping(value = "/te/exam/info",method = RequestMethod.GET)
-	public void examInfo(@RequestParam("id")BigInteger examId,
+	public String examInfo(@RequestParam("id")BigInteger examId,
 	                     Model model){
+		Subject subject  = SecurityUtils.getSubject();
+		
+		logger.info("教师" + subject.getPrincipal().toString() +"查看考试" + examId);
+		
 		Exam exam = examService.selectExamByExamId(examId);
 		List<Answer> answerList = answerService.selectAnswerByExamId(examId);
 		
+		if (exam.getClazzList() == null){
+			exam.setClazzList(new ArrayList <>());
+		}
+
+		
+		for (BigInteger id:exam.getClassList()) {
+			exam.getClazzList().add(courseService.selectClass(id));
+		}
+		
 		model.addAttribute(exam);
 		model.addAttribute(answerList);
-		System.out.println(JSON.toJSONString(exam));
-		System.out.println(JSON.toJSONString(answerList));
+		
+
+		
+		return "/te/exam-viewTest";
  	}
 	
 	

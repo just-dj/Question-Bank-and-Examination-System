@@ -93,7 +93,7 @@ public class ClassController {
 		
 //		redirectAttributes.addFlashAttribute("id",clazz.getCourseId());
 		
-		return "redirect:/te/class?id="+ clazz.getCourseId();
+		return "redirect:/te/class?id="+ clazz.getCourseId() + "&" + new Random().nextInt();
 	}
 	
 	

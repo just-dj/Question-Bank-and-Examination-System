@@ -125,4 +125,13 @@ public interface CourseMapper {
 	@Insert("insert into course (teacher_id,name,introduce,img) " +
 			"values (#{teacherId},#{name},#{introduce},#{img})")
 	Integer addCourse(Course course);
+	
+	@Select("select * from class where id = #{id}")
+	@Results({
+			@Result(id = true,column = "id",property = "id"),
+			@Result (column = "name",property = "name"),
+			@Result(column = "time",property = "time"),
+			@Result(column = "place",property = "place")
+	})
+	Clazz selectClass(BigInteger classId);
 }

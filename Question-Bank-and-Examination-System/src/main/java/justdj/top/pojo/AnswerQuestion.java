@@ -42,4 +42,6 @@ public class AnswerQuestion implements Serializable {
 	
 	private Short score;
 	
+	private Short questionScore;
+	
 }

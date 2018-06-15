@@ -63,6 +63,46 @@ public class ParseFileService {
 		}catch (IOException e){
 			e.printStackTrace();
 		}
+		
+		checkQuestion(list);
+		
+		return list;
+	}
+	
+	//解析填空题
+	public List<Question> parseEmptyFile(InputStream inputStream){
+		List<Question> list = new ArrayList<>();
+		InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+		BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+		String lineString = "";
+		StringBuffer partString = new StringBuffer();
+		Question question = new Question();
+		try{
+			while (null != (lineString = bufferedReader.readLine())){
+				if (!lineString.equals("")){//判断是否是空白行
+					if (lineString.startsWith("答:")){
+						question.setQuestion(partString.toString());
+						partString = new StringBuffer(lineString.substring(2));
+					}
+					else {
+						partString.append(lineString);
+					}
+				}else{
+					question.setAnswer(partString.toString());
+					list.add(question);
+					question = new Question();
+					partString = new StringBuffer();
+				}
+			}
+		}catch (IOException e){
+			e.printStackTrace();
+		}
+		//这里为了加入最后一题
+		//最后一个空行不会被读取的
+		question.setAnswer(partString.toString());
+		list.add(question);
+		
+		checkQuestion(list);
 		return list;
 	}
 	
@@ -81,7 +121,7 @@ public class ParseFileService {
 						question.setQuestion(partString.toString());
 						partString = new StringBuffer(lineString.substring(2));
 					}
-					 else {
+					else {
 						partString.append(lineString);
 					}
 				}else{
@@ -98,11 +138,54 @@ public class ParseFileService {
 		//最后一个空行不会被读取的
 		question.setAnswer(partString.toString());
 		list.add(question);
+		checkQuestion(list);
+		return list;
+	}
+	
+	//解析判断题
+	public List<Question> parseJudgementFile(InputStream inputStream){
+		List<Question> list = new ArrayList<>();
+		InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+		BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+		String lineString = "";
+		StringBuffer partString = new StringBuffer();
+		Question question = new Question();
+		try{
+			while (null != (lineString = bufferedReader.readLine())){
+				if (!lineString.equals("")){//判断是否是空白行
+					if (lineString.startsWith("答:")){
+						question.setQuestion(partString.toString());
+						partString = new StringBuffer(lineString.substring(2));
+					}
+					else {
+						partString.append(lineString);
+					}
+				}else{
+					question.setAnswer(partString.toString());
+					list.add(question);
+					question = new Question();
+					partString = new StringBuffer();
+				}
+			}
+		}catch (IOException e){
+			e.printStackTrace();
+		}
+		//这里为了加入最后一题
+		//最后一个空行不会被读取的
+		question.setAnswer(partString.toString());
+		list.add(question);
+		checkQuestion(list);
 		
 		return list;
 	}
 	
-	
+	/**
+	 *@author  ShanDJ
+	 *@params [inputStream]
+	 *@return  java.util.List<java.lang.String>
+	 *@date  18.6.15
+	 *@description 解析导入的学生文件
+	 */
 	public List<String>  parseStudentAccountFile(InputStream inputStream){
 		List<String> list = new ArrayList<>();
 		InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
@@ -121,15 +204,21 @@ public class ParseFileService {
 		
 	}
 	
-	public List<Question> parseChooseFile(InputStream inputStream){
-		List<Question> list = new ArrayList<>();
-		InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-		BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-		String lineString = "";
-		StringBuffer partString = new StringBuffer();
-		Question question = new Question();
+	/**
+	 *@author  ShanDJ
+	 *@params [questionList]
+	 *@return  void
+	 *@date  18.6.15
+	 *@description 排除没有正常导入的试题
+	 */
+	private void checkQuestion(List<Question> questionList){
 		
-		
-		return list;
+		if (null != questionList){
+			for (int i = 0; i < questionList.size(); i++) {
+				if (null == questionList.get(i).getQuestion() || questionList.get(i).getQuestion().trim().equals("")){
+					questionList.remove(i);
+				}
+			}
+		}
 	}
 }

@@ -26,7 +26,9 @@ public interface AnswerMapper {
 			@Result(column = "result",property = "result"),
 			@Result(column = "is_commit",property = "commit"),
 			@Result(column = "student_id",property = "student",
-			one = @One(select = "justdj.top.dao.UserMapper.selectUserByAccount",fetchType = FetchType.EAGER))
+			one = @One(select = "justdj.top.dao.UserMapper.selectUserByAccount",fetchType = FetchType.EAGER)),
+			@Result(column = "test_paper_id",property = "testPaper",
+					one = @One(select = "justdj.top.dao.TestPaperMapper.selectTestPaperByPaperId",fetchType = FetchType.EAGER))
 			
 	})
 	List<Answer> selectAnswerByExamId(BigInteger examId);
@@ -46,7 +48,9 @@ public interface AnswerMapper {
 			@Result(column = "result",property = "result"),
 			@Result(column = "is_commit",property = "commit"),
 			@Result(column = "student_id",property = "student",
-					one = @One(select = "justdj.top.dao.UserMapper.selectUserByAccount",fetchType = FetchType.EAGER))
+					one = @One(select = "justdj.top.dao.UserMapper.selectUserByAccount",fetchType = FetchType.EAGER)),
+			@Result(column = "test_paper_id",property = "testPaper",
+					one = @One(select = "justdj.top.dao.TestPaperMapper.selectTestPaperByPaperId",fetchType = FetchType.EAGER))
 		
 	})
 	Answer selectAnswerByExamIdAndStudentId(@Param("examId") BigInteger examId,
@@ -62,12 +66,15 @@ public interface AnswerMapper {
 			@Result(column = "test_paper_id",property = "testPaperId"),
 			@Result(column = "start_time",property = "startTime"),
 			@Result(column = "end_time",property = "endTime"),
-			@Result(column = "is_commit",property = "commit")
+			@Result(column = "is_commit",property = "commit"),
+			@Result(column = "test_paper_id",property = "testPaper",
+					one = @One(select = "justdj.top.dao.TestPaperMapper.selectTestPaperByPaperId",fetchType = FetchType.EAGER))
 	})
 	Answer selectAnswerByAnswerId(BigInteger answerId);
 	
 	
-	@Select("select answer_question.id,question,a,b,c,d,question.answer as an,answer_question.answer,score,kind_id," +
+	@Select("select answer_question.id,question,a,b,c,d,question.answer as an,answer_question.answer," +
+			"answer_question.score,kind_id, question.score as questionscore" +
 			"kind.name\n" +
 			"from answer join answer_question join question join kind\n" +
 			"on answer.id = answer_id and question_id = question.id and  kind_id = kind.id\n" +
@@ -83,6 +90,7 @@ public interface AnswerMapper {
 			@Result(column = "an",property = "answer"),
 			@Result(column = "answer",property = "userAnswer"),
 			@Result(column = "score",property = "score"),
+			@Result(column = "questionscore",property = "questionScore"),
 			@Result(column = "kind_id",property = "kindId"),
 			@Result(column = "name",property = "kindName")
 	})
@@ -117,18 +125,6 @@ public interface AnswerMapper {
 			"values (#{answerId},#{questionId},#{answer},#{score})")
 	@Options(flushCache = true)
 	Integer addAnswerQuestion(AnswerQuestion answerQuestion);
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
