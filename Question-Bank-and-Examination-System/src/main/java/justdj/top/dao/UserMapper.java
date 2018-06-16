@@ -1,5 +1,6 @@
 package justdj.top.dao;
 
+import justdj.top.pojo.Role;
 import justdj.top.pojo.User;
 import org.apache.ibatis.annotations.*;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,6 +25,21 @@ public interface UserMapper {
 			@Result(column = "is_use",property = "use")
 	})
 	User selectUserById(BigInteger userId);
+	
+	@Select("select * from user")
+	@Results({
+			@Result(id = true,column = "id",property = "id"),
+			@Result(column = "account",property = "account"),
+			@Result(column = "email",property = "email"),
+			@Result(column = "password",property = "password"),
+			@Result(column = "salt",property = "salt"),
+			@Result(column = "name",property = "name"),
+			@Result(column = "age",property = "age"),
+			@Result(column = "sex",property = "sex"),
+			@Result(column = "img",property = "img"),
+			@Result(column = "is_use",property = "use")
+	})
+	List<User> selectAllUser();
 	
 	@Select("select * from user where account = #{userAccount}")
 	@Results({
@@ -72,8 +88,8 @@ public interface UserMapper {
 	@Insert("insert into user_role (user_id,role_id) " +
 			"values (#{userId},#{roleId})")
 	@Options(flushCache = true)
-	Integer addRoleToUser(@RequestParam("userId") BigInteger userId,
-	                      @RequestParam("roleId")BigInteger roleId);
+	Integer addRoleToUser(@Param("userId") BigInteger userId,
+	                      @Param("roleId")BigInteger roleId);
 	
 	@Delete("delete from user_role where user_id = #{userId}")
 	@Options(flushCache = true)
@@ -81,5 +97,27 @@ public interface UserMapper {
 	
 	@Update("update user set img=#{img} where id = #{id}")
 	Integer updateUserImg(User user);
+	
+	
+	@Update("update user set is_use = #{kind} where id = #{id}")
+	Integer stopUser(@Param("id") BigInteger userId,@Param("kind") Boolean kind);
+	
+	@Select("select * from user where account like #{account} and name like #{name} ")
+	@Results({
+			@Result(id = true,column = "id",property = "id"),
+			@Result(column = "account",property = "account"),
+			@Result(column = "email",property = "email"),
+			@Result(column = "password",property = "password"),
+			@Result(column = "salt",property = "salt"),
+			@Result(column = "name",property = "name"),
+			@Result(column = "age",property = "age"),
+			@Result(column = "sex",property = "sex"),
+			@Result(column = "img",property = "img"),
+			@Result(column = "is_use",property = "use")
+	})
+	List<User> selectUserByCondition(@Param("account")String account,
+	                              @Param("name")String name);
+	
+	
 	
 }

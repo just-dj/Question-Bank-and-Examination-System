@@ -24,9 +24,16 @@ public interface UserService {
 	
 	Integer changePassword(User user);
 	
-	Integer addUserWithRole(User user,List<BigInteger> roleList) throws Exception;
+	Integer addUserWithRole(User user,List<BigInteger> roleList);
 	
-	Integer updateRole(BigInteger userId,List<BigInteger> roleList);
+	Integer updateRole(BigInteger userId,List<BigInteger> roleList)throws RuntimeException;
 	
 	Integer updateUserImg(User user);
+	
+	List<User> selectAllUser();
+	
+	Integer stopUser(BigInteger userId,@Param("kind") Boolean kind);
+	
+	List<User> selectUserByCondition(@Param("account")String account,
+	                                 @Param("name")String name) throws RuntimeException;
 }

@@ -59,7 +59,7 @@ public class ClassController {
 	 *@description 班级管理界面
 	 */
 	@RequestMapping("/te/class")
-	public String classManager(@RequestParam("id") BigInteger courseId,
+	public String classManager(@ModelAttribute("id") BigInteger courseId,
 	                         Model model){
 		List<Clazz> classList = courseService.selectClazzByCourseId(courseId);
 		
@@ -91,9 +91,9 @@ public class ClassController {
 		logger.info(" 教师 " + subject.getPrincipal().toString() +" 新建班级 " + clazz.toString());
 		int result = courseService.addClass(clazz);
 		
-//		redirectAttributes.addFlashAttribute("id",clazz.getCourseId());
+		redirectAttributes.addFlashAttribute("id",clazz.getCourseId());
 		
-		return "redirect:/te/class?id="+ clazz.getCourseId() + "&" + new Random().nextInt();
+		return "redirect:/te/class"+ new Random().nextInt();
 	}
 	
 	
@@ -130,12 +130,14 @@ public class ClassController {
 	 *@description 班级详情
 	 */
 	@RequestMapping("/te/class/student")
-	public String getStudentListByClassId(@RequestParam("id")BigInteger classId,
+	public String getStudentListByClassId(@ModelAttribute("id")BigInteger classId,
+	                                    @ModelAttribute(value = "courseId")BigInteger courseId,
 	                                    Model model){
 		List<User> studentList = courseService.selectStudentByClassId(classId);
 		
 		model.addAttribute("studentList",studentList);
 		model.addAttribute("classId",classId);
+		model.addAttribute("courseId",courseId);
 		
 		Subject subject = SecurityUtils.getSubject();
 		
@@ -154,15 +156,18 @@ public class ClassController {
 	@RequestMapping(value = "/te/class/student/delete",method = RequestMethod.GET)
 	public String deleteStudentByStudentId(@RequestParam("studentId")BigInteger studentId,
 	                                     @RequestParam("classId")BigInteger classId,
+	                                     @RequestParam("courseId")BigInteger courseId,
 	                                     RedirectAttributes redirectAttributes,
 	                                     Model model){
 		  int result = courseService.deleteClassStudent(classId,studentId);
 		  
 		  redirectAttributes.addAttribute("id",classId);
+		redirectAttributes.addFlashAttribute("courseId",courseId);
 		
 		Subject subject = SecurityUtils.getSubject();
 		
 		  logger.warn("教师 "+subject.getPrincipal().toString() + " 删除" + classId +" 班 " + " 学生 " + studentId);
+		  
 		  return "redirect:/te/class/student?"+ new Random().nextInt();
 //		return "班级详情";
 	}
@@ -170,12 +175,14 @@ public class ClassController {
 	
 	@RequestMapping(value = "/te/class/student/add",method = RequestMethod.GET)
 	public String addStudent(@RequestParam("classId")BigInteger classId,
+	                         @RequestParam("courseId")BigInteger courseId,
 	                         Model model){
 		
 		Subject subject = SecurityUtils.getSubject();
 		logger.warn("教师 "+subject.getPrincipal().toString() + " 访问 班级 "+classId+" 添加学生界面");
 		
 		model.addAttribute("classId",classId);
+		model.addAttribute("courseId",courseId);
 		return "/te/class-addStudent";
 	}
 	
@@ -191,13 +198,15 @@ public class ClassController {
 	@RequestMapping(value = "/te/class/student/add",method = RequestMethod.POST)
 	@ResponseBody
 	public String addStudent(HttpServletRequest request){
-		
 		Subject subject = SecurityUtils.getSubject();
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 		Integer kind = Integer.valueOf(multipartRequest.getParameter("kind"));
 		BigInteger classId = new BigInteger(multipartRequest.getParameter("classId"));
+		BigInteger courseId = new BigInteger(multipartRequest.getParameter("courseId"));
 		String studentAccount = "";
 		MultipartFile uploadFile = null;
+		
+		List<Clazz> clazzList = courseService.selectClazzByCourseId(courseId);
 		
 		if (0 == kind){
 			studentAccount = multipartRequest.getParameter("account");
@@ -209,6 +218,11 @@ public class ClassController {
 			}
 			//进行插入
 			int result = 0;
+			if (isStdIsInClazz(clazzList,studentAccount)){
+				logger.warn("教师 " + subject.getPrincipal().toString() + "尝试导入重复账号 " +studentAccount);
+				return "该账号已在班级名单内！";
+			}
+			
 			try {
 				result = courseService.addStudentToClass(classId,user.getId());
 			}catch (DataIntegrityViolationException e){
@@ -231,7 +245,7 @@ public class ClassController {
 				logger.warn("教师 "+subject.getPrincipal().toString() + " 批量向 班级 "+classId + " 添加学生" + " 文件上传失败" + e.getMessage());
 				resultMap.put("message","文件上传失败，请稍后重试！");
 			}
-			if (null == studentAccount){
+			if (null == accountList){
 				logger.warn("教师 "+subject.getPrincipal().toString() + " 批量向 班级 "+classId + " 添加学生" + " 文件处理失败");
 				resultMap.put("message","文件处理失败，请检查文件格式！");
 			}
@@ -243,9 +257,12 @@ public class ClassController {
 					//进行插入
 					int result = 0;
 					try{
+						if (isStdIsInClazz(clazzList,account)){
+							throw new DataIntegrityViolationException("重复添加");
+						}
 						result = courseService.addStudentToClass(classId,user.getId());
 					}catch (DataIntegrityViolationException e){
-						errorAccountList.add(account +" 已在班级名单内。" + "<br>");
+						errorAccountList.add(account +" 已在班级名单内（或在其他班级名单中）。" + "<br>");
 					}
 					
 				}
@@ -268,6 +285,24 @@ public class ClassController {
 		
 	}
 	
+	
+	public Boolean isStdIsInClazz(List<Clazz> clazzList,String studentAccount){
+	
+		if (null == clazzList)
+			return false;
+		
+		for (Clazz clazz:clazzList){
+			for (User user:clazz.getUserList()){
+				System.err.println("学生账户"+user.getAccount());
+				System.err.println("上传账号"+ studentAccount);
+				if (user.getAccount().trim().equals(studentAccount.trim())){
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
 	
 	
 }

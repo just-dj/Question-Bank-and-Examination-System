@@ -41,9 +41,14 @@ public class RoleController {
 	 *@description 角色管理界面 待完善
 	 */
 	@RequestMapping(value = "/ma/role",method = RequestMethod.GET)
-	public void roleManagerPage(Model model){
-		List<Role> roleList = roleService.selectAllRole();
+	public String roleManagerPage(Model model){
+		
+		
+		List<Role> roleList;
+		roleList = roleService.selectAllRole();
 		model.addAttribute(roleList);
+		
+		return "/ma/adminRoleManage";
 	}
 	
 	/**

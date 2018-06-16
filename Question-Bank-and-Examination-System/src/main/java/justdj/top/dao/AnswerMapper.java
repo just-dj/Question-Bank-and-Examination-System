@@ -74,10 +74,12 @@ public interface AnswerMapper {
 	
 	
 	@Select("select answer_question.id,question,a,b,c,d,question.answer as an,answer_question.answer," +
-			"answer_question.score,kind_id, question.score as questionscore" +
+			"answer_question.score,kind_id, test_paper_question.score as questionscore," +
 			"kind.name\n" +
-			"from answer join answer_question join question join kind\n" +
-			"on answer.id = answer_id and question_id = question.id and  kind_id = kind.id\n" +
+			"from answer join answer_question join question join kind join test_paper_question\n" +
+			"on answer.id = answer_id and answer_question.question_id = question.id and  kind_id = kind.id and " +
+			"question.id = test_paper_question.question_id and answer.test_paper_id = test_paper_question" +
+			".test_paper_id \n" +
 			"where answer.id = #{answerId}\n" +
 			"order by answer_question.answer_id\n")
 	@Results({
@@ -95,6 +97,33 @@ public interface AnswerMapper {
 			@Result(column = "name",property = "kindName")
 	})
 	 List<AnswerQuestion> selectAnswerQuestionByAnswerId(BigInteger answerId);
+	
+	
+	@Select("select answer_question.id,question,a,b,c,d,question.answer as an,answer_question.answer," +
+			"answer_question.score,kind_id, test_paper_question.score as questionscore," +
+			"kind.name\n" +
+			"from answer join answer_question join question join kind join test_paper_question\n" +
+			"on answer.id = answer_id and answer_question.question_id = question.id and  kind_id = kind.id and " +
+			"question.id = test_paper_question.question_id and answer.test_paper_id = test_paper_question" +
+			".test_paper_id \n" +
+			"where answer.id = #{answerId} and question.kind_id = #{kindId}\n" +
+			"order by answer_question.answer_id\n")
+	@Results({
+			@Result(id = true,column = "id",property = "id"),
+			@Result(column = "question",property = "question"),
+			@Result(column = "a",property = "a"),
+			@Result(column = "b",property = "b"),
+			@Result(column = "c",property = "c"),
+			@Result(column = "d",property = "d"),
+			@Result(column = "an",property = "answer"),
+			@Result(column = "answer",property = "userAnswer"),
+			@Result(column = "score",property = "score"),
+			@Result(column = "questionscore",property = "questionScore"),
+			@Result(column = "kind_id",property = "kindId"),
+			@Result(column = "name",property = "kindName")
+	})
+	List<AnswerQuestion> selectAnswerQuestion(@Param("answerId") BigInteger answerId,@Param("kindId") BigInteger
+			kindId);
 	
 //	获取答卷所含题目类型 好像哪里有逻辑错误 暂时理不清 标记一下
 	@Select("select kind.id,kind.name\n" +

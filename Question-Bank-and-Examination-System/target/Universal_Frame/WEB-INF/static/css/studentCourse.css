@@ -1,0 +1,132 @@
+@charset "UTF-8";
+.containers{
+	display:flex;
+	flex-direction: column;
+	align-items: center;
+	height: 100%;
+}
+a{
+	text-decoration:none;
+	color:#000;
+}
+.main{
+	display: flex;
+	width: 80%;
+	margin-top: 40px;
+	justify-content: space-between;;
+}
+.main-course{
+	width:60%;
+	/*height:600px;*/
+	margin-bottom: 80px;
+	border: 1px solid #ccc;
+}
+.main-course-title{
+	width:100%;
+	height:65px;
+	background-color:#F2F2F2;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+}
+.course-title-content{
+	font-size:18px;
+	font-weight:bold;
+	width:90%;
+}
+.main-course-main{
+	display:flex;
+	flex:1;
+	flex-direction: column;
+	align-items:center;
+	overflow: auto;
+}
+.course-main-knowledge{
+	display: flex;
+	flex-direction: column;
+	width:90%;
+	height:120px;
+	margin-top:25px;
+}
+.knowledge-title{
+	color:#000;
+	font-size:18px;
+	text-decoration: none;
+}
+.knowledge-content{
+	font-size: 16px;
+	/*width: 70px;*/
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	margin-top:30px;
+	max-width: 80%;
+	overflow: hidden;
+}
+.main-test{
+	width: 35%;
+	height:600px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	border:1px solid #ccc; 
+}
+.test-title{
+	width: 95%;
+	height: 50px;
+	font-size: 18px;
+	display:flex;
+	align-items:center;
+}
+.test-title-img{
+	width:30px;
+	height:30px;
+	background:url(../img/arrows.png);
+	background-size:30px 30px;
+}
+.test-items{
+	width: 85%;
+	flex:1;
+	font-size: 16px;
+	padding: 5px;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+}
+
+.test-items-item{
+	padding: 5px;
+	width: 100%;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.test-items-item-left{
+	width: 70%;
+}
+
+.test-check{
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	height: 70px;
+}
+.test-check-btn{
+	width: 240px;
+	height: 45px;
+	background-color: #5BC0DE;
+	border:0;
+	border-radius: 5px;
+	color: #fff;
+	font-size:18px;
+}
+
+.ignore{
+	color: #CCCCCC;
+}
+
+.bold{
+	font-weight: bold;
+}

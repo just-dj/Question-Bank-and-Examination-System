@@ -1,0 +1,73 @@
+@charset "UTF-8";
+.containers{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.main{
+	width: 80%;
+	height: 680px;
+	display: flex;
+	justify-content: space-around;
+	padding-top: 100px;
+}
+.role-table{
+	width: 750px;
+	height: 80%;
+}
+table{
+	border: 1px solid #A9A9A9;
+	border-collapse:collapse;
+}
+td,th{
+	/*min-width:150px;*/
+	height: 40px;
+	border: 1px solid #A9A9A9;
+	padding:3px;
+	text-align: center;
+	line-height: 40px;
+}
+.role-add{
+	width: 330px;
+	height: 80%;
+}
+.role-add-text{
+	font-size: 16px;
+}
+form{
+	/*height:50%;*/
+	display:flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+#role-name{
+	width: 300px;
+	height: 35px;
+	margin-bottom: 45px;
+	border-radius: 5px;
+	border: 1px solid #A9A9A9;
+}
+#role-select{
+	width: 300px;
+	height: 35px;
+	border-radius: 5px;
+}
+#role-submit{
+	width: 300px;
+	height: 40px;
+	color: #fff;
+	font-size: 16px;
+	background-color: #28BDB9;
+	border-radius: 5px;
+	border:0;
+	margin-top:40px;
+}
+.role-delete{
+	width: 100px;
+	height: 30px;
+	background-color: #D9534F;
+	color: #fff;
+	font-size: 16px;
+	border:0;
+	cursor: pointer;
+}

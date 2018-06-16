@@ -8,10 +8,15 @@
 
 package justdj.top.controller.manager;
 
+import com.alibaba.fastjson.JSON;
+import justdj.top.pojo.Role;
 import justdj.top.pojo.User;
+import justdj.top.service.RoleService;
 import justdj.top.service.UserService;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigInteger;
-import java.util.Arrays;
+import java.util.*;
 
 @Controller
 public class ManagerController {
@@ -35,6 +40,11 @@ public class ManagerController {
 	@Autowired
 	@Qualifier("userService")
 	private UserService userService;
+	
+	@Autowired
+	@Qualifier("roleService")
+	private RoleService roleService;
+	
 	
 	private Logger logger = LoggerFactory.getLogger(ManagerController.class);
 	
@@ -48,15 +58,30 @@ public class ManagerController {
 	 *@description 管理员主页
 	 */
 	@RequestMapping(value = "/ma",method = RequestMethod.GET)
-	public void managerMainPage(@RequestParam(value = "id",required = false)BigInteger managerId,
+	public String managerMainPage(
 	                            Model model){
-		User user = userService.selectUserById(managerId);
+		
+		Subject subject = SecurityUtils.getSubject();
+		
+		User user = userService.selectUserByAccount(subject.getPrincipal().toString());
 		
 		
 		model.addAttribute(user);
 		
+		return "/ma/adminHome";
 	}
 	
+	
+	
+	@RequestMapping("/ma/userManager")
+	public String userManager(Model model){
+		
+		List<User> userList = userService.selectAllUser();
+		
+		model.addAttribute("users",userList);
+		
+	     return "/ma/adminUserManage";
+	}
 	
 	/**
 	 *@author  ShanDJ
@@ -174,6 +199,115 @@ public class ManagerController {
 		return "redirect:/ma/user/add";
 	}
 	
+	
+	@RequestMapping(value = "/ma/stop",method = RequestMethod.POST)
+	@ResponseBody
+	public String changeAccount(@RequestParam("kind")int kind,
+	                          @RequestParam("id")BigInteger userId){
+		Map<String,String> map = new HashMap();
+		
+		map.put("message","");
+		
+		
+		if ( 0 == kind){
+			//停用
+			userService.stopUser(userId,false);
+			logger.info("用户" + userId + "已被停用");
+			map.put("message","停用账户成功");
+			return JSON.toJSONString(map);
+		}else if(1 == kind){
+			userService.stopUser(userId,true);
+			logger.info("用户" + userId + "已被启用");
+			map.put("message","启用账户成功");
+			return JSON.toJSONString(map);
+		}
+		else if (2 == kind){
+			User userNow = userService.selectUserById(userId);
+			String password = "123456";
+			String salt = secureRandomNumberGenerator.nextBytes().toHex();
+			//加密两次 盐为用户名+随机数
+			String cryptedPwd = new SimpleHash("MD5",password , ByteSource.Util.bytes(salt),2).toHex();
+			userNow.setPassword(cryptedPwd);
+			userNow.setSalt(salt);
+			int result = userService.changePassword(userNow);
+			logger.info("用户" + userId + "密码已被停用");
+			map.put("message","密码重置成功");
+			return JSON.toJSONString(map);
+		}
+		
+		map.put("message","数据错误，请稍后重试");
+		return JSON.toJSONString(map);
+	}
 
+	@RequestMapping(value = "/ma/search",method = RequestMethod.POST)
+	@ResponseBody
+	public String searchUser(@RequestParam("account")String account,
+	                         @RequestParam("name")String name){
+		
+		
+		List<User> userList = null;
+		String newAccount = '%'+account +'%';
+		String newName ='%' + name + '%';
+		try{
+			userList = userService.selectUserByCondition(newAccount,newName);
+		}
+		catch (RuntimeException e){
+			e.printStackTrace();
+		}
+		
+		if (null != account && !account.trim().equals("")){
+			for (User u:userList) {
+				u.setAccount(u.getAccount().replace(account,"<span class='text-danger'>"+account+"<span>"));
+				System.err.println(u.getAccount());
+			}
+		}
+		if (null != name && !name.trim().equals("")){
+			for (User u:userList) {
+				u.setName(u.getName().replace(name,"<span class='text-danger'>"+name+"<span>"));
+				System.err.println(u.getName());
+			}
+		}
+		
+		
+		return JSON.toJSONString(userList);
+	}
+	
+	
+	@RequestMapping(value = "/ma/getUserRole",method = RequestMethod.POST)
+	@ResponseBody
+	public String getUserRole(@RequestParam("id")BigInteger userId){
+		List<String> roleList = userService.selectRoleByUserId(userId);
+		
+		
+		return JSON.toJSONString(roleList);
+	};
+	
+	
+	@RequestMapping("/ma/changeUserRole")
+	@ResponseBody
+	public String changeUserRole(@RequestParam("id")BigInteger userId,
+	                             @RequestParam("role")String[] roleArray){
+		
+		List<BigInteger> roleId = new ArrayList <>();
+		User user = userService.selectUserById(userId);
+		
+		if (Arrays.asList(roleArray).contains("student"))
+			roleId.add(BigInteger.valueOf(1));
+		if(Arrays.asList(roleArray).contains("teacher"))
+			roleId.add(BigInteger.valueOf(2));
+		if (Arrays.asList(roleArray).contains("manager"))
+			roleId.add(BigInteger.valueOf(3));
+		
+		try{
+			userService.updateRole(userId,roleId);
+		}catch (RuntimeException e){
+//			e.printStackTrace();
+			logger.info("修改用户角色失败！" + userId );
+			return "修改用户角色失败！";
+		}
+		
+		logger.info("成功修改用户角色！" + userId);
+		return "成功修改用户角色！";
+	}
 	
 }

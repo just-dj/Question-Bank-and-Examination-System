@@ -67,22 +67,21 @@
             <c:forEach items="${courseList}" var="course" varStatus="status">
                 <div class="item">
                     <div class="item_up">
-                        <c:choose>
-                            <c:when test="${course.img == null || course.img ==''}">
-                                <img class="child_item" src="/static/img/course.jpg" alt="">
-                            </c:when>
-                            <c:otherwise>
-                                <img class="child_item" src="${course.img}" alt="">
-                            </c:otherwise>
-                        </c:choose>
+                        <a href="/st/course?id=${course.id}">
+                            <c:choose>
+                                <c:when test="${course.img == null || course.img ==''}">
+                                    <img class="child_item" src="/static/img/course.jpg" alt="">
+                                </c:when>
+                                <c:otherwise>
+                                    <img class="child_item" src="${course.img}" alt="">
+                                </c:otherwise>
+                            </c:choose>
+                        </a>
                     </div>
                     <div class="item_down">
                         <div class="class_name"><h4>课程名称：${course.name}</h4>
                         </div>
                         <div class="class_intro"><span>课程简介：${course.introduce}</span>
-                        </div>
-                        <div class="delete_btn" style="margin-top: 3px">
-                            <a href="/st/course?id=${course.id}" class="btn btn-primary">查看 </a>
                         </div>
                     </div>
                 </div>

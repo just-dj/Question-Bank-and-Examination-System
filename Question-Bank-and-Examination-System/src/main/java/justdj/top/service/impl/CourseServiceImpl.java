@@ -98,4 +98,9 @@ public class CourseServiceImpl implements CourseService{
 	public Clazz selectClass(BigInteger classId) {
 		return courseMapper.selectClass(classId);
 	}
+	
+	@Override
+	public Knowledge selectKnowledge(BigInteger knowledgeId) {
+		return courseMapper.selectKnowledge(knowledgeId);
+	}
 }

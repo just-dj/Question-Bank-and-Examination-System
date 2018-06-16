@@ -41,8 +41,8 @@
 							选择题
 						</div>
 						<div>
-							<span id="totalQuestion">共10题</span>&nbsp;&nbsp;&nbsp;&nbsp;
-							<span id="totalScore">共40分</span>
+							<span id="totalQuestion">共0题</span>&nbsp;&nbsp;&nbsp;&nbsp;
+							<span id="totalScore">共0分</span>
 						</div>
 					</div>
    				</div>

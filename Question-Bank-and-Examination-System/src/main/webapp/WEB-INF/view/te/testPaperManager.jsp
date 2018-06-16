@@ -80,10 +80,12 @@
 					</c:choose>
 				</td>
 				<td class="paper-tab-cont paper-tab-cont-last">
-				    <button class="basic-bnt delete-bnt" id="addPaperQuestion" onclick="deletePaper(${testPaper.getId()})">删除试卷</button>
-					<a href="/te/testPaper/import?courseId=${courseId}&testPaperId=${testPaper.id}">
-						<button class="basic-bnt" id="addPaperQuestion" onclick="toViewPaper()" >导入试题</button>
-					</a>
+					<c:if test="${!testPaper.use}">
+						<button class="basic-bnt delete-bnt" id="addPaperQuestion" onclick="deletePaper(${testPaper.getId()})">删除试卷</button>
+						<a href="/te/testPaper/import?courseId=${courseId}&testPaperId=${testPaper.id}">
+							<button class="basic-bnt" id="addPaperQuestion" onclick="toViewPaper()" >导入试题</button>
+						</a>
+					</c:if>
 					<a href="/te/testPaper/question?id=${testPaper.id}">
 						<button class="basic-bnt" id="viewPapper" onclick="toViewPaper()">浏览</button>
 					</a>

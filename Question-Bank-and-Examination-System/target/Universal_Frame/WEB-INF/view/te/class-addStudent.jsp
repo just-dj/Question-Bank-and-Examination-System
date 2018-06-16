@@ -39,6 +39,7 @@
 
 			<form id="two" action="/te/class/student/add" enctype="multipart/form-data" method="Post"
 				  onsubmit="return false">
+				<input name="courseId" type="hidden" value="${courseId}">
 				<input name="kind" type="hidden" value="1"/>
 				<input name="classId" type="hidden" value="${classId}"/>
 				<div class="add_box_body">
@@ -68,6 +69,8 @@
 		var account = $("input[name='account']").val();
 
         var id = $("input[name='classId2']").val();
+
+        var courseId = $("input[name='courseId']").val();
 
 		if (1 == kind ){
             if (jQuery("input[type='file']").val()==""){
@@ -101,7 +104,8 @@
 						shadeClose: true, //开启遮罩关闭
 						content: data.message + '<br>' +
 						data.data.toString().replace(new RegExp(",","gm")," ")  + '<br>' +
-						"<a class='btn btn-primary' href='/te/class/student?id="+id+"'>查看" + "</a>" ,
+						"<a class='btn btn-primary' href='/te/class/student?id="+id + "&courseId=" + courseId+" '>查看" +
+						"</a>" ,
 					});
                 })
                 .fail(function() {
@@ -138,7 +142,8 @@
                         closeBtn: 0, //不显示关闭按钮
                         anim: 2,
                         shadeClose: true, //开启遮罩关闭
-                        content: data.toString()
+                        content: data.toString() +"<br>"+
+                        "<a class='btn btn-primary' href='/te/class/student?id="+id+ "&courseId=" + courseId+"'>查看" + "</a>" ,
                     });
 
                 })

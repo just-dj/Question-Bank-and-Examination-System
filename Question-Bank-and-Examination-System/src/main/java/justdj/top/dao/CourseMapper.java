@@ -60,6 +60,16 @@ public interface CourseMapper {
 	})
 	List<Knowledge> selectKnowledgeByCourseId(BigInteger courseId);
 	
+	
+	@Select("select * from knowledge where id = #{id}")
+	@Results({
+			@Result(id = true,column = "id",property = "id"),
+			@Result(column = "name",property = "name"),
+			@Result(column = "introduce",property = "introduce")
+	})
+	Knowledge selectKnowledge(@Param("id") BigInteger knowledgeId);
+	
+	
 	@Delete("delete from knowledge where id = #{knowledgeId}")
 	@Options(flushCache = true)
 	Integer deleteKnowledge(@Param("knowledgeId") BigInteger knowledgeId);

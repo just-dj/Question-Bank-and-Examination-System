@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,7 +39,7 @@ public class KnowledgeController {
 	 *@description 知识点管理
 	 */
 	@RequestMapping(value = "/te/knowledge",method = RequestMethod.GET)
-	public void knowledgeList(@RequestParam("id")BigInteger courseId,
+	public void knowledgeList(@ModelAttribute("id")BigInteger courseId,
 	                          Model model){
 		List<Knowledge> knowledgeList = courseService.selectKnowledgeByCourseId(courseId);
 		

@@ -33,4 +33,6 @@ public interface AnswerService {
 	Integer updateAnswer(Answer answer);
 	
 	Integer addAnswerQuestion(AnswerQuestion answerQuestion);
+	
+	List<AnswerQuestion> selectAnswerQuestion(BigInteger answerId,BigInteger kindId);
 }

@@ -31,11 +31,11 @@
 						</div>
 					</div>
 				</c:if>
-				<input type="text" placeholder="请输入姓名" name="name" value="${user.name}"/><br>
-				<input type="text" placeholder="请输入账户" name="account" value="${user.account}"/><br>
+				<input type="text" placeholder="请输入姓名" name="name" /><br>
+				<input type="text" placeholder="请输入账户" name="account" /><br>
 				<input type="password" placeholder="请输入6位密码" name="pwd" /><br>
 				<input type="password" placeholder="请确认密码" name="pwdCheck" /><br>
-				<input id="email" type="text" placeholder="请输入邮箱" name="email" value="${user.email}"/><br>
+				<input id="email" type="text" placeholder="请输入邮箱" name="email" /><br>
 				<div class="identify_box">
 					<div>
 						<input id="identify" type="text" placeholder="请输入验证码" name="identifyCode" />

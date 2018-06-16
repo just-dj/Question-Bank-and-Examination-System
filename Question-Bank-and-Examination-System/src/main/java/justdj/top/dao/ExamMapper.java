@@ -16,7 +16,8 @@ public interface ExamMapper {
 	@Select("select exam.id,exam.name,course_id,start_time,end_time,is_use\n" +
 			"from  course join exam \n" +
 			"on course.id = exam.course_id \n" +
-			"where course.id = #{courseId}")
+			"where course.id = #{courseId} " +
+			"order by start_time desc")
 	@Results({
 			@Result(id = true,column = "id",property = "id"),
 			@Result(column = "name",property = "name"),
@@ -29,10 +30,11 @@ public interface ExamMapper {
 	})
 	List<Exam> selectExamByCourseId(BigInteger courseId);
 	
-	@Select("select exam.id,exam.name,course_id,start_time,end_time,is_use\n" +
+	@Select({"select exam.id,exam.name,course_id,start_time,end_time,is_use\n" +
 			"from  course join exam\n" +
 			"on course.id = exam.course_id  \n" +
-			"where course.id = #{courseId}")
+			"where course.id = #{courseId} " +
+			"order by start_time DESC"})
 	@Results({
 			@Result(id = true,column = "id",property = "id"),
 			@Result(column = "name",property = "name"),

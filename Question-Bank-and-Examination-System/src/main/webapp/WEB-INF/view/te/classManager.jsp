@@ -35,7 +35,7 @@
 					</div>
 					<div class="item_btn_group">
 						<div class="item_btn_look" id="item_btn_look">
-							<a href="/te/class/student?id=${clazz.id}">
+							<a href="/te/class/student?id=${clazz.id}&courseId=${courseId}">
 								<span style="color: #ffffff">查看</span>
 							</a>
 

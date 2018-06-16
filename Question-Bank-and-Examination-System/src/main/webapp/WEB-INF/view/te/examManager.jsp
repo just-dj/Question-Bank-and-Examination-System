@@ -88,10 +88,11 @@
    				</tr>
    			</table>
    			<div class="exam-cont-see">
-				<a>
-					<button class="see-bnt" style="background: #d9534f">删除</button>
-				</a>
-
+				<%--<c:if test="${!exam.use}">--%>
+					<a>
+						<button class="see-bnt" style="background: #d9534f">删除</button>
+					</a>
+				<%--</c:if>--%>
 				<a href="/te/exam/info?id=${exam.id}">
 					<button class="see-bnt">查看</button>
 				</a>

@@ -60,13 +60,11 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public Integer addUserWithRole(User user, List <BigInteger> roleList) throws Exception{
+	public Integer addUserWithRole(User user, List <BigInteger> roleList) {
 		User oldUser = userMapper.selectUserByAccount(user.getAccount());
-		if (null == oldUser)
-			throw new Exception("账号已存在！");
+		
 		int result = userMapper.insertUser(user);
-		if (null == user.getId())
-			throw new Exception("用户插入失败。");
+		
 		for (BigInteger roleId:roleList) {
 			result = userMapper.addRoleToUser(user.getId(),roleId);
 		}
@@ -75,8 +73,8 @@ public class UserServiceImpl implements UserService {
 	
 	
 	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public Integer updateRole(BigInteger userId, List <BigInteger> roleList)  {
+	@Transactional(rollbackFor = RuntimeException.class)
+	public Integer updateRole(BigInteger userId, List <BigInteger> roleList) throws  RuntimeException {
 		int result = 0;
 		result = userMapper.deleteRole(userId);
 		
@@ -90,5 +88,20 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Integer updateUserImg(User user) {
 		return userMapper.updateUserImg(user);
+	}
+	
+	@Override
+	public List <User> selectAllUser() {
+		return userMapper.selectAllUser();
+	}
+	
+	@Override
+	public Integer stopUser(BigInteger userId, Boolean kind) {
+		return userMapper.stopUser(userId,kind);
+	}
+	
+	@Override
+	public List <User> selectUserByCondition(String account, String name) {
+		return userMapper.selectUserByCondition(account,name);
 	}
 }

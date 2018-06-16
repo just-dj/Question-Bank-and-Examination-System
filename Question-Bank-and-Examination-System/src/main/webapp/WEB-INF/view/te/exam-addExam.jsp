@@ -130,6 +130,7 @@
  	<button onclick="sendData()" type="submit" class="view-bnt"  style="width:160px;height:40px;">添加考试</button>
  	</div>
  	</form>
+	<input type="hidden" name="temp" value="${courseId}">
 </body>
 <script src="/static/lib/jquery/jquery-3.2.1.min.js"></script>
 <script type="text/javascript" src="/static/lib/jquery/jquery.date.js"></script>
@@ -137,6 +138,13 @@
 <script type="text/javascript">
 $.date('#date1');
 $.date('#date2');
+
+
+var courseId;
+
+$(document).ready(function () {
+	courseId = $("input[name='temp']").val();
+})
 
 function sendData() {
 
@@ -166,7 +174,7 @@ function sendData() {
 				anim: 2,
 				shadeClose: true, //开启遮罩关闭
 				content: data.message +
-				"<a class='btn btn-primary' href='/te/class/student?id="+12+"'>查看" + "</a>" ,
+				"<a class='btn btn-primary' href='/te/exam/new?id="+courseId+"'>查看" + "</a>" ,
 			});
 		})
 	.fail(function() {

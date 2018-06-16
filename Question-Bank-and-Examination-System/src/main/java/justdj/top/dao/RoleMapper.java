@@ -23,10 +23,10 @@ public interface RoleMapper {
 	
 	@Select("select id,role_name from role")
 	@Results({
-			@Result(column = "id",property = "id"),
+			@Result(id = true,column = "id",property = "id"),
 			@Result(column = "role_name",property = "name"),
 			@Result(column = "id",property = "permission",
-					one = @One(select = "justdj.top.dao.selectPermission",fetchType = FetchType.EAGER))
+					one = @One(select = "justdj.top.dao.RoleMapper.selectPermission",fetchType = FetchType.EAGER))
 	})
 	List<Role> selectAllRole();
 }

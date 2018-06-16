@@ -66,4 +66,10 @@ public class AnswerServiceImpl implements AnswerService{
 	public Integer addAnswerQuestion(AnswerQuestion answerQuestion) {
 		return answerMapper.addAnswerQuestion(answerQuestion);
 	}
+	
+	
+	@Override
+	public List <AnswerQuestion> selectAnswerQuestion(BigInteger answerId, BigInteger kindId) {
+		return answerMapper.selectAnswerQuestion(answerId,kindId);
+	}
 }

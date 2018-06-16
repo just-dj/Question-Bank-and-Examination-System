@@ -11,16 +11,14 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import justdj.top.pojo.*;
 import justdj.top.service.*;
+import justdj.top.util.KindHelper;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.terracotta.statistics.Time;
 
@@ -52,6 +50,11 @@ public class StudentController {
 	@Autowired
 	@Qualifier("testPaperService")
 	private TestPaperService testPaperService;
+	
+	
+	@Autowired
+	@Qualifier("kindService")
+	private KindService kindService;
 	
 	
 	/**
@@ -111,13 +114,16 @@ public class StudentController {
 	 *@description 课程详情 学生获得课程知识点列表 以及考试列表的接口
 	 */
 	@RequestMapping("/st/course")
-	public  void selectCourseInfoByCourseId(@RequestParam(value = "id",required = true) BigInteger courseId,
+	public String selectCourseInfoByCourseId(@RequestParam(value = "id",required = true) BigInteger courseId,
 																		Model model){
 		List<Knowledge> knowledgeList = courseService.selectKnowledgeByCourseId(courseId);
 		List<Exam> examList = examService.selectExamByCourseId(courseId);
 		
 		model.addAttribute("knowledgeList",knowledgeList);
 		model.addAttribute("examList",examList);
+		model.addAttribute("courseId",courseId);
+		
+		return "/st/studentCourse";
 	}
 	
 	
@@ -130,13 +136,17 @@ public class StudentController {
 	 */
 	@RequestMapping(value = "/st/course/examInfo",method = RequestMethod.GET
 	)
-	public void selectExamByCourseId(@RequestParam("id")BigInteger courseId,
+	public String selectExamByCourseId(@ModelAttribute("id")BigInteger courseId,
 	                                 Model model){
-		BigInteger studentId = BigInteger.valueOf(1);
+		Subject subject = SecurityUtils.getSubject();
+		User user = userService.selectUserByAccount(subject.getPrincipal().toString());
+		
 		//这里获得学生对应的考试信息
 		List<Exam> examList = examService.selectStudentExamByCourseId(courseId);
 		List<Exam> newExamList = new ArrayList <>();
-		BigInteger classId = userService.selectClassByStudentIdAndCourseId(studentId,courseId);
+		
+		BigInteger classId = userService.selectClassByStudentIdAndCourseId(user.getId(),courseId);
+		
 		if (null != examList){
 			for (int i = 0; i < examList.size(); i++) {
 				if (null != examList.get(i).getClassList()){
@@ -146,7 +156,16 @@ public class StudentController {
 				}
 			}
 		}
+		
+		List<Answer> answerList = new ArrayList <>();
+		for (Exam exam:examList){
+			answerList.add(answerService.selectAnswerByExamIdAndStudentId(exam.getId(),user.getId()));
+		}
+		
 		model.addAttribute("examList",newExamList);
+		model.addAttribute("answerList",answerList);
+		model.addAttribute("courseId",courseId);
+		return "/st/studentExams";
 	}
 	
 	
@@ -252,6 +271,7 @@ public class StudentController {
 //		更新一下answer的分值
 		
 		redirectAttributes.addFlashAttribute("id",courseId);
+		
 		return "redirect:/st/course/examInfo";
 	}
 	
@@ -282,26 +302,66 @@ public class StudentController {
 	 *@description 查看考试 获取学生答卷信息 包括题型 题目
 	 */
 	@RequestMapping("/st/course/exam/answer")
-	public void selectAnswerByExamIdAndStudentId(@RequestParam("id")BigInteger examId,
-	                                             Model model){
+	public String selectAnswerByExamIdAndStudentId(@RequestParam("id")BigInteger examId,
+	                                             @RequestParam(value = "courseId",required = false)BigInteger courseId,
+	                                             Model model,
+	                                               RedirectAttributes redirectAttributes){
+		KindHelper.setKindService(kindService);
 //		Subject subject = SecurityUtils.getSubject();
 //		subject.getPrincipal();
 
+		redirectAttributes.addFlashAttribute("message","");
+		
+		List<String> kindList = KindHelper.getKindNameList();
+		String[] attrName = new String[]{"singleList","multipleList","judgeList","fillInList","essayList"};
 
+		List<AnswerQuestion>[] arr = new ArrayList[5];
+		Integer[] sum = new Integer[]{0,0,0,0,0};
+		
+		Subject subject = SecurityUtils.getSubject();
+		User user = userService.selectUserByAccount(subject.getPrincipal().toString());
+		Answer answer = answerService.selectAnswerByExamIdAndStudentId(examId,user.getId());
+		if (answer == null){
+			redirectAttributes.addFlashAttribute("message","你没有参加这场考试！");
+			redirectAttributes.addFlashAttribute("id",courseId);
+			return "redirect:/st/course/examInfo";
+		}
+		for (int i = 0; i < kindList.size(); i++) {
+		
+			arr[i] = answerService.selectAnswerQuestion(answer.getId(),KindHelper.getKindId(kindList.get(i)));
+			if ( null == arr[i]){
+				System.err.println(kindList.get(i) +" 数据为空");
+			}
+			model.addAttribute(attrName[i],arr[i]);
+			
+			for (AnswerQuestion answerQuestion:arr[i]) {
+				sum[i] += answerQuestion.getQuestionScore();
+			}
+		}
 //		这里从内部获取学生ID
-		Answer answer = answerService.selectAnswerByExamIdAndStudentId(examId,BigInteger.valueOf(1));
-		List<AnswerQuestion> answerQuestionList = answerService.selectAnswerQuestionByAnswerId(answer.getId());
-		List<Kind> kindList = answerService.selectQuestionKindByAnswerId(answer.getId());
 		
 		System.err.println(JSON.toJSONString(answer));
-		System.err.println(JSON.toJSONString(answerQuestionList));
 		System.err.println(JSON.toJSONString(kindList));
 		
+		
 		model.addAttribute("answer",answer);
-		model.addAttribute("answerQuestionList",answerQuestionList);
 		model.addAttribute("kindList",kindList);
+		model.addAttribute("sum",sum);
+		
+		return "/st/viewExam";
 	}
 	
 	
 
+	@RequestMapping("/te/course/knowledge")
+	public String getKnowledge(@RequestParam("id")BigInteger knowledgeId,
+	                           Model model){
+		
+		Knowledge knowledge = courseService.selectKnowledge(knowledgeId);
+		
+		model.addAttribute("knowledge",knowledge);
+		
+		return "/st/knowledgeDetails";
+		
+	}
 }

@@ -8,10 +8,15 @@
 
 package justdj.top.pojo;
 
+import lombok.Data;
+
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.List;
 
-public class Role {
+@Data
+public class Role implements Serializable {
+	
 	private BigInteger id;
 	
 	private String name;

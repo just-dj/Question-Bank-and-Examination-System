@@ -11,6 +11,10 @@
     <link rel="stylesheet" href="/static/lib/bootstrap-3.3.7-dist/css/bootstrap.css" >
 </head>
 <body>
+
+<button class="test-check-btn" onclick="location.href='/st/course/examInfo'">查看考试信息
+</button>
+
 <!--对表格进行包装-->
 <form id="uploadForm" action="/upload"  method="post" enctype="multipart/form-data">
     <label>${message}</label>

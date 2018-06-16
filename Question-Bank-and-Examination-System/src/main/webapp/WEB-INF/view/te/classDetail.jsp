@@ -57,7 +57,7 @@
 							</c:choose>
 							<td class="action_td">
 								<div class="btn_delete"><a id="delete"
-														   href="/te/class/student/delete?studentId=${student.id}&classId=${classId}"
+														   href="/te/class/student/delete?studentId=${student.id}&classId=${classId}&courseId=${courseId}"
 										style="color:#ffffff">删除</a></div>
 							</td>
 						</tr>
@@ -65,7 +65,7 @@
 				</table>
 			</div>
 			<div class="add_student_btn" id="add_student_btn">
-				<a href="/te/class/student/add?classId=${classId}">添加学生</a>
+				<a href="/te/class/student/add?classId=${classId}&courseId=${courseId}">添加学生</a>
 			</div>
 		</div>
 	</div>
