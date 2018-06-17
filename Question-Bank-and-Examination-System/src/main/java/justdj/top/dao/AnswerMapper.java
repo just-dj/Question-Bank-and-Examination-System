@@ -137,6 +137,7 @@ public interface AnswerMapper {
 	
 	@Insert("insert into answer (student_id,test_paper_id,start_time,is_commit)" +
 			"values (#{studentId},#{testPaperId},#{startTime},#{commit})")
+	@Options(flushCache = true)
 	Integer addAnswer(Answer answer);
 	
 	@Update("update answer set " +
@@ -154,8 +155,6 @@ public interface AnswerMapper {
 			"values (#{answerId},#{questionId},#{answer},#{score})")
 	@Options(flushCache = true)
 	Integer addAnswerQuestion(AnswerQuestion answerQuestion);
-	
-	
 	
 	
 }

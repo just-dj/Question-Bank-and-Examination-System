@@ -96,10 +96,12 @@ public interface UserMapper {
 	Integer deleteRole(@Param("userId") BigInteger userId);
 	
 	@Update("update user set img=#{img} where id = #{id}")
+	@Options(flushCache = true)
 	Integer updateUserImg(User user);
 	
 	
 	@Update("update user set is_use = #{kind} where id = #{id}")
+	@Options(flushCache = true)
 	Integer stopUser(@Param("id") BigInteger userId,@Param("kind") Boolean kind);
 	
 	@Select("select * from user where account like #{account} and name like #{name} ")

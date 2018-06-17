@@ -29,4 +29,16 @@ public interface RoleMapper {
 					one = @One(select = "justdj.top.dao.RoleMapper.selectPermission",fetchType = FetchType.EAGER))
 	})
 	List<Role> selectAllRole();
+	
+	
+	@Insert({"insert  into role (role_name) values (#{name})"})
+	@Options(useGeneratedKeys = true,keyProperty = "id",flushCache = true)
+	Integer addRole(Role role);
+	
+	@Insert("insert into permission (role_id,permission_name) " +
+			"values (#{roleId},#{permissionName})")
+	@Options(flushCache = true)
+	Integer addPermission(@Param("roleId") BigInteger roleId,@Param("permissionName") String permissionName);
+	
+	
 }

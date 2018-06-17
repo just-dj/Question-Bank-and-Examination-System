@@ -1,0 +1,204 @@
+@charset "UTF-8";
+
+.JSP_knowledge_box {
+	box-sizing: border-box;
+	/*width: 1366px;*/
+	height: 768px;
+	/*border: 1px solid #CCCCCC;*/
+}
+
+/* .JSP_knowledge_box_bar {
+	box-sizing: border-box;
+	width: 1364px;
+	height: 61px;
+	background-color: rgba(91,192,222,1);
+	boredr-bottom: 1px solid #CCCCCC;
+}
+
+.bar_blind {
+	width: 240px;
+	height: 60px;
+	color: #FFFFFF;
+	text-align: center;
+	line-height: 60px;
+	font-size: 16px;
+} */
+
+.JSP_knowledge_box_body {
+	margin-top: 50px;
+	/*width: 1366px;*/
+	height: 650px;
+	display: flex;
+	justify-content: center;
+}
+
+.JSP_knowledge_box_body div {
+	/*float: left;*/
+}
+
+.JSP_knowledge_box_body table {
+	/*width: 738px;*/
+	text-align: center;
+}
+
+.btn_delete {
+	float: left;
+	width: 71px;
+	height: 23px;
+	font-size: 13px;
+	color: #FFFFFF;
+	background-color: rgba(217,83,79,1);
+	text-align: center;
+	line-height: 23px;
+	cursor: pointer;
+}
+
+.btn_check {
+	margin-left: 20px;
+	float: left;
+	width: 71px;
+	height: 23px;
+	font-size: 13px;
+	color: #FFFFFF;
+	background-color: rgba(91,192,222,1);
+	text-align: center;
+	line-height: 23px;
+	cursor: pointer;
+}
+
+.add_knowledge_btn {
+	width: 175px;
+	height: 44px;
+	color: #FFFFFF;
+	background-color: rgba(91,192,222,1);
+	text-align: center;
+	line-height: 44px;
+	cursor: pointer;
+	border-radius: 5px;
+	margin-left: 50px;
+}
+
+
+/*弹出框*/
+.add_layer_box_body {
+	
+}
+
+.add_layer_box_body_row {
+	box-sizing: border-box;
+	width: 600px;
+	height: 80px;
+	padding-left: 100px;
+	padding-right: 100px;
+}
+
+.knowledge_name {
+	float: left;
+	width: 130px;
+	height: 80px;
+	font-size: 14px;
+	text_align: center;
+	line-height: 80px;
+}
+
+.add_layer_box_body_row input {
+	float: left;
+	box-sizing: border-box;
+	width: 270px;
+	height: 30px;
+	border: 1px solid rgba(204,204,204,1);
+	border-radius: 5px;
+	font-size: 14px;
+	margin-top: 25px;
+}
+
+.knowledge_context {
+	float: left;
+	width: 130px;
+	height: 80px;
+	font-size: 14px;
+	text_align: center;
+	line-height: 80px;
+}
+
+.add_layer_box_btn {
+	width: 600px;
+	height: 50px;
+	text-align: center;
+	margin-top: 20px;
+}
+
+.add_layer_box_btn input {
+	box-sizing: border-box;
+	width: 174px;
+	height: 30px;
+	background-color: rgba(91,192,222,1);
+	border: 1px solid rgba(204,204,204,1);
+	border-radius: 5px;
+	font-size: 14px;
+	color: #FFFFFF;
+}
+
+.introduce{
+	max-width: 500px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	padding-right: 15px;
+}
+
+.iname{
+	max-width: 200px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.table tbody tr td{
+	vertical-align: middle;
+}
+
+th{
+	text-align: unset;
+}
+
+/*.child_center{*/
+	/*display: flex;*/
+	/*justify-content: space-between;*/
+	/*align-items: center;*/
+/*}*/
+body .my-layui .layui-layer-title {
+	/*min-width: 450px;*/
+	/*width: 450px;*/
+	/*max-width: 450px;*/
+	padding: 0 80px 0 20px;
+	height: 42px;
+	line-height: 42px;
+	font-size: 14px;
+	background:#5bc0de;
+	color:#fff;
+	border: none;
+}
+
+body .my-layui .layui-layer-content {
+	padding: 20px;
+	min-height: 250px;
+	max-height: 250px;
+	/*min-width: 450px;*/
+	/*width: 450px;*/
+	max-width: 450px;
+	word-break: break-all;
+	white-space:normal;
+	OVERFLOW-Y: auto;
+	OVERFLOW-X:hidden;
+}
+
+.my-layui{
+	width: 450px;
+}

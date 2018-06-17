@@ -26,7 +26,7 @@ public interface CourseService {
 	
 	Integer addKnowledge(@Param("courseId")BigInteger courseId,
 	                     @Param("name")String name,
-	                     @Param("introduce")String introduce);
+	                     @Param("introduce")String introduce) throws RuntimeException;
 	
 	List<Clazz> selectClazzByCourseId(BigInteger courseId);
 	

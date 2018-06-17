@@ -24,7 +24,7 @@ public interface UserService {
 	
 	Integer changePassword(User user);
 	
-	Integer addUserWithRole(User user,List<BigInteger> roleList);
+	Integer addUserWithRole(User user,List<BigInteger> roleList) throws RuntimeException;
 	
 	Integer updateRole(BigInteger userId,List<BigInteger> roleList)throws RuntimeException;
 	

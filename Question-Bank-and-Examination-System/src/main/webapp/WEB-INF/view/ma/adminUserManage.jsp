@@ -43,7 +43,7 @@
 						</tr>
 						<c:forEach items="${users}" var="user" varStatus="status">
 							<tr onclick = "roleShow({id : ${user.id}})">
-								<td>${user.id}</td>
+								<td>${user.account}</td>
 								<td>${user.name}</td>
 								<td>${user.sex }</td>
 								<td>${user.email }</td>
@@ -75,7 +75,7 @@
 					</table>
 				</div>
 				<div class="row-right table-right">
-					<a class="mybtn add-user-btn" href="adminAddUser.jsp">添加用户</a>
+					<a class="mybtn add-user-btn" href="/ma/user/add">添加用户</a>
 					<div class="now-user-role" style="font-weight: bold">当前用户角色</div>
 					<div class="user-role-list">
 						<form id="changeUserRole" class="temp2" action="" onsubmit="return false">

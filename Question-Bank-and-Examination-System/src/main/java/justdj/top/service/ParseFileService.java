@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service("parseFileService")
@@ -202,6 +203,48 @@ public class ParseFileService {
 		
 		return list;
 		
+	}
+	
+	
+	
+	/**
+	 *@author  ShanDJ
+	 *@params [inputStream]
+	 *@return  java.util.List<justdj.top.pojo.User>
+	 *@date  18.6.17
+	 *@description 解析用户名单文件
+	 */
+	public List<User>  parseUserFile(InputStream inputStream){
+		List<User> userList = new ArrayList <>();
+		List<String> list = new ArrayList<>();
+		InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+		BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+		String lineString = "";
+		try {
+			while (null != (lineString = bufferedReader.readLine())){
+				if (null == lineString || lineString.contains("//") || lineString.equals(""))
+					continue;
+				String[] data = lineString.trim().split(" ");
+				User user = new User();
+				user.setAccount(data[0]);
+				user.setName(data[1]);
+				user.setSex(data[2].charAt(0));
+				user.setPassword(data[3]);
+				user.setEmail(data[4]);
+				String[] role = data[5].split("-");
+				List<BigInteger> roleId = new ArrayList <>();
+				for (String id:role){
+					roleId.add(new BigInteger(id));
+				}
+				user.setRoleList(roleId);
+				userList.add(user);
+			}
+		}catch (Exception e){
+			userList = null;
+			e.printStackTrace();
+		}
+		
+		return userList;
 	}
 	
 	/**

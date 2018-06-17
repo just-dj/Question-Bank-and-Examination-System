@@ -59,6 +59,9 @@ body{
 
 		<button class="head-dropdown-user">${sessionScope.user.name},你好！</button>
 		<div class="head-dropdown-content">
+			<shiro:hasRole name="manager">
+				<a href="/ma">管理员首页</a>
+			</shiro:hasRole>
 			<shiro:hasRole name="teacher">
 				<a href="/te">我教的课程</a>
 			</shiro:hasRole>

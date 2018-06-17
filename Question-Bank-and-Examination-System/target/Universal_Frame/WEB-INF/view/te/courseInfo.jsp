@@ -122,7 +122,7 @@
 
     	<div class="body-right">
     		<div class="add-right">
-    			<a href=""><i class="fa fa-plus-circle fa-5x right-pic" style="font-size: 10em"></i></a>
+    			<a href="/te/knowledge?id=${courseId}"><i class="fa fa-plus-circle fa-5x right-pic" style="font-size: 10em"></i></a>
     			<p class="right-word">知识点管理</p>
     		</div>
     	</div>

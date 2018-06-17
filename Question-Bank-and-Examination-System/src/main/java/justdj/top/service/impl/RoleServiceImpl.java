@@ -33,4 +33,28 @@ public class RoleServiceImpl implements RoleService{
 	public List<Role> selectAllRole() {
 		return roleMapper.selectAllRole();
 	}
+	
+	
+	@Override
+	public Integer addRoleWithPermission(Role role) throws RuntimeException {
+		
+		Integer a = roleMapper.addRole(role);
+		
+		for (String name:role.getPermission()){
+			roleMapper.addPermission(role.getId(),name);
+		}
+		
+		return  a;
+	}
+	
+	
+	@Override
+	public Integer addRole(Role role) {
+		return roleMapper.addRole(role);
+	}
+	
+	@Override
+	public Integer addPermission(BigInteger roleId, String permissionName) {
+		return roleMapper.addPermission(roleId,permissionName);
+	}
 }

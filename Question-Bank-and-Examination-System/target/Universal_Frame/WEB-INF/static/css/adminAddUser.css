@@ -1,0 +1,103 @@
+@charset "UTF-8";
+.main{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 50px;
+}
+.main-single{
+	width: 65%;
+	height: 350px;
+	display: flex;
+	flex-direction: column;
+	border: 1px solid #ccc;
+	margin-top: 40px;
+}
+.main-batch{
+	width: 65%;
+	height: 170px;
+	display: flex;
+	flex-direction: column;
+	border: 1px solid #ccc;
+	margin-top: 40px;
+}
+.main-title{
+	margin: 15px 0 20px 15px;
+	color: #333;
+	font-weight: bold;
+}
+form{
+	margin:0 0 0 30px;
+
+}
+td{
+	min-width: 90px;
+}
+#role{
+	height: 30px;
+	width: 150px;
+
+}
+.single-text{
+	height: 30px;
+	width: 330px;
+	padding: 0px;
+	margin: 0px 0 10px 0;
+}
+.single-btn{
+	width: 90%;
+	display:flex;
+	justify-content: flex-end;
+}
+.batch-btn{
+	width: 90%;
+	display:flex;
+	justify-content: flex-end;
+}
+.btn{
+	width: 130px;
+	height: 30px;
+	background-color: #5ac1df;
+	color: #fff;
+	border: 0;
+	border-radius: 5px;
+}
+.file-ui{
+	display:flex;
+	align-items:center;
+}
+
+#user-file{
+	
+}
+
+body .my-layui .layui-layer-title {
+	/*min-width: 450px;*/
+	/*width: 450px;*/
+	/*max-width: 450px;*/
+	padding: 0 80px 0 20px;
+	height: 42px;
+	line-height: 42px;
+	font-size: 14px;
+	background:#5bc0de;
+	color:#fff;
+	border: none;
+}
+
+body .my-layui .layui-layer-content {
+	padding: 20px;
+	min-height: 250px;
+	max-height: 250px;
+	/*min-width: 450px;*/
+	/*width: 450px;*/
+	max-width: 450px;
+	word-break: break-all;
+	white-space:normal;
+	OVERFLOW-Y: auto;
+	OVERFLOW-X:hidden;
+}
+
+.my-layui{
+	width: 450px;
+}

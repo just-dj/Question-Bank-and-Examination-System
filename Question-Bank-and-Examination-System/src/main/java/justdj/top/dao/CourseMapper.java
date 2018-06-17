@@ -129,11 +129,13 @@ public interface CourseMapper {
 	
 	@Insert("insert into class (course_id,name,time,place) " +
 			"values (#{courseId},#{name},#{time},#{place})")
+	@Options(flushCache = true)
 	Integer addClass(Clazz clazz);
 	
 	
 	@Insert("insert into course (teacher_id,name,introduce,img) " +
 			"values (#{teacherId},#{name},#{introduce},#{img})")
+	@Options(flushCache = true)
 	Integer addCourse(Course course);
 	
 	@Select("select * from class where id = #{id}")

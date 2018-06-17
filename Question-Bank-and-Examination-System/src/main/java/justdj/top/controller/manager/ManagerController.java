@@ -11,6 +11,7 @@ package justdj.top.controller.manager;
 import com.alibaba.fastjson.JSON;
 import justdj.top.pojo.Role;
 import justdj.top.pojo.User;
+import justdj.top.service.ParseFileService;
 import justdj.top.service.RoleService;
 import justdj.top.service.UserService;
 import org.apache.shiro.SecurityUtils;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigInteger;
@@ -45,6 +47,9 @@ public class ManagerController {
 	@Qualifier("roleService")
 	private RoleService roleService;
 	
+	@Autowired
+	@Qualifier("parseFileService")
+	private ParseFileService parseFileService;
 	
 	private Logger logger = LoggerFactory.getLogger(ManagerController.class);
 	
@@ -150,9 +155,9 @@ public class ManagerController {
 	 *@description 添加用户界面 待完善 仅做跳转作用
 	 */
 	@RequestMapping(value = "/ma/user/add",method = RequestMethod.GET)
-	public void addStudentPage(){
+	public String addStudentPage(){
 
-	
+		return "/ma/adminAddUser";
 	}
 	
 	/**
@@ -163,8 +168,10 @@ public class ManagerController {
 	 *@description 添加用户界面 待完善 接收数据 批量导入还没处理
 	 */
 	@RequestMapping(value = "/ma/user/add",method = RequestMethod.POST)
+	@ResponseBody
 	public String addStudent(@RequestParam("account")String account,
 	                       @RequestParam("name")String name,
+	                       @RequestParam("sex")Character sex,
 	                       @RequestParam("password")String password,
 	                       @RequestParam("email")String email,
 	                       @RequestParam("role")BigInteger[] roleList,
@@ -174,14 +181,22 @@ public class ManagerController {
 		User user = new User();
 		user.setAccount(account);
 		user.setName(name);
+		user.setSex(sex);
 		user.setPassword(password);
 		user.setEmail(email);
+		System.err.println(user);
+		System.err.println(Arrays.asList(roleList));
 		String salt = secureRandomNumberGenerator.nextBytes().toHex();
 		//加密两次 盐为用户名+随机数
 		String cryptedPwd = new SimpleHash("MD5",user.getPassword() , ByteSource.Util.bytes(salt),2).toHex();
 		user.setPassword(cryptedPwd);
 		user.setSalt(salt);
 		user.setUse(true);
+		
+		User check = userService.selectUserByAccount(user.getAccount());
+		if (!(null == check)){
+			return "账户添加失败！(账号冲突)";
+		}
 		//默认为学生权限
 		if (null == roleList){
 			logger.warn("管理员未对账户" +user.getAccount() +"分配角色，默认学生角色。");
@@ -189,14 +204,68 @@ public class ManagerController {
 		}
 		try {
 			userService.addUserWithRole(user, Arrays.asList(roleList));
-		}catch (Exception e){
+		}catch (RuntimeException e){
+			e.printStackTrace();
 			logger.error("账户插入失败，"+ e.getMessage());
 			redirectAttributes.addFlashAttribute("message",name);
+			return "用户添加失败！请稍后重试！";
+		}
+
+		logger.info("账户" +user.getAccount() +"添加成功");
+//		redirectAttributes.addFlashAttribute("message","账户" +user.getAccount() +"添加成功");
+		return "用户添加成功！";
+	}
+	
+	
+	@RequestMapping("/ma/user/file")
+	@ResponseBody
+	public String addUserByFile(@RequestParam("file")MultipartFile file){
+		Map<String,String> map = new HashMap <>();
+		map.put("message","");
+		map.put("result","");
+		
+		if (file.isEmpty()){
+			logger.info("文件传输失败！");
+			map.put("message","文件传输失败！");
+			return JSON.toJSONString(map);
+		}
+		List<User> userList = null;
+		try {
+			userList  = parseFileService.parseUserFile(file.getInputStream());
+			if (null == userList){
+				logger.info("读取到0个用户！");
+				map.put("message","读取到0个用户！(请检查数据-格式)");
+				return JSON.toJSONString(map);
+			}
+			
+			System.err.println(JSON.toJSONString(userList));
+			
+		}catch (Exception e){
+			logger.info("文件读取失败！");
+			map.put("message","文件读取失败！");
+			return JSON.toJSONString(map);
 		}
 		
-		logger.info("账户" +user.getAccount() +"添加成功");
-		redirectAttributes.addFlashAttribute("message","账户" +user.getAccount() +"添加成功");
-		return "redirect:/ma/user/add";
+		List<String> errorAccount =  new ArrayList <>();
+		
+		for (User user:userList){
+			User temp =  userService.selectUserByAccount(user.getAccount());
+			if (!(null == temp)){
+				errorAccount.add("账户 "+ user.getAccount() + " 已存在！");
+				continue;
+			}
+			user.setUse(true);
+			try{
+				userService.addUserWithRole(user,user.getRoleList());
+			}catch (RuntimeException e){
+				errorAccount.add("账户 "+ user.getAccount() + " 插入失败！");
+			}
+		}
+		
+		logger.info("用户导入成功！导入成功" +( userList.size() -errorAccount.size()) +" 条 ，失败 " + errorAccount.size() + " 条");
+		map.put("message","用户导入成功！导入成功" +( userList.size() -errorAccount.size()) +" 条 ，失败 " + errorAccount.size() + " 条");
+		map.put("result",JSON.toJSONString(errorAccount).replace(",","<br>"));
+		return JSON.toJSONString(map);
 	}
 	
 	
@@ -257,13 +326,13 @@ public class ManagerController {
 		
 		if (null != account && !account.trim().equals("")){
 			for (User u:userList) {
-				u.setAccount(u.getAccount().replace(account,"<span class='text-danger'>"+account+"<span>"));
+				u.setAccount(u.getAccount().replace(account,"<span class='text-danger'>"+account+"</span>"));
 				System.err.println(u.getAccount());
 			}
 		}
 		if (null != name && !name.trim().equals("")){
 			for (User u:userList) {
-				u.setName(u.getName().replace(name,"<span class='text-danger'>"+name+"<span>"));
+				u.setName(u.getName().replace(name,"<span class='text-danger'>"+name+"</span>"));
 				System.err.println(u.getName());
 			}
 		}

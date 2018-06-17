@@ -13,6 +13,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.List;
 
 @Data
 public class User implements Serializable{
@@ -38,4 +39,6 @@ public class User implements Serializable{
 	private Boolean use;
 	
 	private String code;
+	
+	private List<BigInteger> roleList;
 }

@@ -12,4 +12,11 @@ public interface RoleService {
 	
 	
 	List<Role> selectAllRole();
+	
+	
+	Integer addRoleWithPermission(Role role) throws RuntimeException;
+	
+	Integer addRole(Role role);
+	
+	Integer addPermission(@Param("roleId") BigInteger roleId,@Param("permissionName") String permissionName);
 }

@@ -162,6 +162,7 @@
     {
 //    	window.location.href="localhost:8080/te/testPaper/question?id="+id;
     	event.stopPropagation();
+
     }
     //删除试卷
     function deletePaper(id)

@@ -20,8 +20,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -59,10 +61,26 @@ public class RoleController {
 	 *@description 角色管理界面 待完善 添加角色
 	 */
 	@RequestMapping(value = "/ma/role",method = RequestMethod.POST)
-	public void addRole(@RequestParam("name")String name,
-		                @RequestParam("permission")BigInteger[] permissionList,
+	@ResponseBody
+	public String addRole(@RequestParam("name")String name,
+		                @RequestParam(value = "permission",required = false)String[] permissionList,
 		                Model model){
 		
+//		System.err.println(permissionList.length + permissionList.toString());
+		Role role = new Role();
+		role.setName(name);
+		role.setPermission(Arrays.asList(permissionList));
+		try{
+			roleService.addRoleWithPermission(role);
+		}catch (RuntimeException e){
+			e.printStackTrace();
+			logger.info("新建角色失败！" + e.getMessage());
+			return "新建角色失败！";
+		}
+		
+		
+		logger.info("新建角色成功");
+		return "新建角色成功！";
 	}
 	
 	

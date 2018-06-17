@@ -233,7 +233,7 @@ public class ExamController {
 	 *@description 批阅试卷 学生答卷页面
 	 */
  	@RequestMapping(value = "/te/exam/answer",method = RequestMethod.GET)
- 	public void answerOfExam(@RequestParam("id")BigInteger answerId,
+ 	public String answerOfExam(@RequestParam("id")BigInteger answerId,
                               Model model){
 		
  		Answer answer = answerService.selectAnswerByAnswerId(answerId);
@@ -242,8 +242,30 @@ public class ExamController {
  		
  		model.addAttribute(answer);
 	    model.addAttribute(answerQuestionList);
+	    
+	    return "/te/viewStudentTestPaper";
     }
 	
+    
+    @RequestMapping(value = "/te/exam/getAnswer",method = RequestMethod.POST)
+    @ResponseBody
+    public  String getAnswerByAnswerIdAndKindName(@RequestParam("answerId")BigInteger answerId,
+                                                  @RequestParam("kind")String kindName){
+//	    Answer answer = answerService.selectAnswerByAnswerId(answerId);
+	    List<AnswerQuestion> answerQuestionList =  answerService.selectAnswerQuestionByAnswerId(answerId);
+	    
+	    List<AnswerQuestion> result = new ArrayList <>();
+	    for (AnswerQuestion answerQuestion:answerQuestionList){
+	    	if (answerQuestion.getKindName().equals(kindName)){
+			    result.add(answerQuestion);
+		    }
+	    	
+	    }
+ 		return JSON.toJSONString(result);
+    }
+    
+    
+    
 	/**
 	 *@author  ShanDJ
 	 *@params [answerQuestionId, score, model]

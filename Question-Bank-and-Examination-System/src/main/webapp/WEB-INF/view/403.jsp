@@ -10,14 +10,22 @@
 <html>
 <head>
     <title>权限错误</title>
-    <link rel="stylesheet" href="/static/lib/bootstrap-3.3.7-dist/css/bootstrap.css" >
+    <link rel="stylesheet" href="/static/lib/bootstrap-3.3.7-dist/css/bootstrap.min.css" >
 </head>
 
 <body>
-<h1 class="text-warning">对不起，您没有权限请求此连接！</h1>
-<div><a class="text-primary" onclick="back()">返回上一页</a></div>
 
-<img alt="" src="/static/img/warn.jpg">
+<img style="width: 600px;height: 600px" alt="" src="/static/img/warn.jpg">
+
+<div style="position:absolute;left: 600px;top: 500px">
+    <h1 class="text-warning">对不起，您没有权限请求此连接！</h1>
+
+    <div>
+        <a class="btn btn-primary" onclick="back()">返回上一页</a>
+        <a class="btn btn-primary" onclick="location.href='/logout'">清除会话信息</a>
+    </div>
+
+</div>
 
 <script type="text/javascript">
     function back() {

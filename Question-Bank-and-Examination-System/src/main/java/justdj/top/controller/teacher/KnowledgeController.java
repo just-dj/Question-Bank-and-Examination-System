@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
@@ -39,12 +36,13 @@ public class KnowledgeController {
 	 *@description 知识点管理
 	 */
 	@RequestMapping(value = "/te/knowledge",method = RequestMethod.GET)
-	public void knowledgeList(@ModelAttribute("id")BigInteger courseId,
+	public String knowledgeList(@ModelAttribute("id")BigInteger courseId,
 	                          Model model){
 		List<Knowledge> knowledgeList = courseService.selectKnowledgeByCourseId(courseId);
 		
 		model.addAttribute(knowledgeList);
-		
+		model.addAttribute("courseId",courseId);
+		return "/te/managerKnowledge";
 	}
 	
 	
@@ -60,6 +58,7 @@ public class KnowledgeController {
 			@RequestParam("id") BigInteger knowledgeId,
             RedirectAttributes redirectAttributes,
             Model model){
+		
 		int result = courseService.deleteKnowledge(knowledgeId);
 		
 		redirectAttributes.addFlashAttribute("id",courseId);
@@ -75,14 +74,22 @@ public class KnowledgeController {
 	 *@description 添加知识点 待完善
 	 */
 	@RequestMapping(value = "/te/knowledge/add",method = RequestMethod.POST)
+	@ResponseBody
 	public String addKnowledge(@RequestParam("courseId")BigInteger courseId,
 			@RequestParam("name")String name,
             @RequestParam("introduce")String introduce,
             RedirectAttributes redirectAttributes,
             Model  model){
 			
-		int result = courseService.addKnowledge(courseId,name,introduce);
-		redirectAttributes.addFlashAttribute("id",courseId);
-		return "redirect:/te/knowledge";
+		try{
+			int result = courseService.addKnowledge(courseId,name,introduce);
+		}catch (RuntimeException e){
+			e.printStackTrace();
+			return "知识点创建失败";
+		}
+		
+//		redirectAttributes.addFlashAttribute("id",courseId);
+		
+		return "知识点创建成功";
 	}
 }
