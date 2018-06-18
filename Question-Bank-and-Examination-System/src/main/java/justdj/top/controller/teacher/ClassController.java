@@ -93,7 +93,7 @@ public class ClassController {
 		
 		redirectAttributes.addFlashAttribute("id",clazz.getCourseId());
 		
-		return "redirect:/te/class"+ new Random().nextInt();
+		return "redirect:/te/class?"+ new Random().nextInt();
 	}
 	
 	
@@ -105,7 +105,7 @@ public class ClassController {
 	 *@date  18.6.3
 	 *@description
 	 */
-	@RequestMapping(value = "/te/class/delete",method = RequestMethod.POST)
+	@RequestMapping(value = "/te/class/delete",method = RequestMethod.GET)
 	public String deleteClassByClassId(@RequestParam("courseId")BigInteger courseId,
 	                                 @RequestParam("classId")BigInteger classId,
 	                                 RedirectAttributes redirectAttributes){

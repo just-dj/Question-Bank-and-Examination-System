@@ -93,6 +93,10 @@ public class CourseServiceImpl implements CourseService{
 		return courseMapper.addCourse(course);
 	}
 	
+	@Override
+	public Integer deleteCourse(BigInteger courseId) {
+		return courseMapper.deleteCourse(courseId);
+	}
 	
 	@Override
 	public Clazz selectClass(BigInteger classId) {

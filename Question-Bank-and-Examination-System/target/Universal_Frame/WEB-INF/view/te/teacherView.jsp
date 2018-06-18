@@ -85,7 +85,7 @@
                         </div>
                         <div class="delete_btn" style="margin-top: 3px">
                             <a href="/te/course?id=${course.id}" class="btn btn-primary">查看 </a>
-                            <a href="" class="btn btn-danger">删除 </a>
+                            <button  class="btn btn-danger" onclick="deleteClass(${course.id})">删除 </button>
                         </div>
                     </div>
                 </div>
@@ -93,6 +93,36 @@
         </div>
     </div>
 </div>
+<script src="/static/lib/layer-v3.1.1/layer/layer.js"></script>
+<script>
+    function deleteClass(id)
+    {
+        event.stopPropagation();
+        layer.confirm('你真的要删除这套试卷吗？', {
+            btn: ['确定','取消']
+        }, function(){
+            //删除试卷
+            $.ajax({
+                url:'/te/course/delete',
+                type:'POST',
+                data:{
+                    "id":id,
+                },
+                timeout:5000,
+//    		    dataType:'json',
+                success:function(data){
+                    layer.msg(data.toString());
+                    window.location.reload();
+                },
+                error:function(){
+                    layer.msg("数据出现错误");
+                }
+            });
 
+        }, function(){
+
+        });
+    }
+</script>
 </body>
 </html>

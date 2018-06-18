@@ -23,6 +23,7 @@
 				  onsubmit="return false">
 				<div class="add_box_body">
 					<span>账号：</span>
+					<input name="courseId" type="hidden" value="${courseId}"/>
 					<input name="kind" type="hidden" value="0"/>
 					<input name="classId" type="hidden" value="${classId}"/>
 					<input name="account" class="add_box_input" type="text"  />

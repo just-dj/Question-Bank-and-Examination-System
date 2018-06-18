@@ -56,6 +56,15 @@ body,html {
 	font-weight:bold;
 	margin-top:30px;
 }
+
+#demo,.demo{
+	list-style: none;
+	text-align: center;
+	font-size:15px;
+	font-weight:bold;
+	margin-top:30px;
+}
+
 .question-collect,.question-type{
 	width:150px;
 	height:50px;
@@ -212,6 +221,7 @@ body,html {
 .question-type:hover{
 	background-color: #5cb85c;
 }
+
 .score-box {
 	display:flex;
 	flex-direction:row;
@@ -275,4 +285,17 @@ body .my-layui .layui-layer-content {
 
 .my-layui{
 	width: 450px;
+}
+
+.demo2{
+	background-color: #5bc0de;
+	color:white;
+	border: 0;
+	border-radius: 5px;
+	width:150px;
+	height:50px;
+	font-weight:normal;
+	text-align: center;
+	margin:auto;
+	line-height:50px;
 }

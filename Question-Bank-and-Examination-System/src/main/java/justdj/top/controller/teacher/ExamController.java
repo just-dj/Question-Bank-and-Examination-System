@@ -218,8 +218,7 @@ public class ExamController {
 		
 		model.addAttribute(exam);
 		model.addAttribute(answerList);
-		
-
+		model.addAttribute("examId",examId);
 		
 		return "/te/exam-viewTest";
  	}
@@ -277,22 +276,60 @@ public class ExamController {
 	 *
 	 */
     @RequestMapping(value = "/te/exam/answer",method = RequestMethod.POST)
-    public String setAnswerScore(@RequestParam("examId")BigInteger examId,
-//    		@RequestParam("id")BigInteger answerQuestionId,
-//           @RequestParam("score")Integer score,
-           RedirectAttributes redirectAttributes,
-           HttpServletRequest request,
-           Model model){
-	      User student = userService.selectUserByAccount(SecurityUtils.getSubject().getPrincipal().toString());
- 		  Answer answer = answerService.selectAnswerByExamIdAndStudentId(examId,student.getId());
- 		  List<AnswerQuestion> answerQuestionList = answerService.selectAnswerQuestionByAnswerId(answer.getId());
- 		  for (AnswerQuestion a:answerQuestionList){
- 		  	String newScore = request.getParameter(a.getId().toString());
- 		  	if (null != newScore && !newScore.equals("")){
- 		  		int result = examService.updateAnswerQuestionScore(a.getId(),Integer.parseInt(newScore));
-		    }
-	      }
-	      redirectAttributes.addFlashAttribute("id",examId);
-	      return "redirect:/te/exam/info";
+    @ResponseBody
+    public String setAnswerScore(@RequestParam("id")String answerQuestionId,
+                                 @RequestParam ("score")String score,
+                                    @RequestParam("answerId")BigInteger answerId,
+                                    Model model){
+    	Map<String,String> map =new HashMap <>();
+    	map.put("message","");
+	    
+    	map.put("sum",0+"");
+//	      User student = userService.selectUserByAccount(SecurityUtils.getSubject().getPrincipal().toString());
+ 		 Answer answer = answerService.selectAnswerByAnswerId(answerId);
+	
+	    String[] temp1 = answerQuestionId.split(" ");
+	    String[] temp2 = score.split(" ");
+	    
+	    int result;
+	    
+		try{
+			List<AnswerQuestion> answerQuestionList = answerService.selectAnswerQuestionByAnswerId(answerId);
+			int sum = 0;
+			for (AnswerQuestion answerQuestion:answerQuestionList){
+				if (answerQuestion == null || answerQuestion.getScore() ==null){
+					sum += 0;
+				}else {
+					sum += answerQuestion.getScore();
+				}
+			}
+			answer.setResult((short)sum);
+			
+			for (int i = 0; i < temp1.length; i++) {
+				result = examService.updateAnswerQuestionScore(new BigInteger(temp1[i]),new Short(temp2[i]));
+			}
+		}catch (RuntimeException e){
+			e.printStackTrace();
+			map.put("message","分数修改失败!");
+			map.put("sum",answer.getResult()+"");
+			return JSON.toJSONString(map);
+		}
+	 
+		List<AnswerQuestion> answerQuestionList = answerService.selectAnswerQuestionByAnswerId(answerId);
+		int sum = 0;
+		for (AnswerQuestion answerQuestion:answerQuestionList){
+			sum += answerQuestion.getScore();
+		}
+		answer.setResult((short)sum);
+	 
+		try{
+			answerService.updateAnswer(answer);
+		}catch (RuntimeException e){
+			e.printStackTrace();
+		}
+		map.put("message","分数修改成功！");
+		map.put("sum",answer.getResult()+"");
+	    return JSON.toJSONString(map);
     }
 }
+

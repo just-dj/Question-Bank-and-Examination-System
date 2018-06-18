@@ -68,6 +68,10 @@
   <filter-mapping>
     <filter-name>shiroFilter</filter-name>
     <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+    <dispatcher>INCLUDE</dispatcher>
+    <dispatcher>ERROR</dispatcher>
   </filter-mapping>
   
   
@@ -91,5 +95,12 @@
   <session-config>
     <session-timeout>120</session-timeout>
   </session-config>
-
+  
+  
+  <error-page>
+    <error-code>404</error-code>
+    <!-- 这里可以为servlet，不一定非要静态资源 -->
+    <location>/error</location>
+  </error-page>
+  
 </web-app>

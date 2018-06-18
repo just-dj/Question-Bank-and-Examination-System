@@ -1,0 +1,112 @@
+@charset "UTF-8";
+/**
+ * 
+ * @authors Your Name (you@example.org)
+ * @date    2018-06-09 15:28:18
+ * @version $Id$
+ */
+
+.nextBtns{
+	height: 40px;
+	line-height: 40px;
+	/*background: lightgray;*/
+}
+.next, .submix{
+	float: right;
+	width: 150px;
+	margin-left: 15px;
+}
+.submitBtn{
+	margin-top: 100px;
+}
+
+
+.main-left{
+	width: 172px;
+	max-width: 163px;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+	/*position: fixed;*/
+	/*left:210px ;*/
+	/*top:83px;*/
+}
+
+.main-left .kind{
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+	margin-bottom: 25px;
+}
+
+.question{
+	width: 172px;
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-start;
+	flex-wrap: wrap;
+}
+
+.btn-group-title{
+	width: 172px;
+	height: 35px;
+	line-height: 35px;
+	text-align: center;
+	border-radius: 2px;
+	background: lightgray;
+}
+
+.panel-body{
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+}
+
+.normal{
+	white-space:normal;
+	word-break:break-all;
+	word-wrap:break-word;
+	padding: 5px;
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-start;
+}
+
+/*#timeDiv{*/
+	/*position: fixed;*/
+	/*left: 486px;*/
+	/*top: 85px;*/
+/*}*/
+
+body .my-layui .layui-layer-title {
+	/*min-width: 450px;*/
+	/*width: 450px;*/
+	/*max-width: 450px;*/
+	padding: 0 80px 0 20px;
+	height: 42px;
+	line-height: 42px;
+	font-size: 14px;
+	background:#5bc0de;
+	color:#fff;
+	border: none;
+}
+
+body .my-layui .layui-layer-content {
+	padding: 20px;
+	min-height: 250px;
+	max-height: 250px;
+	/*min-width: 450px;*/
+	/*width: 450px;*/
+	max-width: 450px;
+	word-break: break-all;
+	white-space:normal;
+	OVERFLOW-Y: auto;
+	OVERFLOW-X:hidden;
+}
+
+.my-layui{
+	width: 450px;
+}

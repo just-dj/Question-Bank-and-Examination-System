@@ -30,9 +30,9 @@ public interface AnswerService {
 	Integer addAnswer(Answer answer);
 	
 	@Deprecated
-	Integer updateAnswer(Answer answer);
+	Integer updateAnswer(Answer answer) throws RuntimeException;
 	
-	Integer addAnswerQuestion(AnswerQuestion answerQuestion);
+	Integer addAnswerQuestion(AnswerQuestion answerQuestion)throws RuntimeException;
 	
 	List<AnswerQuestion> selectAnswerQuestion(BigInteger answerId,BigInteger kindId);
 }

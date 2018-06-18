@@ -21,7 +21,12 @@
    <div class="get-question-body">
    		<div class="get-question-left">
    			<ul class="paper-catalog">
-   				
+				<li class="demo" id="demo">
+					<div class="demo2" style="font-weight: bold">
+						<span>总分</span>
+						<span id="sum">${answer.result}</span>
+					</div>
+				</li>
    				<li class="basic-li">
    					<div class="question-type">
    						<span>单选题</span>
@@ -54,11 +59,11 @@
    			<div class="grayborder">
    				<div class="choose-div-top question-top">
    					<div id="kindName">
-   						选择题
+
    					</div>
    					<div>
-   						<span id="totalQuestion">共10题</span>&nbsp;&nbsp;&nbsp;&nbsp;
-   						<span id="totalScore">共40分</span>
+   						<span id="totalQuestion">共0题</span>&nbsp;&nbsp;&nbsp;&nbsp;
+   						<span id="totalScore">共0分</span>
    					</div>
    				</div>
 			    <div class="questions-box">
@@ -150,7 +155,7 @@
 		var id = "";
 		for(var i=0;i<ans.length;i++)
 		{
-			id+=ans.id;
+			id+=ans[i].id;
 			id+=" ";
 		}
 		var scorelist = "",anslist="";
@@ -162,32 +167,24 @@
 			anslist+=$(this).val();
 			anslist+=" ";
 		});
-		console.log(anslist);
-		console.log(scorelist);
+//		console.log(anslist);
+//		console.log(scorelist);
 		$.ajax({
-		    url:'读取数据',
+		    url:'/te/exam/answer',
 		    type:'POST',
 		    data:{
-		        id:id,
-		        scorelist:scorelist,
-		        anslist:anslist
+		        "answerId":${answer.id},
+		        "id":id,
+		        "score":scorelist
 		    },
 		    timeout:5000,    
 		    dataType:'json',
 		    success:function(data){
-		    	if(data.toString().indexOf("失败")>=0)
-		        {
-		    		alert("失败");
-		        }
-		    	else
-		    	{   ans=data;
-			        $(".questions-box").empty();
-			        renderQuestions(data);
-		    	}
-		        
+		    	layer.msg(data.message);
+                $("#sum").html(data.sum);
 		    },
 		    error:function(){
-		        alert("数据出现错误");
+		        layer.msg("哎呀，和服务器连接失败！");
 		    }
 		});
 	});

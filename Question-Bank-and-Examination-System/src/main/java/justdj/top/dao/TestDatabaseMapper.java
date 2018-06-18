@@ -115,4 +115,6 @@ public interface TestDatabaseMapper {
 			"values(#{kindId},#{testDatabaseId},#{question},#{a},#{b},#{c},#{d},#{answer})")
 	@Options(flushCache = true)
 	Integer addQuestion(Question question);
+	
+	
 }

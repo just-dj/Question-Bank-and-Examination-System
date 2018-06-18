@@ -55,7 +55,7 @@ public class TestPaperController {
 	 *@description 试卷管理 提供所有试卷队列  和相关的题目信息
 	 */
 	@RequestMapping(value = "/te/testPaper",method = RequestMethod.GET)
-	public String getAllTestPaperByCourseId(@RequestParam(value = "id",required = true)BigInteger courseId,
+	public String getAllTestPaperByCourseId(@ModelAttribute(value = "id")BigInteger courseId,
 	                                      Model model){
 		KindHelper.setKindService(kindService);
 		
@@ -97,6 +97,23 @@ public class TestPaperController {
 		
 	}
 	
+	
+	@RequestMapping(value = "/te/testPaper/delete",method = RequestMethod.POST)
+	@ResponseBody
+	public String deleteTestPaper(@RequestParam("testPaperId")BigInteger testPaperId,
+	                              RedirectAttributes redirectAttributes){
+		
+		List<Question> questionList = testPaperService.selectQuestionByTestPaperId(testPaperId);
+		
+		for (Question question:questionList){
+			testPaperService.deleteTestPaperQuestion(testPaperId,question.getId());
+		}
+		testPaperService.deleteTestPaper(testPaperId);
+		
+		
+		return "成功删除";
+	}
+	
 	/**
 	 *@author  ShanDJ
 	 *@params [testPaperName, model]
@@ -106,12 +123,14 @@ public class TestPaperController {
 	 */
 	
 	@RequestMapping(value = "/te/testPaper/new",method = RequestMethod.POST)
+	@ResponseBody
 	public String createTestPaper(@RequestParam("courseId")BigInteger courseId,
 			@RequestParam("name")String testPaperName,
 	                            Model model){
-	    int result = testPaperService.addTestPaper(courseId,testPaperName,true);
 		
-		return "redirect:/te/testPaper";
+	    int result = testPaperService.addTestPaper(courseId,testPaperName,false);
+		
+		return "创建成功！";
 	}
 	
 	

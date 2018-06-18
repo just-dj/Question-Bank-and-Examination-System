@@ -55,6 +55,12 @@ public class TestController1 {
 		return "test";
 	}
 	
+	
+	@RequestMapping("/error")
+	public String error(){
+		return "error";
+	}
+	
 	@RequestMapping(value = "/upload",method = RequestMethod.POST)
 	public String uploadFile(HttpServletRequest request,
 	                         @RequestParam(value = "author",required = false) String author,
@@ -115,6 +121,7 @@ public class TestController1 {
 	
 	
 	@RequestMapping(value = "/exam")
+	@ResponseBody
 	public String upAnswer(){
 		
 		return "testPaper";

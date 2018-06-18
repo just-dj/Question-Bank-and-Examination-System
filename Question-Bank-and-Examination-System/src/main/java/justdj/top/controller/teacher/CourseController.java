@@ -178,4 +178,14 @@ public class CourseController {
 		
 	}
 	
+	
+	@RequestMapping("/te/course/delete")
+	@ResponseBody
+	public String deleteCourse(@RequestParam("id")BigInteger courseId){
+		//这里只进行了软删除 课程相关信息还保留着
+		int result = courseService.deleteCourse(courseId);
+		
+		return "删除成功";
+	}
+	
 }

@@ -146,4 +146,8 @@ public interface CourseMapper {
 			@Result(column = "place",property = "place")
 	})
 	Clazz selectClass(BigInteger classId);
+	
+	
+	@Delete("delete from course where id = #{id}")
+	Integer deleteCourse(BigInteger courseId);
 }

@@ -83,6 +83,18 @@ public class UserController {
 	
 	@RequestMapping("/")
 	public String main(){
+		Subject subject = SecurityUtils.getSubject();
+		if (subject.isRemembered()){
+			if (subject.hasRole("teacher")){
+				return "redirect:/te";
+			}else if (subject.hasRole("student")){
+				return "redirect:/st";
+			}else if (subject.hasRole("manager")){
+				return "redirect:/ma";
+			}else {
+				return "redirect:/st";
+			}
+		}
 		return "redirect:/login";
 	}
 	
@@ -120,9 +132,9 @@ public class UserController {
 		Boolean remember = false;
 		redirectAttributes.addFlashAttribute("user",user);
 		//验证码判断
-//		if (!codeIdentify(vcode,redirectAttributes)){
-//			return "redirect:/login";
-//		}
+		if (!codeIdentify(vcode,redirectAttributes)){
+			return "redirect:/login";
+		}
 		
 		if (null != rememberMe && rememberMe[0].equals("true"))
 			remember = true;
@@ -136,7 +148,7 @@ public class UserController {
 		//if语句是为了避免重复登录问题
 		User userNow = userService.selectUserByAccount(user.getAccount());
 		
-		if (subject.isAuthenticated()){
+		if (subject.isRemembered()){
 			//  用户是使用了记住密码
 		}else{
 			try{
@@ -166,7 +178,6 @@ public class UserController {
 		else{
 			//				这里应该有一段判断跳转到哪里的逻辑
 			if (subject.hasRole("teacher")){
-				model.addAttribute("courseList",courseService.selectCourseByTeacherId(userNow.getId()));
 				return "redirect:/te";
 			}else if (subject.hasRole("student")){
 				return "redirect:/st";

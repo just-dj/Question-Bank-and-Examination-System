@@ -78,7 +78,7 @@
    				</tr>
    			</table>
    			<div class="database-bnt-box">
-	   			<button class="delete-database-bnt" onclick="deletebnt(${testDatabase.getId()})">删除</button>
+	   			<%--<button class="delete-database-bnt" onclick="deletebnt(${testDatabase.getId()})">删除</button>--%>
 
 				<a href="/te/testDatabase/question?id=${testDatabase.id}">
 					<button class="view-database" onclick="viewDatabase(${testDatabase.getId()})">查看</button>

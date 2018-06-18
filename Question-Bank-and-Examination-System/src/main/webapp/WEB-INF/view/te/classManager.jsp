@@ -41,7 +41,8 @@
 
 						</div>
 
-						<div class="item_btn_delete" id="item_btn_delete">
+						<div class="item_btn_delete" id="item_btn_delete"
+							 onclick="location.href='/te/class/delete?courseId=${courseId}&&classId=${clazz.id}'">
 							<span>删除</span>
 						</div>
 

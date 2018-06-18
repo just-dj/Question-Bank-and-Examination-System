@@ -46,4 +46,6 @@ public interface CourseService {
 	Integer addCourse(Course course) throws RuntimeException;
 	
 	Clazz selectClass(BigInteger classId);
+	
+	Integer deleteCourse(BigInteger courseId);
 }

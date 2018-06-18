@@ -76,7 +76,7 @@ public class ExamServiceImpl implements ExamService {
 	
 	
 	@Override
-	public Integer updateAnswerQuestionScore(BigInteger answerQuestionId, Integer score) {
+	public Integer updateAnswerQuestionScore(BigInteger answerQuestionId, Short score) {
 		return examMapper.updateAnswerQuestionScore(answerQuestionId,score);
 	}
 }

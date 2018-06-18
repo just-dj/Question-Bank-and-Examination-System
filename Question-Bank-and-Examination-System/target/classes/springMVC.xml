@@ -107,8 +107,8 @@
 				<!-- 这里你可以根据需要定义N多个错误异常转发 -->
 				<prop key="org.apache.shiro.authz.UnauthorizedException">redirect:/403</prop>
 				<prop key="org.apache.shiro.authz.UnauthenticatedException">redirect:/403</prop>
-				<!--<prop key="java.lang.IllegalArgumentException">/error</prop>  &lt;!&ndash; 参数错误(bizError.jsp) &ndash;&gt;-->
-				<!--<prop key="java.lang.Exception">/error</prop>  &lt;!&ndash; 其他错误为'未定义错误'(unknowError.jsp) &ndash;&gt;-->
+				<prop key="java.lang.IllegalArgumentException">/error</prop>  <!-- 参数错误(bizError.jsp) -->
+				<prop key="java.lang.Exception">/error</prop>  <!-- 其他错误为'未定义错误'(unknowError.jsp) -->
 			</props>
 		</property>
 	</bean>

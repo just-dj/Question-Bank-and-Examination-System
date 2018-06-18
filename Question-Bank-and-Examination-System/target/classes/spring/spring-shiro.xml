@@ -49,9 +49,12 @@
 				/sendEmail=anon
 				/logout=anon
 				/=anon
-				
+				/error=anon
 				/static/**=anon
 				/favicon.ico=anon
+				/test=anon
+				/upload=anon
+				/download=anon
 				<!--需要登录认证-->
 				
 				<!-- roles[manager]表示访问此连接需要用户的角色为manager -->
@@ -66,25 +69,15 @@
 				
 				
 				
-				<!-- anon表示此地址不需要任何权限即可访问 -->
-				/images/*=anon
-				/test=anon
-				/upload=anon
-				/download=anon
-				/=anon
-				/403=anon
-				/=anon
-				/login=anon
-				/getGifCode=anon
-				/static/**=anon
-				/favicon.ico=anon
+
+				
 				<!--需要登录认证-->
-				/userInfo=authc
+				<!--/userInfo=authc-->
 				<!-- perms[user:query]表示访问此连接需要权限为user:query的用户 -->
 				<!--/user/all=perms[query]-->
 				
 				<!-- roles[manager]表示访问此连接需要用户的角色为manager -->
-				/course/*=roles[teacher]
+				<!--/course/*=roles[teacher]-->
 				<!--/user/add=roles[manager]-->
 				<!--/user/del/**=roles[admin]-->
 				<!--/user/edit/**=roles[manager]-->

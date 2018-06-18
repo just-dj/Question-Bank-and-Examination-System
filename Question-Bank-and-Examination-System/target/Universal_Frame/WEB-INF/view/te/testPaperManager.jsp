@@ -11,6 +11,7 @@
 </head>
 <body>
     <%@ include file="../head.jsp" %>
+
 	<div class="top-subtitle">
 		<ul class="subtitle-cont">
 			<li class="subtitle-cont-li">
@@ -134,18 +135,21 @@
 				</div>
 			</div>
 			<div class="cover-input">
-				<table>
-					<tr>
-						<td>试卷名称
-						</td>
-						<td>
-							<input type="text"class="paper-name-input">
-						</td>
-						<td>
-							<button class="add-submmit" id="creatPaperbnt">创建试卷</button>
-						</td>
-					</tr>
-				</table>
+				<form action="" onsubmit="return false" id="addTestPaper">
+					<input type="hidden" value="${courseId}" name="courseId"/>
+					<table>
+						<tr>
+							<td>试卷名称
+							</td>
+							<td>
+								<input name="name" type="text"class="paper-name-input">
+							</td>
+							<td>
+								<button class="add-submmit" id="creatPaperbnt">创建试卷</button>
+							</td>
+						</tr>
+					</table>
+				</form>
 			</div>
 		</div>
 	</div>
@@ -168,31 +172,24 @@
     function deletePaper(id)
     {
     	event.stopPropagation();
-    	layer.confirm('您真的要删除吗？', {
+    	layer.confirm('你真的要删除这套试卷吗？', {
     	 btn: ['确定','取消'] 
     	}, function(){
     		//删除试卷
     		$.ajax({
-    		    url:'删除',
+    		    url:'/te/testPaper/delete',
     		    type:'POST',
     		    data:{
-    		    	paperId:id,
+    		    	"testPaperId":id,
     		    },
     		    timeout:5000,    
-    		    dataType:'json',
+//    		    dataType:'json',
     		    success:function(data){
-    		    	if(data.toString().indexOf("失败")>=0)
-    		        {
-    		    		alert("失败");
-    		        }
-    		    	else
-    		    	{
+    		        layer.msg(data.toString());
     		    		window.location.reload();
-    		    	}
-    		        
     		    },
     		    error:function(){
-    		        alert("数据出现错误");
+    		        layer.msg("数据出现错误");
     		    }
     		});
     		
@@ -220,31 +217,46 @@
 	});
 	$("#creatPaperbnt").click(function()
 	{
+
+        var formData = new FormData(document.getElementById("addTestPaper"));//表单id
 		var name = $(".paper-name-input").val();
+		if (name==""){
+		    layer.msg("试卷名不能为空！");
+		    return;
+		}
+
 		event.stopPropagation();
-		$.ajax({
-		    url:'增加',
-		    type:'POST',
-		    data:{
-		    	paperName:name,
-		    },
-		    timeout:5000,    
-		    dataType:'json',
-		    success:function(data){
-		    	if(data.toString().indexOf("失败")>=0)
-		        {
-		    		alert("失败");
-		        }
-		    	else
-		    	{
-		    		window.location.reload();
-		    	}
-		        
-		    },
-		    error:function(){
-		        alert("数据出现错误");
-		    }
-		});
+        $.ajax({
+            url: '/te/testPaper/new',
+            //type是无所谓的 但是get只能传递1kb数据
+            type: 'POST',
+//            dataType:'json',
+            // dataType: 'default: Intelligent Guess (Other values: xml, json, script, or html)',
+            data:formData,
+            //上传文件不需要缓存
+            cache:false,
+            //data值是FormData对象，不需要对数据做处理
+            processData:false,
+            // 且已经声明了属性enctype="multipart/form-data"，所以这里设置为false
+            contentType:false
+        }).done(function(data) {
+            layer.open({
+                type: 1,
+                skin: 'my-layui', //样式类名
+                closeBtn: 0, //不显示关闭按钮
+                anim: 2,
+                shadeClose: true, //开启遮罩关闭
+                content: data+ '<br>' +
+                "<a class='btn btn-primary' style='margin='auto' ;'  href='' " + " >查看" + "</a>" ,
+            });
+        })
+            .fail(function() {
+                console.log("error");
+            })
+            .always(function() {
+                console.log("complete");
+
+            });
 		
 	
 	});

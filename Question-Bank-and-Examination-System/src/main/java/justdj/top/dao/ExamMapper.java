@@ -95,5 +95,5 @@ public interface ExamMapper {
 			"where id = #{answerQuestionId}")
 	@Options(flushCache = true)
 	Integer updateAnswerQuestionScore(@Param("answerQuestionId")BigInteger answerQuestionId,
-	                                      @Param("score")Integer score);
+	                                      @Param("score")Short score);
 }

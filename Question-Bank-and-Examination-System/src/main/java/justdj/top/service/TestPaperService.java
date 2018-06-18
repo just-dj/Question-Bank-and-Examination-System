@@ -40,4 +40,6 @@ public interface TestPaperService {
 	Integer addQuestion(@Param("testPaperId") BigInteger testPaperId,
 	                    @Param("questionId") BigInteger questionId,
 	                    @Param("score")Integer score) throws RuntimeException;
+	
+	Integer deleteTestPaper(BigInteger testPaperId);
 }

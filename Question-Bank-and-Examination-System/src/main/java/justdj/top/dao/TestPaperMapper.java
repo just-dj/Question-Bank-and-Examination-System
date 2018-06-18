@@ -137,4 +137,8 @@ public interface TestPaperMapper {
 	Integer addQuestion(@Param("testPaperId") BigInteger testPaperId,
 	                    @Param("questionId") BigInteger questionId,
 	                    @Param("score")Integer score);
+	
+	@Delete("delete from test_paper where id=#{id}")
+	@Options(flushCache = true)
+	Integer deleteTestPaper(BigInteger testPaperId);
 }

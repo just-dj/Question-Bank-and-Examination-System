@@ -14,6 +14,8 @@ import justdj.top.service.*;
 import justdj.top.util.KindHelper;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -56,6 +58,7 @@ public class StudentController {
 	@Qualifier("kindService")
 	private KindService kindService;
 	
+	private static Logger logger = LoggerFactory.getLogger(StudentController.class);
 	
 	/**
 	 *@author  ShanDJ
@@ -158,13 +161,16 @@ public class StudentController {
 		}
 		
 		List<Answer> answerList = new ArrayList <>();
-		for (Exam exam:examList){
+		for (Exam exam:newExamList){
 			answerList.add(answerService.selectAnswerByExamIdAndStudentId(exam.getId(),user.getId()));
 		}
+		
+		System.err.println(JSON.toJSONString(answerList));
 		
 		model.addAttribute("examList",newExamList);
 		model.addAttribute("answerList",answerList);
 		model.addAttribute("courseId",courseId);
+		
 		return "/st/studentExams";
 	}
 	
@@ -178,36 +184,43 @@ public class StudentController {
 	 */
 	@RequestMapping(value = "/st/course/exam",method = RequestMethod.GET)
 	public String startExam(@RequestParam("id") BigInteger examId,
+	                      @RequestParam("courseId")BigInteger courseId,
 	                      Model model){
 		Subject subject = SecurityUtils.getSubject();
+		Exam exam = examService.selectExamByExamId(examId);
+		
 		//获得考试使用的所有试卷
 		List<TestPaper> testPaperList =  testPaperService.selectTestPaperByExamId(examId);
 		
 		Answer answer = answerService.selectAnswerByExamIdAndStudentId(examId,
 				userService.selectUserByAccount(subject.getPrincipal().toString()).getId());
 		BigInteger randomTestPaper  = BigInteger.valueOf(1);
+		
 		if (null == answer){
+			logger.info("第一次访问考试界面！插入Answer");
 			//多张试卷并且是第一次访问的时候进行一下随机算法，,这里应该随机获取试卷
 			int random = new Random().nextInt(testPaperList.size());
 			randomTestPaper = testPaperList.get(random).getId();
 			//将Answer插入数据库
 			Answer newAnswer = new Answer();
 			newAnswer.setTestPaperId(randomTestPaper);
+			newAnswer.setExamId(examId);
 			newAnswer.setStartTime(new Timestamp(Time.absoluteTime()));
 			newAnswer.setCommit(false);
 			newAnswer.setStudentId(userService.selectUserByAccount(subject.getPrincipal().toString()).getId());
 			answerService.addAnswer(newAnswer);
 		}else{
+			logger.info("非第一次访问考试界面！获取上次信息");
 			randomTestPaper = answer.getTestPaperId();
 		}
 		
 		
-		//假设随机到第一张试卷
+
 		//获取到试卷的所有题型
 		List<Kind> kindList = testPaperService.selectQuestionKindByTestPaperId(randomTestPaper);
 		//获取到试卷对应的全部的问题
-		List<Question> questionList = testPaperService.selectQuestionByTestPaperId(randomTestPaper);
-		
+//		List<Question> questionList = testPaperService.selectQuestionByTestPaperId(randomTestPaper);
+		List<Question> questionList = new ArrayList <>();
 		//根据题型获取试卷问题
 //		List<Question> questionList1 =
 //				testPaperService.selectQuestionByTestPaperIdAndKindId(testPaperList.get(randomNum).getId(),);
@@ -218,14 +231,73 @@ public class StudentController {
 				break;
 			}
 		}
-		model.addAttribute("kindList",kindList);
-		model.addAttribute("questionList",questionList);
 		
 		List<String> kindName = new LinkedList <>();
 		for (Kind a:kindList)
 			kindName.add(a.getName());
+		
+		
+		if (kindName.contains("单选题")){
+			List<Question> single = testPaperService.selectQuestionByTestPaperIdAndKindName(randomTestPaper,
+					"单选题");
+			model.addAttribute("single",single);
+			if (null != single && single.size() != 0){
+				questionList.addAll(single);
+			}
+		}
+		if (kindName.contains("多选题")){
+			List<Question> muti = testPaperService.selectQuestionByTestPaperIdAndKindName(randomTestPaper,
+					"多选题");
+			model.addAttribute("muti",muti);
+			if (null != muti){
+				questionList.addAll(muti);
+			}
+		}
+		if (kindName.contains("判断题")){
+			List<Question> judge = testPaperService.selectQuestionByTestPaperIdAndKindName(randomTestPaper,
+					"判断题");
+			model.addAttribute("judge",judge);
+			if (null != judge){
+				questionList.addAll(judge);
+			}
+		}
+		if (kindName.contains("填空题")){
+			List<Question> empty = testPaperService.selectQuestionByTestPaperIdAndKindName(randomTestPaper,
+					"填空题");
+			model.addAttribute("emp",empty);
+			if (null != empty){
+				questionList.addAll(empty);
+			}
+		}
+		
+		if (kindName.contains("简答题")){
+			List<Question> question  = testPaperService.selectQuestionByTestPaperIdAndKindName(randomTestPaper,
+					"简答题");
+			model.addAttribute("question",question);
+			if (null != question){
+				questionList.addAll(question);
+			}
+		}
+		
+		Long time = (exam.getEndTime().getTime() - Time.absoluteTime())/1000;
+		
+		for (Question question:questionList){
+			question.setAnswer(null);
+		}
+		
+		//所有Kind信息
+		model.addAttribute("kindList",kindList);
+		//所有问题
+		model.addAttribute("questionList",JSON.toJSONString(questionList));
+		//题型队列
 		model.addAttribute("kindName",kindName);
-		return "testPaper";
+		
+		model.addAttribute("time",time);
+		
+		model.addAttribute("examId",examId);
+		model.addAttribute("courseId",courseId);
+		System.err.println(JSON.toJSONString(questionList));
+		return "/st/startExam";
 	}
 	
 	/**
@@ -236,18 +308,22 @@ public class StudentController {
 	 *@description 开始考试提交 这是个学生提交答案的接口 具体逻辑还没实现
 	 */
 	@RequestMapping(value = "/st/course/exam",method = RequestMethod.POST)
+	@ResponseBody
 	public String saveAnswer(
 			@RequestParam("courseId")BigInteger courseId,
 			@RequestParam("examId")BigInteger examId,
-			@RequestParam("testPaperId")BigInteger testPaperId,
 			RedirectAttributes redirectAttributes,
 			HttpServletRequest request){
 		Subject subject = SecurityUtils.getSubject();
 		Answer answer = answerService.selectAnswerByExamIdAndStudentId(examId,
 				userService.selectUserByAccount(subject.getPrincipal().toString()).getId());
-		
 		//插入AnswerQuestion
-		List<Question> questionList = testPaperService.selectQuestionByTestPaperId(testPaperId);
+		
+		List<Question> questionList = testPaperService.selectQuestionByTestPaperId(answer.getTestPaperId());
+		
+		answer.setEndTime(new Timestamp(Time.absoluteTime()));
+		answer.setCommit(true);
+		
 		System.out.println(request.getParameter("1"));
 		//更新答案提交时间
 		answer.setEndTime(new Timestamp(Time.absoluteTime()));
@@ -257,22 +333,56 @@ public class StudentController {
 			AnswerQuestion answerQuestion = new AnswerQuestion();
 			answerQuestion.setQuestionId(question.getId());
 			answerQuestion.setAnswerId(answer.getId());
-			answerQuestion.setAnswer(request.getParameter(question.getId().toString()));
+			if (question.getKindName().equals("多选题")){
+				String[] arr = request.getParameterValues(question.getId().toString());
+				if (arr != null){
+					String temp = "";
+					for (String str:arr){
+						temp += str+" ";
+					}
+					answerQuestion.setAnswer(temp);
+				}
+			}else{
+				answerQuestion.setAnswer(request.getParameter(question.getId().toString()));
+			}
+			
 			if (question.getKindName().equals("单选题")
 					|| question.getKindName().equals("多选题")
-					|| question.getKindName().equals("填空题")){
-				if (answer.equals(question.getAnswer())){
+					|| question.getKindName().equals("判断题")){
+				if (answerQuestion.getAnswer().trim().equals(question.getAnswer().trim())){
 					answerQuestion.setScore(question.getScore());
 				}
 			}
-			answerService.addAnswerQuestion(answerQuestion);
+			try{
+				answerService.addAnswerQuestion(answerQuestion);
+			}catch (RuntimeException e){
+				e.printStackTrace();
+				logger.warn(subject.getPrincipal().toString() + "保存答案出现异常！" +e.getMessage());
+			}
+			
 		}
-		
+
 //		更新一下answer的分值
 		
-		redirectAttributes.addFlashAttribute("id",courseId);
+		List<AnswerQuestion> answerQuestionList = answerService.selectAnswerQuestionByAnswerId(answer.getId());
+		int sum = 0;
+		for (AnswerQuestion answerQuestion:answerQuestionList){
+			if (answerQuestion == null || answerQuestion.getScore()== null){
+				sum += 0;
+			}else{
+				sum += answerQuestion.getScore();
+			}
+		}
+		answer.setResult((short)sum);
 		
-		return "redirect:/st/course/examInfo";
+		try{
+			answerService.updateAnswer(answer);
+		}catch (RuntimeException e){
+			e.printStackTrace();
+		}
+		
+
+		return "数据保存成功！";
 	}
 	
 	/**

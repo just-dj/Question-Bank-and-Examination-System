@@ -137,7 +137,8 @@
  				<td>
  					<%--<button class="view-bnt" onClick="toViewPaper(<c:out value="${answer.id}"></c:out>,<c:out--%>
  					<%--value="${answer.studentId}"></c:out>">查看</button>--%>
-					<button class="view-bnt" onClick="location.href='/te/exam/answer?id=${answer.id}'">查看</button>
+					<button class="view-bnt" onClick="location.href='/te/exam/answer?id=${answer.id}'">查看
+					</button>
  				</td>
  			</tr>
  			</c:forEach>

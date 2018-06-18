@@ -135,9 +135,9 @@ public interface AnswerMapper {
 	List<Kind> selectQuestionKindByAnswerId(BigInteger answerId);
 	
 	
-	@Insert("insert into answer (student_id,test_paper_id,start_time,is_commit)" +
-			"values (#{studentId},#{testPaperId},#{startTime},#{commit})")
-	@Options(flushCache = true)
+	@Insert("insert into answer (student_id,exam_id,test_paper_id,start_time,is_commit)" +
+			"values (#{studentId},#{examId},#{testPaperId},#{startTime},#{commit})")
+	@Options(useGeneratedKeys = true,keyProperty = "id",flushCache = true)
 	Integer addAnswer(Answer answer);
 	
 	@Update("update answer set " +
@@ -146,7 +146,7 @@ public interface AnswerMapper {
 			"start_time  = #{startTime}," +
 			"end_time = #{endTime}," +
 			"result = #{result}," +
-			"commit = #{commit} " +
+			"is_commit = #{commit} " +
 			"where id = #{id}")
 	@Options(flushCache = true)
 	Integer updateAnswer(Answer answer);

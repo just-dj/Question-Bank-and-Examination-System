@@ -31,7 +31,7 @@ public interface ExamService {
 	Integer insertExamAllInfo(Exam exam,List<BigInteger> classId,List<BigInteger> testPaperId) throws Exception;
 	
 	Integer updateAnswerQuestionScore(@Param("answerQuestionId")BigInteger answerQuestionId,
-	                                  @Param("score")Integer score);
+	                                  @Param("score")Short score) throws RuntimeException;
 
 
 

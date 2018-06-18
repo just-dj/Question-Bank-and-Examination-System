@@ -177,9 +177,20 @@ body .my-layui .layui-layer-content {
 								<button class="btn btn-warn"  >未开始</button>
 							</div>
 						</c:when>
+						<c:when test="${exam.startTime.before(requestScope.date)&& exam.endTime.after(requestScope.date)
+						&& (answerList.get(status.index)==
+						null || answerList.get(status.index).commit == false) }">
+							<div class="test-btn-row">
+									<button class="btn btn-danger"
+											onclick="location.href='/st/course/exam?id=${exam.id}&courseId=${courseId}'">开始
+									</button>
+							</div>
+						</c:when>
 						<c:otherwise >
 							<div class="test-btn-row">
-								<button class="btn btn-danger"  onclick="location.href='/st'">开始</button>
+								<div class="test-btn-row">
+									<button class="btn btn-warn"  >已提交</button>
+								</div>
 							</div>
 						</c:otherwise>
 					</c:choose>

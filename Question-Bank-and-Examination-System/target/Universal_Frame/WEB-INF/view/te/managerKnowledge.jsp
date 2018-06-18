@@ -60,7 +60,9 @@
 								<div class="child_center">
 									<div class="btn btn-warning"
 										  onclick="location.href='/te/knowledge/delete?id=${knowledge.id}&courseId=${courseId}'">删除</div>
-									<div class="btn btn-primary" style="margin-right: 8px">查看</div>
+									<div class="btn btn-primary" style="margin-right: 8px"
+										 onclick="location.href='/te/course/knowledge?id=${knowledge.id}'">查看
+									</div>
 								</div>
 							</td>
 						</tr>

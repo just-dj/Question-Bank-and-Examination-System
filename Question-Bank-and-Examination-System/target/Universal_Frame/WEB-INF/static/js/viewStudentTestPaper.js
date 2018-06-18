@@ -4,7 +4,7 @@
 	    for(var i=0;i<ant.length;i++)
 	    {
 	    	
-	    	sum+=ant[i]["score"];
+	    	sum+=ant[i]["questionScore"];
 	    	
 	    	switch(ant[i]["kindId"])
 	    	{
@@ -32,20 +32,20 @@
     	console.log(question['answer'].indexOf("b"));
     	console.log(question['answer'].indexOf("c"));
     	console.log(question['answer'].indexOf("d"));
-    	if(question["userAnswer"].indexOf("a",0)==-1)
+    	if(question["answer"].indexOf("a",0)==-1)
     	{
     		//console.log(question['answer'].indexOf("a"));
     		classA="correct-ans wrong-ans";
     	}
-    	if(question["userAnswer"].indexOf("b",0)==-1)
+    	if(question["answer"].indexOf("b",0)==-1)
     	{   //console.log(question['answer'].indexOf("b"));
     		classB="correct-ans wrong-ans";
     	}
-    	if(question["userAnswer"].indexOf("c",0)==-1)
+    	if(question["answer"].indexOf("c",0)==-1)
     	{   //console.log(question['answer'].indexOf("c"));
     		classC="correct-ans wrong-ans";
     	}
-    	if(question["userAnswer"].indexOf("d",0)==-1)
+    	if(question["answer"].indexOf("d",0)==-1)
     	{
     		//console.log(question['answer'].indexOf("c"));
     		classD="correct-ans wrong-ans";
@@ -75,14 +75,14 @@
     {
     	console.log(question["userAnswer"]);
     	var classA="correct-ans",classB="correct-ans";
-    	if(question["userAnswer"].indexOf("a")==-1)
-    	{
-    		classA="correct-ans wrong-ans";
-    	}
-        if(question["userAnswer"].indexOf("b")==-1)
-    	{
-    		classB="correct-ans wrong-ans";
-    	}
+    	// if(question["answer"].indexOf("a")==-1)
+    	// {
+    	// 	classA="correct-ans wrong-ans";
+    	// }
+        // if(question["answer"].indexOf("b")==-1)
+    	// {
+    	// 	classB="correct-ans wrong-ans";
+    	// }
         var score = 5;
     	if(question["score"]==undefined||question["score"]=="")
     		score = 0;
@@ -92,11 +92,11 @@
 		    "<div class='question-title'>"+
 			"<span>"+question['question']+"</span>"+
 			"</div>"+   
-		    "<p class='"+classA+"'>参考答案: "+question['answer']+"</p>"+
+		    "<p class='"+classA+"'>参考答案 : "+question['answer']+"</p>"+
             "<p >学生答案 : "+question['userAnswer']+"</p>"+
 		    "<div class='score-box'>"+
 		    "<span>评分</span>"+
-		    "<input type='text' class='score-input scorelist' name='score' value='"+score+"'>"+
+            "<input type='text' class='score-input scorelist' name='score' value='"+score+"'>"+
 		    "</div>"+
  	        "</div>";
  	    
@@ -114,11 +114,11 @@
 		    "<div class='question-title'>"+
 			"<span>"+question['question']+"</span>"+
 			"</div>"+
-		    "<p class='"+classA+"'>参考答案:"+question["userAnswer"]+"</p>"+
+		    "<p class='"+classA+"'>参考答案 : "+question["userAnswer"]+"</p>"+
             "<p >学生答案 : "+question['userAnswer']+"</p>"+
-		    "<div class='score-box blank-ans'>"+
+		    "<div class='score-box'>"+
 		    "<span>评分</span>"+
-		    "<input type='text' class='score-input scorelist' name='score' value='"+score+"'>"+
+            "<input type='text' class='score-input scorelist' name='score' value='"+score+"'>"+
 		    "</div>"+
  	        "</div>";
  	    

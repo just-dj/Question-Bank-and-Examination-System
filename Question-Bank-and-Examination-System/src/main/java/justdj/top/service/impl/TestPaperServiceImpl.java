@@ -74,4 +74,10 @@ public class TestPaperServiceImpl implements TestPaperService {
 	public Integer addQuestion(BigInteger testPaperId, BigInteger questionId,Integer score) throws RuntimeException{
 		return testPaperMapper.addQuestion(testPaperId,questionId,score);
 	}
+	
+	
+	@Override
+	public Integer deleteTestPaper(BigInteger testPaperId) {
+		return testPaperMapper.deleteTestPaper(testPaperId);
+	}
 }

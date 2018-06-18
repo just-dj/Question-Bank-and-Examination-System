@@ -174,7 +174,7 @@ function sendData() {
 				anim: 2,
 				shadeClose: true, //开启遮罩关闭
 				content: data.message +
-				"<a class='btn btn-primary' href='/te/exam/new?id="+courseId+"'>查看" + "</a>" ,
+				"<a class='btn btn-primary' href='/te/exam?id="+courseId+"'>查看" + "</a>" ,
 			});
 		})
 	.fail(function() {
