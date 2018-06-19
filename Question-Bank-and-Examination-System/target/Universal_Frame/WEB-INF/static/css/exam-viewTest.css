@@ -46,18 +46,19 @@ body,html {
 .test-info-main {
 	margin: auto;
 	width: 85%;
+	padding-bottom: 80px;
 }
 .test-info-main table {
 	width:100%;
 	margin-top: 20px;
 }
-.test-info-main td{
-	width:10%;
-	border:1px solid #cccccc;
-	text-align: center;
-	border-collapse: collapse;
-	height:35px;
-} 
+/*.test-info-main td{*/
+	/*width:10%;*/
+	/*border:1px solid #cccccc;*/
+	/*text-align: center;*/
+	/*border-collapse: collapse;*/
+	/*height:35px;*/
+/*} */
 .view-bnt {
 	background-color: #5bc0de;
 	color: white;
@@ -68,4 +69,10 @@ body,html {
 }
 .paperlist {
 	background-color: #cccccc;
+}
+.text-success{
+	color: #5cb85c;
+}
+.text-danger{
+	color: #d9534f;
 }

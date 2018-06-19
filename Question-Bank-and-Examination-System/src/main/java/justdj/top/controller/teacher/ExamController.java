@@ -205,7 +205,8 @@ public class ExamController {
 		logger.info("教师" + subject.getPrincipal().toString() +"查看考试" + examId);
 		
 		Exam exam = examService.selectExamByExamId(examId);
-		List<Answer> answerList = answerService.selectAnswerByExamId(examId);
+		
+		List<Answer> answerList = new ArrayList <>();
 		
 		if (exam.getClazzList() == null){
 			exam.setClazzList(new ArrayList <>());
@@ -216,11 +217,35 @@ public class ExamController {
 			exam.getClazzList().add(courseService.selectClass(id));
 		}
 		
+		List<User> userList = new ArrayList <>();
+		for (Clazz clazz:exam.getClazzList()){
+			List<User> students = courseService.selectStudentByClassId(clazz.getId());
+			if (students != null){
+				userList.addAll(students);
+			}
+		}
+		
+		for (User student:userList){
+			Answer answer = answerService.selectAnswerByExamIdAndStudentId(examId,student.getId());
+			if (answer == null){
+				Answer temp  = new Answer();
+				temp.setResult((short)0);
+				temp.setStudent(student);
+				temp.setCommit(false);
+				answerList.add(temp);
+			}else {
+				if (answer.getResult() == null )
+					answer.setResult((short)0);
+				answerList.add(answer);
+			}
+		}
+		
 		model.addAttribute(exam);
 		model.addAttribute(answerList);
 		model.addAttribute("examId",examId);
 		
 		return "/te/exam-viewTest";
+		
  	}
 	
 	

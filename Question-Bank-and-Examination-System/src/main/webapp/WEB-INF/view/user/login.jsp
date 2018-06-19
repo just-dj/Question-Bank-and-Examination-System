@@ -25,13 +25,13 @@
 						</div>
 					</div>
 				</c:if>
-				<input type="text" name="account" placeholder="请输入账号" value="${user.account}"/><br>
-				<input type="password" name="password" placeholder="请输入密码" value="${user.password}"/><br>
-				<%--<input type="text" name="account" placeholder="请输入账号" value="1"/><br>--%>
-				<%--<input type="password" name="password" placeholder="请输入密码" value="123456"/><br>--%>
+				<%--<input type="text" name="account" placeholder="请输入账号" value="${user.account}"/><br>--%>
+				<%--<input type="password" name="password" placeholder="请输入密码" value="${user.password}"/><br>--%>
+				<input type="text" name="account" placeholder="请输入账号" value="2"/><br>
+				<input type="password" name="password" placeholder="请输入密码" value="123456"/><br>
 				<div class="identify_box">
 					<div>
-						<input id="identify" type="text" name="identifyNum" placeholder="请输入验证码" />
+						<input id="identify" type="text" name="identifyNum"  placeholder="请输入验证码" value="1" />
 						<img id="image" onclick="changeImage()" src="/getGifCode"><br>
 					</div>
 				</div>

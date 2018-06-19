@@ -6,7 +6,11 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>查看考试</title>
-<link rel="stylesheet" type="text/css" href="/static/css/exam-viewTest.css">
+	<link rel="stylesheet" href="/static/lib/bootstrap-3.3.7-dist/css/bootstrap.css" >
+	<link rel="stylesheet" href="/static/lib/layui/css/layui.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/exam-viewTest.css">
+	<%--<script src="/static/lib/jquery/jquery-3.2.1.min.js"></script>--%>
+	<script src="/static/lib/layui/layui.all.js"></script>
 </head>
 <body>
 <div class="top-subtitle">
@@ -68,47 +72,63 @@
  		</tr>
  	</table>
  	</div>
- 	<div class="test-info-main">
- 		<table cellpadding="0" cellspacing="0">
- 			<tr style="font-weight: bold">
- 				<td>
- 					编号
- 				</td>
- 				<td>
- 					账号
- 				</td>
- 				<td>
- 					姓名
- 				</td>
- 				<td>
- 					性别
- 				</td>
- 				<td>
- 				       开始考试时间
- 				</td>
- 				<td>
- 				    提交试卷时间
- 				</td>
-				<td>
+ 	<div class=" test-info-main ">
+ 		<table class="layui-table"  lay-filter="demo">
+			<colgroup>
+				<col width="100">
+				<col width="100">
+				<col width="100">
+				<col width="100">
+				<col width="210">
+				<col width="210">
+				<col width="150">
+				<col width="100">
+				<col width="100">
+				<col>
+			</colgroup>
+
+			<thead>
+				<tr >
+				<th lay-data="{field:'index',width:100}">
+					编号
+				</th>
+				<th lay-data="{field:'account',width:100}">
+					账号
+				</th>
+				<th lay-data="{field:'name',width:100}">
+					姓名
+				</th>
+				<th lay-data="{field:'sex',  sort:true,width:100}">
+					性别
+				</th>
+				<th lay-data="{field:'start',  sort:true,width:210}">
+					开始考试时间
+				</th>
+				<th lay-data="{field:'end',  sort:true,width:210}">
+					提交试卷时间
+				</th>
+				<th lay-data="{field:'kind',  sort:true,width:150}">
 					使用试卷
-				</td>
- 				<td>
- 					是否提交
- 				</td>
-				<td>
+				</th>
+				<th lay-data="{field:'status',width:100}">
+					状态
+				</th>
+				<th lay-data="{field:'score',  sort:true,width:100}">
 					当前分数
-				</td>
- 				<td>
- 					操作
- 				</td>
- 			</tr>
+				</th>
+				<th lay-data="{field:'option',width:110}">
+					操作
+				</th>
+			</tr>
+			</thead>
+
  			<c:forEach items="${answerList}" var="answer" varStatus="status">
  			<tr>
  				<td>
  					<c:out value="${status.count}"></c:out>
  				</td>
  				<td>
- 					<c:out value="${answer.studentId}"></c:out>
+ 					<c:out value="${answer.student.account}"></c:out>
  				</td>
  				<td>
  					<c:out value="${answer.student.name}"></c:out>
@@ -125,20 +145,23 @@
  				<td>
  				    <c:out value="${answer.testPaper.name}"></c:out>
  				</td>
- 				<td>
- 				    <c:if test="${answer.commit==true}">
- 						<c:out value="提交"></c:out>
- 					</c:if>
- 					<c:if test="${answer.commit==false}">
- 						<c:out value="未提交"></c:out>
- 					</c:if>
- 				</td>
+
+				<c:if test="${answer.commit==true}">
+					<td class="text-success">提交</td>
+				</c:if>
+				<c:if test="${answer.commit==false}">
+					<td class="text-danger">未参加</td>
+				</c:if>
+
 				<td>${answer.result}</td>
  				<td>
  					<%--<button class="view-bnt" onClick="toViewPaper(<c:out value="${answer.id}"></c:out>,<c:out--%>
  					<%--value="${answer.studentId}"></c:out>">查看</button>--%>
-					<button class="view-bnt" onClick="location.href='/te/exam/answer?id=${answer.id}'">查看
-					</button>
+					 <c:if test="${answer.commit==true}">
+						<button class="view-bnt" onClick="location.href='/te/exam/answer?id=${answer.id}'">查看
+						</button>
+					</c:if>
+
  				</td>
  			</tr>
  			</c:forEach>
@@ -150,5 +173,16 @@
 	{
 		window.location.href="..?";
 	}
+
+
+    var table = layui.table;
+
+    //转换静态表格
+    table.init('demo', {
+        height: 700 //设置高度
+        ,limit: '${answerList.size()}',
+        cellMinWidth:'100',
+        //支持所有基础参数
+    });
 </script>
 </html>
