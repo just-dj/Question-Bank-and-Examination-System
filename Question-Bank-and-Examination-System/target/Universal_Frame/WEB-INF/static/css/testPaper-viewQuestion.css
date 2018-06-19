@@ -46,7 +46,8 @@ body,html {
 	
 }
 .get-question-right {
-	flex-grow: 1;
+	/*flex-grow: 1;*/
+	width: 70%;
 }
 .basic-li {
 	list-style: none;

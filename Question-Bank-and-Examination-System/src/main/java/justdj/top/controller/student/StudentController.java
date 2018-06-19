@@ -285,10 +285,19 @@ public class StudentController {
 			question.setAnswer(null);
 		}
 		
+		for (Question question:questionList){
+			question.setQuestion(getClearStr(question.getQuestion()));
+			question.setA(getClearStr(question.getA()));
+			question.setB(getClearStr(question.getB()));
+			question.setC(getClearStr(question.getC()));
+			question.setD(getClearStr(question.getD()));
+			question.setAnswer(getClearStr(question.getAnswer()));
+		}
+		
 		//所有Kind信息
 		model.addAttribute("kindList",kindList);
 		//所有问题
-		model.addAttribute("questionList",JSON.toJSONString(questionList));
+		model.addAttribute("questionList",JSON.toJSONString(questionList,true));
 		//题型队列
 		model.addAttribute("kindName",kindName);
 		
@@ -296,7 +305,9 @@ public class StudentController {
 		
 		model.addAttribute("examId",examId);
 		model.addAttribute("courseId",courseId);
+		
 		System.err.println(JSON.toJSONString(questionList));
+		
 		return "/st/startExam";
 	}
 	
@@ -352,6 +363,8 @@ public class StudentController {
 				if (answerQuestion.getAnswer().trim().equals(question.getAnswer().trim())){
 					answerQuestion.setScore(question.getScore());
 				}
+			}else {
+				answerQuestion.setScore((short)0);
 			}
 			try{
 				answerService.addAnswerQuestion(answerQuestion);
@@ -473,5 +486,13 @@ public class StudentController {
 		
 		return "/st/knowledgeDetails";
 		
+	}
+	
+	String getClearStr(String before){
+		if ( before!=null ){
+			return before.replace('"','\'');
+		}else{
+			return "";
+		}
 	}
 }

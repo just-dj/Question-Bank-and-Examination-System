@@ -226,7 +226,8 @@
 
     var arr =new Array()
 
-    var question = '${questionList}';
+    <%--var questionNum = ${questionList.size()}--%>
+    var question = ${questionList};
 
     var time = ${time};
 
@@ -421,7 +422,7 @@
     };
 
     $(document).ready(function () {
-        question = $.parseJSON(question);
+//        question = $.parseJSON(question);
 
         console.log(SecondToDate(time));
         console.log(question.length);

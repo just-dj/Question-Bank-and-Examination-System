@@ -114,7 +114,7 @@
 		    "<div class='question-title'>"+
 			"<span>"+question['question']+"</span>"+
 			"</div>"+
-		    "<p class='"+classA+"'>参考答案 : "+question["userAnswer"]+"</p>"+
+		    "<p class='"+classA+"'>参考答案 : "+question["answer"]+"</p>"+
             "<p >学生答案 : "+question['userAnswer']+"</p>"+
 		    "<div class='score-box'>"+
 		    "<span>评分</span>"+

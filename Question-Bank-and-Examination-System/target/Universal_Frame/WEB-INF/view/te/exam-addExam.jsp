@@ -115,10 +115,10 @@
  				<td>
 					<c:choose>
 						<c:when test="${paperitem.use}">
-							<span class="text-success">已用</span>
+							<span class="text-danger">已使用</span>
 						</c:when>
 						<c:otherwise>
-							<span class="text-danger">不可用</span>
+							<span class="text-success">未使用</span>
 						</c:otherwise>
 					</c:choose>
  				</td>

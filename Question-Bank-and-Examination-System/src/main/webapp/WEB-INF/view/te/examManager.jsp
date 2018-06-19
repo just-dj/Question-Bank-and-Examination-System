@@ -54,13 +54,13 @@
    				<tr >
    					<td>开始时间
    					</td>
-   					<td class="next-td">${exam.getStartTime()}
+   					<td class="next-td">${exam.startTime}
    					</td>
    				</tr>
    				<tr >
    					<td>结束时间
    					</td>
-   					<td class="next-td">${exam.getStartTime()}
+   					<td class="next-td">${exam.endTime}
    					</td>
    				</tr>
    				<tr >

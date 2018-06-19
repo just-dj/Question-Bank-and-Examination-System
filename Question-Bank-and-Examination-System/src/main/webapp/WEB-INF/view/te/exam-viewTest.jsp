@@ -13,6 +13,9 @@
 	<script src="/static/lib/layui/layui.all.js"></script>
 </head>
 <body>
+
+<%@ include file="../head.jsp" %>
+
 <div class="top-subtitle">
 		<ul class="subtitle-cont">
 			<li class="subtitle-cont-li">
@@ -72,6 +75,19 @@
  		</tr>
  	</table>
  	</div>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-5 col-md-offset-1" id="chart1" style="height: 400px">
+
+			</div>
+			<div class="col-md-5 col-md-offset-1" id="chart2" style="height: 400px">
+
+			</div>
+		</div>
+	</div>
+
+
  	<div class=" test-info-main ">
  		<table class="layui-table"  lay-filter="demo">
 			<colgroup>
@@ -110,7 +126,7 @@
 				<th lay-data="{field:'kind',  sort:true,width:150}">
 					使用试卷
 				</th>
-				<th lay-data="{field:'status',width:100}">
+				<th lay-data="{field:'status',width:100, sort:true}">
 					状态
 				</th>
 				<th lay-data="{field:'score',  sort:true,width:100}">
@@ -167,9 +183,140 @@
  			</c:forEach>
  		</table>
  	</div>
+
 </body>
+<script src="/static/lib/echart/echarts.common.min.js"></script>
+
 <script type="text/javascript">
-	function a(examId,stuId)
+
+    // 基于准备好的dom，初始化echarts图表
+    var chart1 = echarts.init(document.getElementById('chart1'));
+
+    option1 = {
+        title : {
+            text: '本次考试目前提交情况',
+            subtext: '考试截至之前的数据可能有偏差',
+            x:'center'
+        },
+        tooltip : {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+            orient : 'vertical',
+            x : 'left',
+            data:['已提交','未提交']
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {
+                    show: true,
+                    type: ['pie', 'funnel'],
+                    option: {
+                        funnel: {
+                            x: '25%',
+                            width: '50%',
+                            funnelAlign: 'left',
+                            max: 1548
+                        }
+                    }
+                },
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+        series : [
+            {
+                name:'提交情况',
+                type:'pie',
+                radius : '55%',
+                center: ['50%', '60%'],
+                data:[
+                    {value:${submitAnswer.size()}, name:'已提交'},
+                    {value:${answerList.size() - submitAnswer.size()}, name:'未提交'}
+                ]
+            }
+        ]
+    };
+
+
+    // 为echarts对象加载数据
+    chart1.setOption(option1);
+
+
+
+    // 基于准备好的dom，初始化echarts图表
+    var chart2 = echarts.init(document.getElementById('chart2'));
+
+    var option2 = {
+        title : {
+            text: '成绩分布',
+            subtext: '已提交考生的'
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:['成绩']
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {show: true, type: ['line', 'bar']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                boundaryGap : false,
+                data : ${nameList.toString()}
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value',
+                axisLabel : {
+                    formatter: '{value} 分'
+                }
+            }
+        ],
+        series : [
+            {
+                name:'最高成绩',
+                type:'line',
+                data:${scoreList.toString()},
+                markPoint : {
+                    data : [
+                        {type : 'max', name: '最大值'},
+                        {type : 'min', name: '最小值'}
+                    ]
+                },
+                markLine : {
+                    data : [
+                        {type : 'average', name: '平均值'}
+                    ]
+                }
+            }
+        ]
+    };
+
+
+    // 为echarts对象加载数据
+    chart2.setOption(option2);
+
+
+
+
+    function a(examId,stuId)
 	{
 		window.location.href="..?";
 	}

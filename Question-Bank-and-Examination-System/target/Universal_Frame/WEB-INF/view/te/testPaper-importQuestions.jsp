@@ -221,7 +221,7 @@
 		    type:'POST',
 		    data:{
 		    	"id":paperId,
-		    	"kind":(kind+1)//id
+		    	"kindId":(kind+1)//id
 		    },
 		    timeout:5000,    
 		    dataType:'json',

@@ -26,7 +26,7 @@ public interface AnswerMapper {
 			@Result(column = "result",property = "result"),
 			@Result(column = "is_commit",property = "commit"),
 			@Result(column = "student_id",property = "student",
-			one = @One(select = "justdj.top.dao.UserMapper.selectUserByAccount",fetchType = FetchType.EAGER)),
+			one = @One(select = "justdj.top.dao.UserMapper.selectUserById",fetchType = FetchType.EAGER)),
 			@Result(column = "test_paper_id",property = "testPaper",
 					one = @One(select = "justdj.top.dao.TestPaperMapper.selectTestPaperByPaperId",fetchType = FetchType.EAGER))
 			

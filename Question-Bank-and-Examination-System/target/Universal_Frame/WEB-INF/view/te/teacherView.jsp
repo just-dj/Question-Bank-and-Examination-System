@@ -98,7 +98,7 @@
     function deleteClass(id)
     {
         event.stopPropagation();
-        layer.confirm('你真的要删除这套试卷吗？', {
+        layer.confirm('你确定要删除这门课程吗？', {
             btn: ['确定','取消']
         }, function(){
             //删除试卷

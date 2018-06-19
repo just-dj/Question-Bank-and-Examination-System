@@ -108,7 +108,7 @@
 				<prop key="org.apache.shiro.authz.UnauthorizedException">redirect:/403</prop>
 				<prop key="org.apache.shiro.authz.UnauthenticatedException">redirect:/403</prop>
 				<prop key="java.lang.IllegalArgumentException">/error</prop>  <!-- 参数错误(bizError.jsp) -->
-				<prop key="java.lang.Exception">/error</prop>  <!-- 其他错误为'未定义错误'(unknowError.jsp) -->
+				<!--<prop key="java.lang.Exception">/error</prop>  &lt;!&ndash; 其他错误为'未定义错误'(unknowError.jsp) &ndash;&gt;-->
 			</props>
 		</property>
 	</bean>

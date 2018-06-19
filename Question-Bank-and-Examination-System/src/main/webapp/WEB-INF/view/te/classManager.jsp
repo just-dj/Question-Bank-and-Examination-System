@@ -29,6 +29,14 @@
 						${clazz.name}<br>
 					</div>
 					<div class="item_row">
+						<span>上课时间：</span>
+							${clazz.time}<br>
+					</div>
+					<div class="item_row">
+						<span>上课地点：</span>
+							${clazz.place}<br>
+					</div>
+					<div class="item_row">
 						<span>班级人数：</span>
 						${clazz.userList.size()}
 						<span>人</span><br>

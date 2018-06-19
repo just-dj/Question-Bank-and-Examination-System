@@ -225,6 +225,9 @@ public class ExamController {
 			}
 		}
 		
+		List<Answer> submitAnswer = answerService.selectAnswerByExamId(examId);
+		
+		logger.info("获取所有answer(已提交和未提交)");
 		for (User student:userList){
 			Answer answer = answerService.selectAnswerByExamIdAndStudentId(examId,student.getId());
 			if (answer == null){
@@ -240,9 +243,32 @@ public class ExamController {
 			}
 		}
 		
+		logger.info("处理分值统计数据");
+		
+		List<Integer> scoreList  = new ArrayList <>();
+		List<String> nameList = new ArrayList <>();
+		for (Answer answer : submitAnswer){
+			nameList.add("'"+answer.getStudent().getName()+"'");
+			System.err.println("'"+answer.getStudent().getName()+"'");
+			if (answer.getResult() == null){
+				scoreList.add((int)0);
+				answer.setResult((short)0);
+				answerService.updateAnswer(answer);
+			}else {
+				scoreList.add((int)answer.getResult());
+			}
+		}
+		
+		logger.info("放置数据");
+		
 		model.addAttribute(exam);
 		model.addAttribute(answerList);
 		model.addAttribute("examId",examId);
+		model.addAttribute("submitAnswer",submitAnswer);
+		model.addAttribute("scoreList",scoreList);
+		model.addAttribute("nameList",nameList);
+		
+		logger.info("返回！");
 		
 		return "/te/exam-viewTest";
 		
@@ -343,7 +369,12 @@ public class ExamController {
 		List<AnswerQuestion> answerQuestionList = answerService.selectAnswerQuestionByAnswerId(answerId);
 		int sum = 0;
 		for (AnswerQuestion answerQuestion:answerQuestionList){
-			sum += answerQuestion.getScore();
+			if (answerQuestion == null || answerQuestion.getScore() == null){
+				sum += 0;
+			}else {
+				sum += answerQuestion.getScore();
+			}
+			
 		}
 		answer.setResult((short)sum);
 	 

@@ -155,9 +155,16 @@ public class TestPaperController {
 	@RequestMapping(value = "/te/testPaper/question",method = RequestMethod.POST)
 	@ResponseBody
 	public String getTestPaperQuestionByKindName(@RequestParam(value = "id",required = true)BigInteger testPaperId,
-	                                           @RequestParam(value = "kind",required = true)BigInteger kindId){
+	                                           @RequestParam(value = "kind",required = false)String kindName,
+	                                             @RequestParam(value = "kindId",required = false)BigInteger kindId){
 		
-		List<Question> questionList = testPaperService.selectQuestionByTestPaperIdAndKindId(testPaperId,kindId);
+		List<Question> questionList = null;
+		
+		if (kindId != null){
+			questionList = testPaperService.selectQuestionByTestPaperIdAndKindId(testPaperId,kindId);
+		}else {
+			questionList = testPaperService.selectQuestionByTestPaperIdAndKindName(testPaperId,kindName);
+		}
 		
 		System.err.println(JSON.toJSONString(questionList));
 		

@@ -35,10 +35,10 @@
 .item_row {
 	box-sizing: border-box;
 	width: 280px;
-	height: 60px;
-	padding-top: 20px;
+	height: 33px;
+	padding-top: 4px;
 	padding-left: 15px;
-	padding-bottom: 20px;
+	padding-bottom: 4px;
 }
 
 .item_btn_group {
