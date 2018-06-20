@@ -99,18 +99,18 @@
 	</bean>
 	
 	
-	<!-- shiro为集成springMvc 拦截异常-->
-	<bean
-			class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
-		<property name="exceptionMappings">
-			<props>
-				<!-- 这里你可以根据需要定义N多个错误异常转发 -->
-				<prop key="org.apache.shiro.authz.UnauthorizedException">redirect:/403</prop>
-				<prop key="org.apache.shiro.authz.UnauthenticatedException">redirect:/403</prop>
-				<prop key="java.lang.IllegalArgumentException">/error</prop>  <!-- 参数错误(bizError.jsp) -->
+	<!--&lt;!&ndash; shiro为集成springMvc 拦截异常&ndash;&gt;-->
+	<!--<bean-->
+			<!--class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">-->
+		<!--<property name="exceptionMappings">-->
+			<!--<props>-->
+				<!--&lt;!&ndash; 这里你可以根据需要定义N多个错误异常转发 &ndash;&gt;-->
+				<!--<prop key="org.apache.shiro.authz.UnauthorizedException">redirect:/403</prop>-->
+				<!--<prop key="org.apache.shiro.authz.UnauthenticatedException">redirect:/403</prop>-->
+				<!--<prop key="java.lang.IllegalArgumentException">/error/400</prop>  &lt;!&ndash; 参数错误(bizError.jsp) &ndash;&gt;-->
 				<!--<prop key="java.lang.Exception">/error</prop>  &lt;!&ndash; 其他错误为'未定义错误'(unknowError.jsp) &ndash;&gt;-->
-			</props>
-		</property>
-	</bean>
+			<!--</props>-->
+		<!--</property>-->
+	<!--</bean>-->
 	
 </beans>

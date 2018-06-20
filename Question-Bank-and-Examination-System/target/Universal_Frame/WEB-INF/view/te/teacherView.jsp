@@ -48,6 +48,12 @@
             <a href="/te/course/add">
                 <div class="new_btn">新建课程</div>
             </a>
+            <a href="/download?filename=题库导入题目模板.zip">
+                <div class="new_btn">题库导入题目模板</div>
+            </a>
+            <a href="/download?filename=班级导入学生模板.txt">
+                <div class="new_btn">班级导入学生模板</div>
+            </a>
         </div>
         <!-- 右侧 -->
         <div class="col-md-9 column">

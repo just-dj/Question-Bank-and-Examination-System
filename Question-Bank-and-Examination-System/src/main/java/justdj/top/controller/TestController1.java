@@ -56,11 +56,6 @@ public class TestController1 {
 	}
 	
 	
-	@RequestMapping("/error")
-	public String error(){
-		return "error";
-	}
-	
 	@RequestMapping(value = "/upload",method = RequestMethod.POST)
 	public String uploadFile(HttpServletRequest request,
 	                         @RequestParam(value = "author",required = false) String author,
@@ -106,7 +101,7 @@ public class TestController1 {
 	                                       @RequestParam("filename") String filename,
 	                                       Model model) throws Exception{
 //		下载文件路径
-		String path = request.getServletContext().getRealPath("/images");
+		String path = request.getServletContext().getRealPath("/upload");
 		File  file = new File( path + File.separator + filename);
 //		logger.info("请求下载   ："  + path + File.separator + filename);
 		HttpHeaders headers = new HttpHeaders();
@@ -120,10 +115,10 @@ public class TestController1 {
 	}
 	
 	
-	@RequestMapping(value = "/exam")
-	@ResponseBody
-	public String upAnswer(){
-		
-		return "testPaper";
+	@RequestMapping("/403")
+	public String error403 (){
+		return "/error/403";
 	}
+	
+	
 }

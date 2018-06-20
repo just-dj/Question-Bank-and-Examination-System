@@ -46,7 +46,7 @@
     	}
     	var score = 0;
     	if(question.score==undefined||question.score=="")
-    		score = 0
+    		score = 2
     	else
     		score = question["score"];
     	var text = 
@@ -79,7 +79,7 @@
     	}
         var score = 0;
     	if(question.score==undefined||question.score=="")
-    		score = 0;
+    		score = 2;
     	else
     		score = question["score"];
     	var text = 
@@ -101,7 +101,7 @@
     	console.log(question["answer"]);
     	var classA="correct-ans";
     	if(question.score==undefined||question.score=="")
-    		score = 0;
+    		score = 2;
     	else
     		score = question["score"];
     	var text = 

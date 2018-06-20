@@ -40,6 +40,7 @@ public class MySessionAwareMessageListener implements SessionAwareMessageListene
 			try{
 				mailUtils.sendSimpleMail("justdjtop@163.com",user.getEmail(),"无限考试系统注册验证码",getMailBody(user));
 			}catch (MailException e){
+				e.printStackTrace();
 				logger.error("邮件发送失败！" + user.getAccount());
 				throw new JMSException("邮件发送失败！" + user.getAccount());
 			}

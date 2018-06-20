@@ -132,9 +132,9 @@ public class UserController {
 		Boolean remember = false;
 		redirectAttributes.addFlashAttribute("user",user);
 		//验证码判断
-//		if (!codeIdentify(vcode,redirectAttributes)){
-//			return "redirect:/login";
-//		}
+		if (!codeIdentify(vcode,redirectAttributes)){
+			return "redirect:/login";
+		}
 		
 		if (null != rememberMe && rememberMe[0].equals("true"))
 			remember = true;
@@ -217,18 +217,6 @@ public class UserController {
 		return "redirect:/login";
 	}
 	
-	/**
-	 *@author  ShanDJ
-	 *@params []
-	 *@return  java.lang.String
-	 *@date  18.5.25
-	 *@description 简单错误页面,后期可以删除
-	 */
-	@RequestMapping("/403")
-	public String unauthorizedRole(){
-		
-		return "/403";
-	}
 	
 	/**
 	 *@author  ShanDJ

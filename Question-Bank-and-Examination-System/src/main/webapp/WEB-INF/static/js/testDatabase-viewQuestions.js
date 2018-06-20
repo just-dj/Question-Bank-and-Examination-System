@@ -58,7 +58,6 @@
     	var text = "<div class='question-item'>"+
 		    "<div class='question-title'>"+
 			"<span>"+question['question']+"</span>"+
-			"<span>("+score+"分)</span>"+
 			"</div>"+ 
 		    "<p class='"+classA+"'>A."+question['a']+"</p>"+
 		    "<p class='"+classB+"'>B."+question['b']+"</p>"+
@@ -87,7 +86,6 @@
     	var text = "<div class='question-item'>"+
 		    "<div class='question-title'>"+
 			"<span>"+question['question']+"</span>"+
-			"<span>("+score+"分)</span>"+
 			"</div>"+   
 		    "<p class='"+classA+"'>答案:"+question['answer']+"</p>"+
  	        "</div>";
@@ -105,7 +103,6 @@
     	var text = "<div class='question-item'>"+
 		    "<div class='question-title'>"+
 			"<span>"+question['question']+"</span>"+
-			"<span>("+score+"分)</span>"+
 			"</div>"+
 		    "<p class='"+classA+"'>答案:"+question['answer']+"</p>"+
  	        "</div>";

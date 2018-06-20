@@ -7,6 +7,7 @@
 	<!-- JavaMail相关配置 -->
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl" >
 		<property name="host" value="${mailserver.mxhichina.host}"></property>
+		<property name="port" value="${mailserver.mxhichina.port}"></property>
 		<property name="username" value="${mailserver.mxhichina.username}"></property>
 		<property name="password" value="${mailserver.mxhichina.password}"></property>
 		<property name="protocol" value="smtp"></property>

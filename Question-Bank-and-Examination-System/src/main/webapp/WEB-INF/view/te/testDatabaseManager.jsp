@@ -110,7 +110,7 @@
 								<option value="多选题">多选题</option>
 								<option value="判断题">判断题</option>
 								<option value="填空题">填空题</option>
-								<option value="简答题">简答题题</option>
+								<option value="简答题">简答题</option>
 							</select>
 						</td>
 						<td>

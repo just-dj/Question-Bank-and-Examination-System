@@ -50,6 +50,7 @@
 				/logout=anon
 				/=anon
 				/error=anon
+				/error/*=anon
 				/static/**=anon
 				/favicon.ico=anon
 				/test=anon
@@ -58,8 +59,11 @@
 				<!--需要登录认证-->
 				
 				<!-- roles[manager]表示访问此连接需要用户的角色为manager -->
+				/st=roles[student]
 				/st/*=roles[student]
+				/te=roles[teacher]
 				/te/*=roles[teacher]
+				/ma=roles[manager]
 				/ma/*=roles[manager]
 				
 				<!--使用remberme功能-->
